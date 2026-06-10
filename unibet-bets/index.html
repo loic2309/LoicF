@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paris du jour · Coupe du Monde 2026 · Unibet</title>
+  <style>
+    :root {
+      --pitch: #0a7e3f; --pitch-dark: #065c2c; --pitch-light: #e8f5ec;
+      --field-stripe: #f4faf6; --white: #ffffff; --ink: #0e1a13;
+      --ink-soft: #4a5a52; --ink-dim: #8a9991; --line: #e3e9e5;
+      --safe: #0a7e3f; --safe-soft: #e3f3e8; --safe-strong: #065c2c;
+      --risky: #c4441a; --risky-soft: #fdeee6; --risky-strong: #8e2f10;
+      --ultra: #6e34c4; --ultra-soft: #f1e9fa; --ultra-strong: #4a1c87;
+      --yellow-card: #f5c518; --accent: #1976d2;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; }
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--field-stripe) 0%, var(--white) 200px), var(--white);
+      color: var(--ink); line-height: 1.45; -webkit-font-smoothing: antialiased;
+    }
+    header {
+      background: radial-gradient(ellipse at 20% 0%, rgba(10,126,63,.18), transparent 50%),
+                  linear-gradient(135deg, var(--pitch) 0%, var(--pitch-dark) 100%);
+      color: var(--white); padding: 24px 36px 20px; position: relative; overflow: hidden;
+    }
+    header::before { content:""; position:absolute; right:-40px; top:-40px; width:180px; height:180px; border:3px solid rgba(255,255,255,.08); border-radius:50%; }
+    header::after  { content:""; position:absolute; right:40px; bottom:-80px; width:240px; height:240px; border:3px solid rgba(255,255,255,.06); border-radius:50%; }
+    header h1 { margin:0; font-size:24px; font-weight:800; letter-spacing:-0.3px; display:flex; align-items:center; gap:12px; }
+    header h1 .badge { background:var(--yellow-card); color:var(--ink); padding:2px 10px; border-radius:4px; font-size:11px; font-weight:800; letter-spacing:1px; }
+    header .sub { margin-top:8px; font-size:12.5px; opacity:.88; display:flex; gap:14px; flex-wrap:wrap; }
+    header .pill { display:inline-block; background:rgba(255,255,255,.13); padding:2px 10px; border-radius:12px; font-weight:500; }
+    .header-actions { position:absolute; top:24px; right:36px; display:flex; gap:10px; align-items:center; }
+    .refresh-btn {
+      background: var(--yellow-card); color: var(--ink); border:0; padding: 10px 16px; border-radius:6px;
+      font-weight:700; cursor:pointer; font-size:13px; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+      transition: transform .12s, opacity .12s;
+    }
+    .refresh-btn:hover { transform: translateY(-1px); }
+    .refresh-btn:disabled { opacity:.6; cursor: wait; transform: none; }
+    .refresh-status { font-size:11.5px; color: var(--white); opacity:.85; }
+    .legend { padding: 12px 36px; background: var(--pitch-light); border-bottom:1px solid var(--line); display:flex; gap:18px; font-size:12px; color: var(--ink-soft); flex-wrap:wrap; }
+    .legend b { color: var(--ink); font-weight:600; }
+    .transparency {
+      padding: 11px 36px; background: #fffaee; border-bottom: 1px solid var(--line);
+      font-size: 11.5px; color: var(--ink-soft); display:flex; gap:16px; flex-wrap:wrap;
+    }
+    .transparency strong { color: var(--ink); }
+    .transparency b { color: var(--ink); font-weight:600; }
+    details.explainer { margin: 12px 36px 0; padding:0; background: var(--white); border:1px solid var(--line); border-radius:6px; transition: box-shadow .15s; }
+    details.explainer[open] { box-shadow: 0 2px 8px rgba(14,26,19,.06); border-color: var(--pitch); }
+    details.explainer summary { padding: 12px 18px; cursor:pointer; font-size:13px; color: var(--ink-soft); list-style:none; user-select:none; display:flex; align-items:center; gap:8px; }
+    details.explainer summary::-webkit-details-marker { display:none; }
+    details.explainer summary::after { content:"▾"; margin-left:auto; color: var(--ink-dim); transition: transform .15s; }
+    details.explainer[open] summary::after { transform: rotate(180deg); }
+    details.explainer summary b { color: var(--ink); font-weight:600; }
+    details.explainer summary:hover { background: var(--pitch-light); }
+    .explainer-body { padding: 4px 22px 18px; font-size: 13px; color: var(--ink-soft); line-height:1.55; border-top:1px solid var(--line); }
+    .explainer-body p { margin: 10px 0; }
+    .explainer-body b { color: var(--ink); font-weight:600; }
+    .explainer-body h4 { margin: 18px 0 6px; font-size: 14px; font-weight:700; color: var(--ink); padding-bottom:4px; border-bottom:1px solid var(--line); }
+    .explainer-body .formula { background: var(--pitch-light); border-left:3px solid var(--pitch); padding:8px 14px; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:12.5px; color:var(--ink); margin:8px 0; border-radius:0 4px 4px 0; }
+    .explainer-body .warn { background: #fff7e0; border-left:3px solid var(--yellow-card); padding:9px 14px; border-radius:0 4px 4px 0; color: var(--ink); }
+    main { padding: 14px 36px 56px; max-width: 1240px; margin: 0 auto; }
+    .day { margin-top: 14px; }
+    .day h2 { font-size: 17px; font-weight:700; margin:0 0 14px; padding:10px 0 10px 4px; border-bottom:2px solid var(--pitch); color: var(--ink); display:flex; align-items:center; gap:10px; }
+    .day-count { color: var(--ink-dim); font-weight:500; font-size:12px; margin-left:auto; background: var(--pitch-light); padding:2px 10px; border-radius:10px; }
+    .empty-day-msg { padding: 40px 20px; text-align:center; font-size: 14px; color: var(--ink-soft); background: var(--pitch-light); border-radius:8px; border:1px solid var(--line); }
+    .rolled-banner { padding:10px 16px; background:#fff7e0; border:1px solid rgba(245,197,24,.5); border-radius:6px; font-size:12.5px; color:var(--ink); margin: 10px 0 4px; }
+    .matches { display: grid; gap: 12px; }
+    .match { background:var(--white); border:1px solid var(--line); border-left:4px solid var(--pitch); border-radius:6px; padding:14px 18px; box-shadow: 0 1px 2px rgba(14,26,19,.04); transition: transform .12s, box-shadow .12s; }
+    .match:hover { box-shadow: 0 4px 14px rgba(14,26,19,.08); transform: translateY(-1px); }
+    .match.no-odds { opacity:.55; border-left-color:var(--ink-dim); }
+    .match-header { display:flex; align-items:center; gap:16px; margin-bottom:10px; }
+    .kickoff { font-variant-numeric: tabular-nums; color:var(--white); background:var(--pitch); font-size:13px; font-weight:700; padding:4px 10px; border-radius:4px; min-width:56px; text-align:center; }
+    .teams { font-weight:500; font-size:15.5px; flex:1; }
+    .teams b { font-weight:700; }
+    .teams em { color:var(--ink-dim); font-style:normal; margin:0 8px; font-size:12px; font-weight:400; }
+    .form-chip { display:inline-block; font-size:11px; padding:1px 5px; border-radius:9px; margin-left:5px; vertical-align:middle; cursor:help; }
+    .form-chip.form-in-form { background:#fff4d9; }
+    .form-chip.form-stable  { background:#eef2ef; color:var(--ink-dim); }
+    .form-chip.form-slump   { background:#e6f1fb; }
+    .lambdas { color:var(--ink-soft); font-size:12px; font-variant-numeric:tabular-nums; background:var(--pitch-light); padding:3px 9px; border-radius:10px; }
+    .match-insight { font-size:12.5px; color:var(--ink-soft); margin:0 0 10px; padding:7px 11px; background:var(--pitch-light); border-left:3px solid var(--pitch); border-radius:0 4px 4px 0; line-height:1.45; }
+    .match-insight b { color:var(--ink); font-weight:600; }
+    .match-players { font-size:11.5px; color:var(--ink-soft); margin:0 0 12px; padding:0 4px; display:flex; gap:12px; flex-wrap:wrap; }
+    .match-odds { display:flex; gap:10px; font-size:12.5px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--line); }
+    .odd-block { background:#f6f8f7; border:1px solid var(--line); border-radius:4px; padding:3px 10px; display:inline-flex; gap:6px; align-items:baseline; }
+    .o-label { color:var(--ink-dim); font-weight:700; font-size:11px; }
+    .odd-block b { color:var(--ink); font-variant-numeric:tabular-nums; font-weight:700; }
+    .picks.three { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+    .pick { padding:11px 13px; border-radius:6px; border:1px solid var(--line); background:var(--white); position:relative; }
+    .pick.safe { background:var(--safe-soft); border-color:rgba(10,126,63,.32); }
+    .pick.risky { background:var(--risky-soft); border-color:rgba(196,68,26,.32); }
+    .pick.ultra { background:var(--ultra-soft); border-color:rgba(110,52,196,.32); }
+    .pick.empty { background:#f6f8f7; border-style:dashed; }
+    .pick.no-value { filter: grayscale(.55); opacity:.82; }
+    .pick-label { font-size:10.5px; font-weight:800; letter-spacing:1.2px; margin-bottom:5px; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+    .safe .pick-label { color:var(--safe-strong); }
+    .risky .pick-label { color:var(--risky-strong); }
+    .ultra .pick-label { color:var(--ultra-strong); }
+    .pick.empty .pick-label { color:var(--ink-dim); }
+    .pick-empty { font-size:12px; color:var(--ink-dim); font-style:italic; }
+    .pick-name { font-size:13.5px; font-weight:600; margin-bottom:3px; color:var(--ink); }
+    .pick-odd { font-size:20px; font-weight:800; font-variant-numeric:tabular-nums; margin-bottom:6px; color:var(--ink); line-height:1; }
+    .pick-stats { display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-soft); }
+    .pick-stats .edge { color:var(--safe-strong); font-weight:700; }
+    .risky .pick-stats .edge { color:var(--risky-strong); }
+    .ultra .pick-stats .edge { color:var(--ultra-strong); }
+    .pick-detail { display:flex; justify-content:space-between; font-size:11px; color:var(--ink-dim); margin-top:3px; }
+    .pick-note { font-size:11px; color:var(--ink-soft); margin-top:5px; padding-top:5px; border-top:1px dashed var(--line); }
+    .value-tag { display:inline-block; padding:1px 6px; border-radius:3px; font-size:9px; font-weight:800; letter-spacing:.6px; }
+    .value-tag.yes { background:var(--yellow-card); color:var(--ink); }
+    .value-tag.no { background:transparent; color:var(--ink-dim); border:1px solid var(--line); font-weight:600; }
+    .combos { margin-top:18px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; }
+    .combo { background:var(--white); border:1px solid var(--line); border-top:5px solid var(--pitch); border-radius:8px; padding:16px 18px; box-shadow: 0 2px 6px rgba(14,26,19,.06); }
+    .combo.safe { border-top-color:var(--safe); background: linear-gradient(180deg, var(--safe-soft) 0%, var(--white) 60%); }
+    .combo.risky { border-top-color:var(--risky); background: linear-gradient(180deg, var(--risky-soft) 0%, var(--white) 60%); }
+    .combo.ultra { border-top-color:var(--ultra); background: linear-gradient(180deg, var(--ultra-soft) 0%, var(--white) 60%); }
+    .combo h3 { margin:0 0 10px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px; color:var(--ink); }
+    .combo .combo-meta { margin-left:auto; font-size:11px; font-weight:600; color:var(--ink-dim); background: var(--pitch-light); padding:3px 9px; border-radius:10px; }
+    .combo ul { margin:0 0 12px; padding:0; list-style:none; font-size:12.5px; }
+    .combo li { display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-bottom:1px dashed var(--line); align-items:center; }
+    .combo li:last-child { border-bottom:none; }
+    .combo-match { color:var(--ink-soft); flex:1; }
+    .combo-time { display:inline-block; background:var(--pitch); color:var(--white); font-size:10px; font-weight:700; padding:1px 6px; border-radius:3px; margin-right:7px; font-variant-numeric:tabular-nums; }
+    .combo-pick { color:var(--ink); font-variant-numeric:tabular-nums; display:inline-flex; align-items:center; gap:8px; }
+    .combo-tag { font-size:9px; font-weight:800; letter-spacing:.5px; padding:2px 5px; border-radius:3px; }
+    .tag-value { background:var(--yellow-card); color:var(--ink); }
+    .combo-excluded { font-size:11.5px; color:var(--ink-dim); background:#fff7e0; padding:8px 11px; border-radius:4px; margin-bottom:10px; }
+    .combo-excluded ul { margin:6px 0 0; padding-left:18px; font-size:11px; }
+    .combo-excluded li { display:list-item; padding:2px 0; border:none; }
+    .combo .total { font-size:12.5px; font-weight:600; padding-top:10px; border-top:2px solid var(--pitch); display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; align-items:baseline; }
+    .combo.safe .total { border-top-color: var(--safe); }
+    .combo.risky .total { border-top-color: var(--risky); }
+    .combo.ultra .total { border-top-color: var(--ultra); }
+    .combo .total-main { flex:1; }
+    .combo .cote { font-size:24px; font-weight:900; font-variant-numeric:tabular-nums; color:var(--pitch-dark); margin-left:6px; }
+    .combo.safe .cote { color: var(--safe-strong); }
+    .combo.risky .cote { color: var(--risky-strong); }
+    .combo.ultra .cote { color: var(--ultra-strong); }
+    .combo .payout { background:var(--yellow-card); color:var(--ink); padding:4px 9px; border-radius:4px; font-weight:700; font-size:12px; }
+    .combo.empty { color:var(--ink-dim); }
+    .combo.empty .empty-msg { font-style:italic; padding:12px 0; text-align:center; }
+    footer { padding:22px 36px 36px; color:var(--ink-dim); font-size:12px; border-top:1px solid var(--line); text-align:center; background:var(--pitch-light); margin-top:32px; }
+    .tabs {
+      display:flex; gap:4px; padding: 14px 36px 0; max-width:1240px; margin: 0 auto;
+      border-bottom: 2px solid var(--line);
+    }
+    .tab {
+      background: transparent; border:0; padding:10px 18px; cursor:pointer;
+      font-size:13.5px; font-weight:600; color: var(--ink-dim);
+      border-bottom: 3px solid transparent; margin-bottom:-2px;
+      transition: color .12s, border-color .12s;
+    }
+    .tab:hover { color: var(--ink); }
+    .tab.active { color: var(--pitch); border-bottom-color: var(--pitch); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .perf-tools { display:flex; gap:14px; align-items:center; padding:14px 0 4px; flex-wrap:wrap; }
+    .refresh-btn.small { padding:7px 14px; font-size:12.5px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .perf-note { font-size: 11.5px; color: var(--ink-dim); margin-left:auto; }
+    .grand-total {
+      display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0 20px;
+      background: linear-gradient(135deg, var(--pitch-light), var(--white));
+      border:1px solid var(--line); border-radius:8px; padding:18px 22px;
+    }
+    .grand-total > div { display:flex; flex-direction:column; gap:4px; text-align:center; }
+    .gt-num { font-size: 26px; font-weight:800; font-variant-numeric:tabular-nums; }
+    .gt-lbl { font-size:11.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.5px; }
+    .gt-num.gain { color: var(--safe); }
+    .gt-num.loss { color: var(--risky); }
+    .perf-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .perf-card { background: var(--white); border:1px solid var(--line); border-left:5px solid var(--pitch); border-radius:8px; padding:14px 18px; }
+    .perf-card.safe { border-left-color: var(--safe); }
+    .perf-card.risky { border-left-color: var(--risky); }
+    .perf-card.ultra { border-left-color: var(--ultra); }
+    .perf-card-head { font-size:13px; font-weight:700; color: var(--ink); margin-bottom:10px; }
+    .perf-card-pl { display:flex; gap:14px; align-items:baseline; margin-bottom:10px; flex-wrap:wrap; }
+    .pl-amount { font-size: 22px; font-weight:800; font-variant-numeric: tabular-nums; }
+    .pl-roi { font-size: 13px; font-weight:700; }
+    .gain { color: var(--safe); } .loss { color: var(--risky); }
+    .perf-card-stats { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; padding-top:8px; border-top:1px dashed var(--line); }
+    .perf-card-stats > div { display:flex; flex-direction:column; align-items:center; }
+    .stat-num { font-size:16px; font-weight:700; color: var(--ink); }
+    .stat-lbl { font-size:10px; color: var(--ink-dim); text-transform:uppercase; letter-spacing:.4px; }
+    .standings { background:var(--white); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin-bottom:20px; }
+    .standings h3 { margin:0 0 10px; font-size: 14px; }
+    .standings-table, .history-table { width:100%; border-collapse: collapse; font-size: 12.5px; }
+    .standings-table th, .standings-table td, .history-table th, .history-table td {
+      padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--line);
+    }
+    .standings-table th, .history-table th { background: var(--pitch-light); font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--ink-soft); }
+    .standings-table .gd, .standings-table .pts { text-align:right; font-variant-numeric: tabular-nums; }
+    .standings-table .pts { font-weight:700; color: var(--pitch-dark); }
+    .standings.empty, .history.empty { padding: 24px; text-align:center; color: var(--ink-dim); font-style:italic; background:var(--pitch-light); border-radius:8px; border:1px solid var(--line); }
+    .history { background:var(--white); border:1px solid var(--line); border-radius:8px; padding:14px 18px; }
+    .history h3 { margin:0 0 10px; font-size: 14px; }
+    .history-table td.date { color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space:nowrap; }
+    .history-table td.match { font-weight: 500; }
+    .history-table td.cat { text-align:center; font-size:14px; }
+    .history-table td.cote, .history-table td.stake, .history-table td.result { font-variant-numeric: tabular-nums; }
+    .history-table td.status { font-weight:700; text-align:center; white-space: nowrap; }
+    .history-table td.outcome-won { color: var(--safe); }
+    .history-table td.outcome-lost { color: var(--risky); }
+    .history-table td.outcome-pending { color: var(--ink-dim); }
+    .history-table td.outcome-manual { color: var(--ultra-strong); }
+    .history-table tr.row-won { background: rgba(46,160,67,.04); }
+    .history-table tr.row-lost { background: rgba(196,68,26,.04); }
+    .history-table td.pl { text-align:right; font-weight:600; font-variant-numeric: tabular-nums; }
+    .mini-btn { font-size:10px; padding: 2px 6px; border:1px solid var(--line); background:var(--white); border-radius:3px; cursor:pointer; margin-left:4px; font-weight:700; }
+    .mini-btn.mini-win:hover { background: var(--safe-soft); color: var(--safe-strong); border-color: var(--safe); }
+    .mini-btn.mini-lose:hover { background: var(--risky-soft); color: var(--risky-strong); border-color: var(--risky); }
+    @media (max-width: 980px) {
+      .picks.three, .combos, .perf-summary, .grand-total { grid-template-columns: 1fr; }
+      header, .legend, .transparency, main, footer, details.explainer, .tabs { padding-left:16px; padding-right:16px; }
+      .header-actions { position:static; margin-top:14px; }
+      .history-table { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚽ Paris du jour <span class="badge">UNIBET</span></h1>
+    <div class="sub">
+      <span class="pill">Jeudi 11 juin 2026 · matchs entre 15:00 et 06:00 (heure belge)</span>
+      <span class="pill">Mise: 10€ safe · 8€ risqué · 2€ ultra</span>
+      <span class="pill">Mise à jour 10/06/2026 21:30</span>
+      <span class="pill">API : 30/500 utilisés · 470 restants</span>
+    </div>
+    <div class="header-actions">
+      <button id="refresh-btn" class="refresh-btn" onclick="doRefresh()">🔄 Rafraîchir les paris du jour</button>
+      <span id="refresh-status" class="refresh-status"></span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span>🛡️ <b>SAFE</b> (10€) cap cote ≤ 5</span>
+    <span>⚡ <b>RISQUÉ</b> (8€) cap cote ≤ 25</span>
+    <span>🎲 <b>ULTRA-RISQUÉ</b> (2€) sans limite, inclut buteurs</span>
+    <span>★ <b>VALEUR</b> = edge ≥ 2/5/5%</span>
+    <span>🔥 en forme · ● stable · ❄️ méforme</span>
+  </div>
+
+  <div class="transparency">
+    <strong>Sources</strong> ·
+    <span><b>Cotes 1X2 & Over/Under</b> : Unibet (variantes FR/NL/SE/UK via The Odds API).</span>
+    <span><b>Cotes buteur anytime</b> : non exposées par Unibet sur cette API → cote indicative du consensus marché (Pinnacle, William Hill, Sky Bet, Betfair). Vérifier la cote finale sur unibet.be avant de jouer.</span>
+    <span><b>Modèle</b> : Poisson + Dixon-Coles sur Elo (avec ajustement de forme) ; consensus marché dévigué pour la blend équitable.</span>
+  </div>
+
+  <details class="explainer">
+    <summary>❓ <b>Comment je calcule l'EV ?</b> — pipeline complet (cliquer pour ouvrir)</summary>
+    <div class="explainer-body">
+      <p>L'<b>EV</b> mesure le gain moyen attendu par euro misé si on rejouait le même pari un grand nombre de fois.</p>
+      <div class="formula" style="font-size:14px;font-weight:600;">EV = (proba équitable × cote) − 1</div>
+
+      <h4>① Probabilité « modèle » — Poisson + Dixon-Coles à partir de l'Elo (+ forme pré-tournoi + déroulé)</h4>
+      <p>Le multiplicateur de forme appliqué à chaque λ combine désormais <b>deux signaux</b> :</p>
+      <ul>
+        <li><b>Forme pré-tournoi</b> : écart vs pic Elo des 12 derniers mois (capté du fichier eloratings.net), borné ±7%.</li>
+        <li><b>Forme du déroulé tournoi</b> : une fois 1 à 3 matchs joués, on compare la <b>différence de buts réelle par match</b> à celle attendue par l'Elo. Une équipe qui surperforme (gros score contre meilleur équipe que prévu) gagne jusqu'à +6% sur son λ ; sous-performance jusqu'à −6%. Le poids du signal grandit jusqu'à 3 matchs joués (≤3 matchs = signal partiel ; ≥3 = pleinement pris en compte).</li>
+      </ul>
+      <p>Les deux multiplicateurs sont composés (≤ ±10% global). C'est ainsi que le modèle s'adapte automatiquement au déroulé du tournoi à chaque fois que tu cliques « Mettre à jour les résultats » dans l'onglet Performance.</p>
+      <p>elo_diff = elo_home + avantage_hôte − elo_away ; goal_diff = elo_diff/200 ; λ_team = (2,45 ± goal_diff)/2. Pour Canada–Bosnie : λ_Canada ≈ 1,86 ; λ_Bosnie ≈ 0,59. Ces λ sont multipliés par form_mult (1±7%) selon l'écart au pic Elo 12 mois. La matrice des scores P(i,j) est construite par Poisson croisée + Dixon-Coles (ρ=−0,13). On somme les cellules correspondant à chaque issue pour obtenir P_modèle.</p>
+
+      <h4>② Probabilité « consensus marché »</h4>
+      <p>On prend la médiane des cotes des ~12 bookmakers EU/UK, on dé-vigue : p_devig = (1/cote) / Σ(1/cote_j).</p>
+
+      <h4>③ Probabilité « équitable »</h4>
+      <div class="formula">P_équitable = 0,40 × P_modèle + 0,60 × P_consensus</div>
+
+      <h4>④ EV vs cote Unibet (avec plafond bon sens)</h4>
+      <div class="formula">EV_brut = P_équitable × cote_Unibet − 1</div>
+      <p><b>Plafond d'edge à +30%.</b> Un edge brut supérieur à +30% reflète quasi toujours un biais de modèle (le marché est très bien calibré sur les cotes extrêmes parce que beaucoup d'argent passe dessus), pas une vraie inefficience. Quand on dépasse, on ramène l'edge affiché à +30% et on re-dérive une P_équitable cohérente :</p>
+      <div class="formula">si EV_brut &gt; 30 % :<br>
+&nbsp;&nbsp;P_équitable = 1,30 / cote ;&nbsp;&nbsp;EV affichée = +30 %</div>
+      <p>De plus, P_équitable ne peut jamais dépasser <b>1,3 × P_consensus marché</b>. Si le modèle pense qu'une issue est deux fois plus probable que le marché, c'est presque toujours le modèle qui se trompe (motivation, blessure, info compo que le marché a, lui).</p>
+
+      <h4>Cas buteur (ultra-risqué)</h4>
+      <p>Pour un joueur, P_modèle = 1 − exp(−λ_équipe × part_du_joueur). La cote vient du consensus marché (Unibet n'exposant pas ce marché via l'API). L'EV affichée utilise donc P_modèle vs cote consensus, considéré comme proxy raisonnable de la cote Unibet finale.</p>
+
+      <h4>Combiné</h4>
+      <div class="formula">cote_combo = ∏ cote_i ; P_combo = ∏ P_i ; EV_combo = P_combo × cote_combo − 1</div>
+      <p>Les combinés safe/risqué ont des plafonds (5 et 25) : si le produit naturel dépasse, l'algorithme retient le sous-ensemble de picks dont le produit est le plus élevé sous le cap.</p>
+
+      <p class="warn"><b>⚠️ Variance.</b> EV positif ≠ gain garanti. Sur un combiné à proba 3% et EV +50%, on perd 97% des fois — c'est mathématiquement attendu. Stakes fixes (10/8/2€) limitent l'exposition.</p>
+      <p class="warn"><b>⚠️ Limites.</b> Pas de stats joueur granulaires (xG), pas de blessures/compos, pas de météo. Forme = écart Elo vs pic 12 mois (proxy). Joueurs cadres affichés à titre indicatif.</p>
+    </div>
+  </details>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="bets" onclick="showTab('bets')">⚽ Paris du jour</button>
+    <button class="tab" data-tab="perf" onclick="showTab('perf')">📈 Performance</button>
+  </div>
+
+  <main>
+    <div class="tab-content active" data-tab="bets">
+      
+    <div class="rolled-banner">ℹ️ Aucun match Coupe du Monde dans la fenêtre du jour. Affichage de la prochaine fenêtre disponible.</div>
+    <section class="day">
+      <h2>⚽ Jeudi 11 juin 2026 · matchs entre 15:00 et 06:00 (heure belge) <span class="day-count">2 matchs</span></h2>
+      <div class="matches">
+      <div class="match">
+        <div class="match-header">
+          <span class="kickoff">21:00</span>
+          <span class="teams"><b>Mexico</b><span class="form-chip form-stable" title="Forme stable, à distance modérée du pic récent (-110 Elo)">●</span> <em>vs</em> <b>South Africa</b><span class="form-chip form-slump" title="Méforme — Elo nettement sous le pic des 12 derniers mois (-330 Elo)">❄️</span></span>
+          <span class="lambdas" title="Buts attendus (forme incluse)">⚽ 2.21 – 0.17</span>
+        </div>
+        <div class="match-insight">💡 <b>Mexico</b> ultra-favori (modèle&nbsp;84%) · modèle plus optimiste que le marché sur Mexico (84% vs 68%).</div>
+        <div class="match-players">⭐ <span class="player-side"><b>Mexico</b> : Edson Álvarez (West Ham), Santiago Giménez (Milan)</span> · <span class="player-side"><b>South Africa</b> : Percy Tau (Al-Ahly), Lyle Foster (Burnley)</span></div>
+        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>1.42</b></span><span class="odd-block"><span class="o-label">N</span> <b>4.75</b></span><span class="odd-block"><span class="o-label">2</span> <b>10.00</b></span></div>
+        <div class="picks three">
+          
+      <div class="pick safe has-value">
+        <div class="pick-label">🛡️ SAFE <span class="value-tag yes">★ VALEUR</span></div>
+        <div class="pick-name">Victoire Mexico</div>
+        <div class="pick-odd">@ 1.42</div>
+        <div class="pick-stats">
+          <span>Proba équitable <b>74.6%</b></span>
+          <span class="edge">Edge +5.9%</span>
+        </div>
+        <div class="pick-detail"><span>Modèle: 84.5%</span><span>Marché: 68.0%</span></div>
+        
+      </div>
+          
+      <div class="pick risky no-value">
+        <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
+        <div class="pick-name">Plus de 2.5 buts</div>
+        <div class="pick-odd">@ 2.20</div>
+        <div class="pick-stats">
+          <span>Proba équitable <b>43.4%</b></span>
+          <span class="edge">Edge -4.4%</span>
+        </div>
+        <div class="pick-detail"><span>Modèle: 42.4%</span><span>Marché: 44.2%</span></div>
+        
+      </div>
+          
+      <div class="pick ultra has-value">
+        <div class="pick-label">🎲 ULTRA-RISQUÉ <span class="value-tag yes">★ VALEUR</span></div>
+        <div class="pick-name">Santiago Gimenez buteur</div>
+        <div class="pick-odd">@ 2.45</div>
+        <div class="pick-stats">
+          <span>Proba équitable <b>46.1%</b></span>
+          <span class="edge">Edge +13.0%</span>
+        </div>
+        <div class="pick-detail"><span>Modèle: 46.1%</span><span>Marché: 40.8%</span></div>
+        <div class="pick-note">⚠️ Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.</div>
+      </div>
+        </div>
+      </div>
+
+      <div class="match">
+        <div class="match-header">
+          <span class="kickoff">04:00</span>
+          <span class="teams"><b>South Korea</b><span class="form-chip form-stable" title="Forme stable, à distance modérée du pic récent (-87 Elo)">●</span> <em>vs</em> <b>Czech Republic</b><span class="form-chip form-slump" title="Méforme — Elo nettement sous le pic des 12 derniers mois (-292 Elo)">❄️</span></span>
+          <span class="lambdas" title="Buts attendus (forme incluse)">⚽ 1.24 – 1.10</span>
+        </div>
+        <div class="match-insight">💡 match&nbsp;<b>ouvert</b>, <b>South Korea</b> légèrement favori (38%) · <b>Czech Republic</b> garde 31% de surprendre.</div>
+        <div class="match-players">⭐ <span class="player-side"><b>South Korea</b> : Son Heung-min (LAFC), Lee Kang-in (PSG)</span> · <span class="player-side"><b>Czech Republic</b> : Patrik Schick (Leverkusen), Tomáš Souček (West Ham)</span></div>
+        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.80</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.15</b></span><span class="odd-block"><span class="o-label">2</span> <b>2.95</b></span></div>
+        <div class="picks three">
+          
+      <div class="pick safe no-value">
+        <div class="pick-label">🛡️ SAFE <span class="value-tag no">pas de valeur</span></div>
+        <div class="pick-name">Moins de 2.5 buts</div>
+        <div class="pick-odd">@ 1.72</div>
+        <div class="pick-stats">
+          <span>Proba équitable <b>57.7%</b></span>
+          <span class="edge">Edge -0.8%</span>
+        </div>
+        <div class="pick-detail"><span>Modèle: 58.6%</span><span>Marché: 57.1%</span></div>
+        
+      </div>
+          
+      <div class="pick risky no-value">
+        <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
+        <div class="pick-name">Victoire South Korea</div>
+        <div class="pick-odd">@ 2.80</div>
+        <div class="pick-stats">
+          <span>Proba équitable <b>36.6%</b></span>
+          <span class="edge">Edge +2.6%</span>
+        </div>
+        <div class="pick-detail"><span>Modèle: 37.9%</span><span>Marché: 35.8%</span></div>
+        
+      </div>
+          
+      <div class="pick ultra has-value">
+        <div class="pick-label">🎲 ULTRA-RISQUÉ <span class="value-tag yes">★ VALEUR</span></div>
+        <div class="pick-name">Hwang Hee-chan buteur</div>
+        <div class="pick-odd">@ 4.50</div>
+        <div class="pick-stats">
+          <span>Proba équitable <b>23.9%</b></span>
+          <span class="edge">Edge +7.6%</span>
+        </div>
+        <div class="pick-detail"><span>Modèle: 23.9%</span><span>Marché: 22.2%</span></div>
+        <div class="pick-note">⚠️ Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.</div>
+      </div>
+        </div>
+      </div></div>
+      <div class="combos">
+        
+        <div class="combo safe">
+          <h3>🛡️ Combiné SAFE <span class="combo-meta">Cap 5 · Mise 10€</span></h3>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Mexico – South Africa</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Victoire Mexico</b> @ 1.42</span></li><li><span class="combo-match"><span class="combo-time">04:00</span>South Korea – Czech Republic</span><span class="combo-pick"><b> Moins de 2.5 buts</b> @ 1.72</span></li></ul>
+          
+          <div class="total">
+            <span class="total-main">Cote combinée <span class="cote">2.44</span></span>
+            <span>Proba 43.02%</span>
+            <span>EV +5.1%</span>
+            <span class="payout">Mise 10€ → gain 24.42€</span>
+          </div>
+        </div>
+        
+        <div class="combo risky">
+          <h3>⚡ Combiné RISQUÉ <span class="combo-meta">Cap 25 · Mise 8€</span></h3>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Mexico – South Africa</span><span class="combo-pick"><b> Plus de 2.5 buts</b> @ 2.20</span></li><li><span class="combo-match"><span class="combo-time">04:00</span>South Korea – Czech Republic</span><span class="combo-pick"><b> Victoire South Korea</b> @ 2.80</span></li></ul>
+          
+          <div class="total">
+            <span class="total-main">Cote combinée <span class="cote">6.16</span></span>
+            <span>Proba 15.91%</span>
+            <span>EV -2.0%</span>
+            <span class="payout">Mise 8€ → gain 49.28€</span>
+          </div>
+        </div>
+        
+        <div class="combo ultra">
+          <h3>🎲 Combiné ULTRA-RISQUÉ <span class="combo-meta">Sans plafond · Mise 2€</span></h3>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Mexico – South Africa</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Santiago Gimenez buteur</b> @ 2.45</span></li><li><span class="combo-match"><span class="combo-time">04:00</span>South Korea – Czech Republic</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Hwang Hee-chan buteur</b> @ 4.50</span></li></ul>
+          
+          <div class="total">
+            <span class="total-main">Cote combinée <span class="cote">11.03</span></span>
+            <span>Proba 11.02%</span>
+            <span>EV +21.5%</span>
+            <span class="payout">Mise 2€ → gain 22.05€</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+    <div class="tab-content" data-tab="perf">
+      
+    <div class="perf-tools">
+      <button class="refresh-btn small" onclick="updateResults()">🔄 Mettre à jour les résultats</button>
+      <span id="update-status" class="refresh-status"></span>
+      <span class="perf-note">Buteur : non-couvert par /scores → cliquer ✓ / ✗ pour marquer manuellement.</span>
+    </div>
+    
+      <div class="grand-total">
+        <div><span class="gt-num gain">+0.00€</span><span class="gt-lbl">profit total</span></div>
+        <div><span class="gt-num gain">+0.0%</span><span class="gt-lbl">ROI cumulé</span></div>
+        <div><span class="gt-num">6</span><span class="gt-lbl">paris suivis</span></div>
+        <div><span class="gt-num">0€</span><span class="gt-lbl">mise totale</span></div>
+      </div>
+    <div class="perf-summary">
+        <div class="perf-card safe">
+          <div class="perf-card-head">🛡️ Safe · mise 10€</div>
+          <div class="perf-card-pl">
+            <span class="pl-amount gain">+0.00€</span>
+            <span class="pl-roi gain">ROI +0.0%</span>
+          </div>
+          <div class="perf-card-stats">
+            <div><span class="stat-num">0</span><span class="stat-lbl">gagnés</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">perdus</span></div>
+            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
+          </div>
+        </div>
+        <div class="perf-card risky">
+          <div class="perf-card-head">⚡ Risqué · mise 8€</div>
+          <div class="perf-card-pl">
+            <span class="pl-amount gain">+0.00€</span>
+            <span class="pl-roi gain">ROI +0.0%</span>
+          </div>
+          <div class="perf-card-stats">
+            <div><span class="stat-num">0</span><span class="stat-lbl">gagnés</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">perdus</span></div>
+            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
+          </div>
+        </div>
+        <div class="perf-card ultra">
+          <div class="perf-card-head">🎲 Ultra-risqué · mise 2€</div>
+          <div class="perf-card-pl">
+            <span class="pl-amount gain">+0.00€</span>
+            <span class="pl-roi gain">ROI +0.0%</span>
+          </div>
+          <div class="perf-card-stats">
+            <div><span class="stat-num">0</span><span class="stat-lbl">gagnés</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">perdus</span></div>
+            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
+          </div>
+        </div></div>
+    <div class="standings empty">📊 Classement à venir — aucun match terminé pour le moment.</div>
+    
+        <div class="history">
+          <h3>📋 Historique des paris (6)</h3>
+          <table class="history-table">
+            <thead><tr>
+              <th>Date</th><th>Match</th><th>Cat</th><th>Pari</th>
+              <th>Cote</th><th>Mise</th><th>Score</th><th>Statut</th><th>P/L</th>
+            </tr></thead>
+            <tbody>
+              <tr class="row-pending">
+                <td class="date">12/06 04:00</td>
+                <td class="match">South Korea – Czech Republic</td>
+                <td class="cat">🛡️</td>
+                <td class="pick">Moins de 2.5 buts</td>
+                <td class="cote">@ 1.72</td>
+                <td class="stake">10€</td>
+                <td class="result">—</td>
+                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-pending">
+                <td class="date">12/06 04:00</td>
+                <td class="match">South Korea – Czech Republic</td>
+                <td class="cat">⚡</td>
+                <td class="pick">Victoire South Korea</td>
+                <td class="cote">@ 2.80</td>
+                <td class="stake">8€</td>
+                <td class="result">—</td>
+                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-manual_pending">
+                <td class="date">12/06 04:00</td>
+                <td class="match">South Korea – Czech Republic</td>
+                <td class="cat">🎲</td>
+                <td class="pick">Hwang Hee-chan buteur</td>
+                <td class="cote">@ 4.50</td>
+                <td class="stake">2€</td>
+                <td class="result">—</td>
+                <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('384cbb5d76b535896a24fe65f93cfac8','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('384cbb5d76b535896a24fe65f93cfac8','ultra_risky','lost')">✗</button></td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-pending">
+                <td class="date">11/06 21:00</td>
+                <td class="match">Mexico – South Africa</td>
+                <td class="cat">🛡️</td>
+                <td class="pick">Victoire Mexico</td>
+                <td class="cote">@ 1.42</td>
+                <td class="stake">10€</td>
+                <td class="result">—</td>
+                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-pending">
+                <td class="date">11/06 21:00</td>
+                <td class="match">Mexico – South Africa</td>
+                <td class="cat">⚡</td>
+                <td class="pick">Plus de 2.5 buts</td>
+                <td class="cote">@ 2.20</td>
+                <td class="stake">8€</td>
+                <td class="result">—</td>
+                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-manual_pending">
+                <td class="date">11/06 21:00</td>
+                <td class="match">Mexico – South Africa</td>
+                <td class="cat">🎲</td>
+                <td class="pick">Santiago Gimenez buteur</td>
+                <td class="cote">@ 2.45</td>
+                <td class="stake">2€</td>
+                <td class="result">—</td>
+                <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('80d82d1113934bfbea4ce8daf37a2433','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('80d82d1113934bfbea4ce8daf37a2433','ultra_risky','lost')">✗</button></td>
+                <td class="pl"></td>
+              </tr></tbody>
+          </table>
+        </div>
+    </div>
+  </main>
+
+  <footer>
+    Outil d'analyse, à fins informatives. Le pari sportif comporte des risques de perte financière.<br>
+    Cotes Unibet via The Odds API · Buteur via consensus marché · Elo eloratings.net · Heure belge (CEST).
+  </footer>
+
+  <script>
+    function showTab(name) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tab === name));
+      try { history.replaceState(null, '', '#' + name); } catch(e) {}
+    }
+    // Restore tab from URL hash
+    if (location.hash === '#perf') showTab('perf');
+
+    async function doRefresh() {
+      const btn = document.getElementById('refresh-btn');
+      const status = document.getElementById('refresh-status');
+      btn.disabled = true;
+      status.textContent = '⏳ Rafraîchissement en cours…';
+      try {
+        const r = await fetch('/refresh', {method: 'POST'});
+        const j = await r.json();
+        if (j.status === 'ok') {
+          status.textContent = '✓ Terminé, rechargement…';
+          setTimeout(() => location.reload(), 400);
+        } else {
+          status.textContent = '⚠ Erreur: ' + (j.detail || 'inconnue');
+          btn.disabled = false;
+        }
+      } catch (e) {
+        status.textContent = '⚠ Pas de serveur local (lance `python3 serve.py`).';
+        btn.disabled = false;
+      }
+    }
+
+    async function updateResults() {
+      const status = document.getElementById('update-status');
+      status.textContent = '⏳ Récupération des scores…';
+      try {
+        const r = await fetch('/update-results', {method: 'POST'});
+        const j = await r.json();
+        if (j.status === 'ok') {
+          status.textContent = `✓ ${j.n_new || 0} nouveaux, ${j.n_updated || 0} mis à jour`;
+          setTimeout(() => location.reload(), 600);
+        } else {
+          status.textContent = '⚠ Erreur: ' + (j.detail || 'inconnue');
+        }
+      } catch (e) {
+        status.textContent = '⚠ Pas de serveur local.';
+      }
+    }
+
+    async function markOutcome(eventId, category, outcome) {
+      try {
+        const r = await fetch('/mark-outcome', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({event_id: eventId, category, outcome})
+        });
+        const j = await r.json();
+        if (j.status === 'ok') location.reload();
+      } catch (e) {
+        alert('Erreur de marquage');
+      }
+    }
+  </script>
+</body>
+</html>

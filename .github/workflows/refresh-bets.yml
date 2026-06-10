@@ -1,0 +1,69 @@
+name: Refresh WC2026 betting picks
+
+# Runs every morning at 06:00 UTC (08:00 Belgian time, CEST) so the live page
+# always reflects the current Belgian-day window before kickoffs. Also
+# triggerable manually from the Actions tab.
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# Only one refresh at a time, cancel any concurrent run.
+concurrency:
+  group: refresh-bets
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: unibet-bets
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Refresh Elo ratings TSV
+        # Cheap, no API quota. Best effort — fall through on failure.
+        run: |
+          curl -fsS -H "User-Agent: Mozilla/5.0" \
+            "https://www.eloratings.net/World.tsv" -o data/elo_raw.tsv || \
+            echo "(elo refresh skipped — keeping last known TSV)"
+
+      - name: Update tournament results
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python3 -c "
+          import sys; sys.path.insert(0, 'src')
+          from fetch_results import update_results
+          summary = update_results(days_from=4)
+          print(summary)
+          "
+
+      - name: Regenerate page with fresh odds
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python3 run.py --force
+          cp bets.html index.html
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Force-add even if listed in .gitignore (data files are the
+          # tournament state we explicitly want to persist for the live page).
+          git add -f index.html data/picks_history.json data/results_history.json data/elo_raw.tsv 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes — nothing to commit."
+          else
+            git commit -m "auto: daily refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi

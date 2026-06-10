@@ -1,0 +1,540 @@
+"""
+Pick a safe / risky / ultra-risky bet per match for today's Belgian window,
+then assemble three daily combos with their respective caps.
+
+Categories
+----------
+  safe        — prob ≥ 0.50, max-edge outcome among h2h/totals
+                Stake 10 €. Combo cap on cote totale: 5.0
+  risky       — 0.18 ≤ prob < 0.50, max-edge, compatible with safe
+                Stake 8 €. Combo cap on cote totale: 25.0
+  ultra_risky — buteur "anytime" pick from the favorite team's top scorer
+                pool. Falls back to a long-shot h2h/totals outcome
+                (prob < 0.25) if buteur odds are unavailable.
+                Stake 2 €. No combo cap.
+
+Belgian day window
+------------------
+A "Belgian day" is the window [today 15:00, tomorrow 06:00] in
+Europe/Brussels. Matches whose kickoff falls in that window are the only
+ones surfaced. Before 06:00 local time we still serve the window that
+started yesterday at 15:00.
+
+Combo caps
+----------
+Each daily combo is built as follows:
+  1. Compute the natural product of all picks of that category for the day.
+  2. If it respects the cap, keep all picks.
+  3. Otherwise, brute-force across subsets (≤ ~10 picks/day, fits easily)
+     to find the subset whose combo product is the highest value ≤ cap.
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timedelta
+from itertools import combinations
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+from model import predict_match, load_elo
+from fetch_odds import (
+    fetch_and_cache,
+    fetch_buteur_for_today,
+    extract_event_odds,
+    devigged_probs_from_odds,
+    UNIBET_KEYS,
+)
+from team_codes import TEAM_TO_CODE
+from team_form import load_elo_full, get_key_players
+from tournament_form import combined_form_data
+from players import scorers_for, player_score_prob
+from insights import generate as generate_insight
+from performance import record_picks
+
+DATA_DIR = Path(__file__).parent.parent / "data"
+BE_TZ = ZoneInfo("Europe/Brussels")
+
+MODEL_WEIGHT = 0.40
+CONSENSUS_WEIGHT = 0.60
+
+# Sanity cap: when both model and market consensus are available, our final
+# "fair probability" cannot exceed 1.3× the consensus probability. This is a
+# common-sense guardrail: if the model thinks an outcome is twice as likely
+# as the market does, the model is almost certainly missing context the
+# market has (injury news, motivation, lineup intel, etc.). We trust the
+# market over a divergent model on the upside. The cap never *raises* a
+# probability — only prevents runaway over-confidence relative to market.
+MAX_MODEL_OVER_MARKET = 1.30
+
+# Hard edge ceiling. Realistic positive-EV opportunities at modest +3-15%
+# happen; an apparent +50%+ edge almost always reflects model bias rather
+# than genuine inefficiency (the market is well-calibrated on extreme cotes
+# because heavy money flows through it). When the raw edge crosses this
+# ceiling we clamp it — and back-derive a fair probability consistent with
+# that ceiling — so the combo math stays internally consistent.
+MAX_EDGE_CEILING = 0.30
+
+
+def cap_edge(fair_prob: float, odd: float) -> tuple[float, float]:
+    """If (fair_prob * odd - 1) > MAX_EDGE_CEILING, lower fair_prob so the
+    edge sits exactly at the ceiling. Returns (capped_fair_prob, capped_edge).
+    Never raises a probability."""
+    raw_edge = fair_prob * odd - 1.0
+    if raw_edge <= MAX_EDGE_CEILING:
+        return fair_prob, raw_edge
+    capped_fair = (1.0 + MAX_EDGE_CEILING) / odd
+    return capped_fair, MAX_EDGE_CEILING
+
+# Probability bands
+SAFE_MIN_PROB = 0.50
+RISKY_MIN_PROB = 0.18
+RISKY_MAX_PROB = 0.50
+
+# Value flag thresholds (edge above which a pick earns the VALEUR badge)
+SAFE_VALUE_EDGE = 0.02
+RISKY_VALUE_EDGE = 0.05
+ULTRA_VALUE_EDGE = 0.05
+
+# Daily combo caps
+SAFE_COMBO_CAP = 5.0
+RISKY_COMBO_CAP = 25.0
+# ultra-risky: no cap
+
+# Stakes
+SAFE_STAKE = 10.0
+RISKY_STAKE = 8.0
+ULTRA_STAKE = 2.0
+
+HOST_NATIONS = {"USA", "Canada", "Mexico"}
+
+
+def label_for(market_key: str, home: str, away: str) -> str:
+    if market_key == "h2h_home":
+        return f"Victoire {home}"
+    if market_key == "h2h_away":
+        return f"Victoire {away}"
+    if market_key == "h2h_draw":
+        return "Match nul"
+    if market_key.startswith("over_"):
+        return f"Plus de {market_key.split('_')[1]} buts"
+    if market_key.startswith("under_"):
+        return f"Moins de {market_key.split('_')[1]} buts"
+    if market_key.startswith("scorer_"):
+        return f"{market_key[len('scorer_'):]} buteur"
+    return market_key
+
+
+def belgian_day_window(now: datetime | None = None) -> tuple[datetime, datetime]:
+    """Returns the (start, end) Belgian-time window for today's slate."""
+    if now is None:
+        now = datetime.now(BE_TZ)
+    else:
+        now = now.astimezone(BE_TZ)
+    if now.hour < 6:
+        start = now.replace(hour=15, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    else:
+        start = now.replace(hour=15, minute=0, second=0, microsecond=0)
+    end = start + timedelta(hours=15)
+    return start, end
+
+
+def consensus_probs_for_event(consensus_odds: dict) -> dict:
+    probs = {}
+    h2h_market = {k: v for k, v in consensus_odds.items() if k.startswith("h2h_")}
+    if h2h_market:
+        probs.update(devigged_probs_from_odds(h2h_market))
+    totals_lines = set()
+    for k in consensus_odds:
+        if k.startswith("over_") or k.startswith("under_"):
+            totals_lines.add(k.split("_")[1])
+    for line in totals_lines:
+        pair = {
+            f"over_{line}": consensus_odds.get(f"over_{line}", 0),
+            f"under_{line}": consensus_odds.get(f"under_{line}", 0),
+        }
+        pair = {k: v for k, v in pair.items() if v > 1.0}
+        if len(pair) == 2:
+            probs.update(devigged_probs_from_odds(pair))
+    return probs
+
+
+def _blend(m_prob, c_prob):
+    """Blend model + consensus into a fair prob, with sanity cap."""
+    if c_prob is None:
+        return m_prob
+    if m_prob is None:
+        return c_prob
+    blended = MODEL_WEIGHT * m_prob + CONSENSUS_WEIGHT * c_prob
+    return min(blended, MAX_MODEL_OVER_MARKET * c_prob)
+
+
+def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dict) -> list:
+    rows = []
+    for mkey, odd in unibet_odds.items():
+        m_prob = model_probs.get(mkey)
+        c_prob = consensus_probs.get(mkey)
+        if m_prob is None and c_prob is None:
+            continue
+        fair = _blend(m_prob, c_prob)
+        fair, edge = cap_edge(fair, odd)
+        rows.append({
+            "market": mkey, "model_prob": m_prob, "consensus_prob": c_prob,
+            "fair_prob": fair, "unibet_odd": odd, "edge": edge,
+        })
+    return rows
+
+
+def are_compatible(market_a: str, market_b: str) -> bool:
+    if market_a == market_b:
+        return True
+    if market_a.startswith("scorer_") or market_b.startswith("scorer_"):
+        return True  # scorer markets independent of h2h/totals
+    is_h2h_a = market_a.startswith("h2h_")
+    is_h2h_b = market_b.startswith("h2h_")
+    if is_h2h_a and is_h2h_b:
+        return False
+    is_t_a = market_a.startswith(("over_", "under_"))
+    is_t_b = market_b.startswith(("over_", "under_"))
+    if is_t_a and is_t_b:
+        ka, la = market_a.split("_")[0], float(market_a.split("_")[1])
+        kb, lb = market_b.split("_")[0], float(market_b.split("_")[1])
+        if ka == kb:
+            return True
+        over_line = la if ka == "over" else lb
+        under_line = la if ka == "under" else lb
+        return over_line < under_line
+    return True
+
+
+def pick_safe_and_risky(rows: list) -> tuple[dict | None, dict | None]:
+    safe_pool = [r for r in rows if r["fair_prob"] >= SAFE_MIN_PROB]
+    risky_pool = [r for r in rows if RISKY_MIN_PROB <= r["fair_prob"] < RISKY_MAX_PROB]
+    safe = max(safe_pool, key=lambda r: r["edge"]) if safe_pool else None
+    if safe is not None:
+        risky_pool = [r for r in risky_pool if are_compatible(safe["market"], r["market"])]
+    risky = max(risky_pool, key=lambda r: r["edge"]) if risky_pool else None
+    if safe is not None:
+        safe["has_value"] = safe["edge"] >= SAFE_VALUE_EDGE
+    if risky is not None:
+        risky["has_value"] = risky["edge"] >= RISKY_VALUE_EDGE
+    return safe, risky
+
+
+ULTRA_MIN_ODD = 2.5  # for non-buteur picks, only cotes ≥ 2.5 count as ultra
+ULTRA_MAX_PROB = 0.40
+
+
+def pick_ultra_risky(
+    home: str, away: str, lam_h: float, lam_a: float,
+    buteur_odds: dict, model_probs: dict, unibet_odds: dict,
+    consensus_probs: dict,
+) -> dict | None:
+    """
+    Ultra-risky pool combines several long-shot market types and picks the
+    single highest-edge candidate, regardless of which family it comes from:
+
+      a) Player goalscorer anytime — top-3 forwards per team, scored by the
+         Poisson player model (λ_team × scorer_share). Cote = consensus
+         market median (non-Unibet — Unibet doesn't expose this market on
+         the API; user verifies on unibet.be).
+
+      b) Long-shot 1X2 — any 1X2 outcome with cote ≥ 2.5 and fair_prob in
+         [0.10, 0.40]. Catches underdog wins and draws in close matches.
+
+      c) Long-shot totals — Over/Under buts lines with cote ≥ 2.5 and
+         fair_prob ≤ 0.40 (typical: Over 3.5/4.5 in big-favorite matches,
+         Under 1.5 in defensive ones).
+
+    "Fair prob" uses the same 40% model + 60% consensus blend as safe/risky
+    when consensus is available, else the raw model probability.
+    """
+    candidates = []
+
+    # (a) Buteur candidates. Sanity-check: the market often knows better than
+    # our coarse hardcoded scorer shares (defenders vs strikers, role on
+    # national team vs club, etc.). We cap our model probability at
+    # 1.5 × market-implied probability — meaning we accept positive edge
+    # only when the market also considers the player a plausible scorer.
+    for team, lam in ((home, lam_h), (away, lam_a)):
+        for player_name, share in scorers_for(team):
+            model_p_raw = player_score_prob(lam, share)
+            matched_odd = None
+            for feed_name, info in buteur_odds.items():
+                fn = feed_name.lower()
+                pn = player_name.lower()
+                if pn in fn or fn in pn:
+                    matched_odd = info["odd"]
+                    break
+            if matched_odd is None:
+                continue
+            # Buteur consensus uses 1/cote (vig-inclusive) — slightly
+            # pessimistic, so we use a looser 1.5× cap before the global
+            # edge ceiling kicks in.
+            implied_market = 1.0 / matched_odd
+            fair_prob = min(model_p_raw, 1.5 * implied_market)
+            fair_prob, edge = cap_edge(fair_prob, matched_odd)
+            candidates.append({
+                "market": f"scorer_{player_name}",
+                "model_prob": model_p_raw,
+                "consensus_prob": implied_market,
+                "fair_prob": fair_prob,
+                "unibet_odd": matched_odd,
+                "edge": edge,
+                "is_buteur": True,
+                "team": team,
+                "note": "Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.",
+            })
+
+    # (b)+(c) Long-shot 1X2 + totals at the Unibet cote.
+    # Same _blend() sanity cap applies here (fair ≤ 1.3 × consensus), so
+    # blowout draws and one-sided over/under picks can't keep an absurd
+    # 90%+ edge derived from model-vs-market divergence alone.
+    for mkey, odd in unibet_odds.items():
+        if odd < ULTRA_MIN_ODD:
+            continue
+        m_prob = model_probs.get(mkey)
+        c_prob = consensus_probs.get(mkey)
+        if m_prob is None and c_prob is None:
+            continue
+        fair = _blend(m_prob, c_prob)
+        if fair > ULTRA_MAX_PROB:
+            continue
+        fair, edge = cap_edge(fair, odd)
+        candidates.append({
+            "market": mkey,
+            "model_prob": m_prob,
+            "consensus_prob": c_prob,
+            "fair_prob": fair,
+            "unibet_odd": odd,
+            "edge": edge,
+            "is_buteur": False,
+        })
+
+    if not candidates:
+        return None
+    best = max(candidates, key=lambda r: r["edge"])
+    best["has_value"] = best["edge"] >= ULTRA_VALUE_EDGE
+    return best
+
+
+def analyse_event(event: dict, elo: dict, form_data: dict, buteur_odds: dict | None = None) -> dict:
+    home, away = event["home_team"], event["away_team"]
+    if home not in elo or away not in elo:
+        return None
+
+    neutral = home not in HOST_NATIONS
+    prediction = predict_match(home, away, elo, neutral_venue=neutral, form_data=form_data)
+    odds = extract_event_odds(event)
+
+    if not odds["unibet"]:
+        return {
+            "event_id": event["id"], "home_team": home, "away_team": away,
+            "commence_time": event["commence_time"], "prediction": prediction,
+            "skipped_reason": "no Unibet odds available", "safe": None,
+            "risky": None, "ultra_risky": None, "outcomes": [],
+        }
+
+    consensus_probs = consensus_probs_for_event(odds["consensus"])
+    rows = evaluate_outcomes(prediction["probs"], consensus_probs, odds["unibet"])
+    safe, risky = pick_safe_and_risky(rows)
+
+    ultra_risky = pick_ultra_risky(
+        home, away,
+        prediction["lambda_home"], prediction["lambda_away"],
+        buteur_odds or {}, prediction["probs"], odds["unibet"],
+        consensus_probs,
+    )
+    if ultra_risky and safe and not are_compatible(safe["market"], ultra_risky["market"]):
+        ultra_risky = None  # fallback path — shouldn't trigger because scorer is always compatible
+    if ultra_risky and risky and not are_compatible(risky["market"], ultra_risky["market"]):
+        ultra_risky = None
+
+    result = {
+        "event_id": event["id"], "home_team": home, "away_team": away,
+        "commence_time": event["commence_time"], "prediction": prediction,
+        "unibet_odds": odds["unibet"], "consensus_odds": odds["consensus"],
+        "consensus_probs": consensus_probs, "outcomes": rows,
+        "safe": safe, "risky": risky, "ultra_risky": ultra_risky,
+        "form_home": (form_data or {}).get(home),
+        "form_away": (form_data or {}).get(away),
+        "key_players_home": get_key_players(home),
+        "key_players_away": get_key_players(away),
+        "buteur_odds_count": len(buteur_odds) if buteur_odds else 0,
+    }
+    result["insight"] = generate_insight(result, form_data=form_data)
+    return result
+
+
+def best_subset_under_cap(picks: list, cap: float) -> list:
+    """Return the subset of picks whose product of cotes is ≤ cap and
+    maximum. With ≤ ~10 picks per day, brute-force enumeration is fine."""
+    if not picks:
+        return []
+    natural = 1.0
+    for p in picks:
+        natural *= p["unibet_odd"]
+    if natural <= cap:
+        return picks
+
+    n = len(picks)
+    best = []
+    best_product = 0.0
+    # Enumerate non-empty subsets (skip empty since 1.0 is trivial)
+    for k in range(1, n + 1):
+        for combo in combinations(range(n), k):
+            prod = 1.0
+            for i in combo:
+                prod *= picks[i]["unibet_odd"]
+            if prod > cap:
+                continue
+            # Tie break: larger subset wins, then higher product
+            if (
+                prod > best_product
+                or (prod == best_product and len(combo) > len(best))
+            ):
+                best = [picks[i] for i in combo]
+                best_product = prod
+    return best
+
+
+def build_combo(matches: list, kind: str, cap: float | None) -> dict:
+    """Aggregate today's picks of the given kind into a combo respecting cap."""
+    picks_with_match = [(m, m.get(kind)) for m in matches if m.get(kind) is not None]
+    if not picks_with_match:
+        return {"kind": kind, "selections": [], "cote": 1.0, "proba": 1.0,
+                "excluded": [], "n_total": 0, "n_selected": 0}
+
+    only_picks = [p for _, p in picks_with_match]
+    if cap is None:
+        selected_picks = only_picks
+    else:
+        selected_picks = best_subset_under_cap(only_picks, cap)
+
+    selected_ids = {id(p) for p in selected_picks}
+    selections, excluded = [], []
+    for m, p in picks_with_match:
+        if id(p) in selected_ids:
+            selections.append({"match": m, "pick": p})
+        else:
+            excluded.append({"match": m, "pick": p})
+
+    cote = 1.0
+    proba = 1.0
+    for s in selections:
+        cote *= s["pick"]["unibet_odd"]
+        proba *= s["pick"]["fair_prob"]
+    return {
+        "kind": kind, "selections": selections, "excluded": excluded,
+        "cote": cote, "proba": proba, "n_total": len(picks_with_match),
+        "n_selected": len(selections),
+    }
+
+
+def analyse_today(force_buteur: bool = False) -> dict:
+    """
+    Analyse the matches in today's Belgian window [15:00 → next 06:00].
+    If that window has no matches (e.g. on a rest day), automatically roll
+    forward to the next window that contains at least one match, so the
+    page never lands empty during the tournament.
+    """
+    payload = fetch_and_cache()
+    elo = load_elo()
+    base_form = load_elo_full()
+    # Merge pre-tournament form with in-tournament results
+    form_data = combined_form_data(elo, base_form)
+
+    start, end = belgian_day_window()
+    auto_rolled = False
+
+    def events_in(s, e):
+        ev_in = []
+        for ev in payload["events"]:
+            ko = datetime.fromisoformat(ev["commence_time"].replace("Z", "+00:00")).astimezone(BE_TZ)
+            if s <= ko < e:
+                ev_in.append(ev)
+        return sorted(ev_in, key=lambda e: e["commence_time"])
+
+    todays_events = events_in(start, end)
+    # If today is empty, scan the next 30 days for the next non-empty window
+    if not todays_events:
+        cursor_start = start
+        for _ in range(30):
+            cursor_start += timedelta(days=1)
+            cursor_end = cursor_start + timedelta(hours=15)
+            candidate = events_in(cursor_start, cursor_end)
+            if candidate:
+                start, end = cursor_start, cursor_end
+                todays_events = candidate
+                auto_rolled = True
+                break
+
+    # Buteur odds: only for today's matches (per-event credits cost)
+    buteur_by_event = {}
+    last_remaining_after_buteur = None
+    if todays_events:
+        buteur_by_event = fetch_buteur_for_today(
+            [e["id"] for e in todays_events], force=force_buteur,
+        )
+        last_remaining_after_buteur = buteur_by_event.pop("_last_remaining", None)
+
+    results = []
+    for ev in todays_events:
+        ev_buteur = buteur_by_event.get(ev["id"], {})
+        # Strip private fields before passing to picker
+        clean_buteur = {k: v for k, v in ev_buteur.items() if not k.startswith("_")}
+        r = analyse_event(ev, elo, form_data, buteur_odds=clean_buteur)
+        if r is not None:
+            results.append(r)
+
+    # Build three combos with their caps
+    safe_combo = build_combo(results, "safe", SAFE_COMBO_CAP)
+    risky_combo = build_combo(results, "risky", RISKY_COMBO_CAP)
+    ultra_combo = build_combo(results, "ultra_risky", None)
+
+    # Snapshot the picks for performance tracking (overwrites prior snapshot
+    # for the same event_id — last refresh of the day wins).
+    if results:
+        record_picks(results)
+
+    remaining = last_remaining_after_buteur or payload["remaining_credits"]
+    used = (500 - int(remaining)) if remaining else payload["used_credits"]
+
+    return {
+        "window_start": start.isoformat(),
+        "window_end": end.isoformat(),
+        "auto_rolled": auto_rolled,
+        "fetched_at": payload["fetched_at"],
+        "credits_used": used,
+        "credits_remaining": remaining,
+        "matches": results,
+        "safe_combo": safe_combo,
+        "risky_combo": risky_combo,
+        "ultra_combo": ultra_combo,
+    }
+
+
+# Kept for backward compatibility — used by older render code paths if any
+def analyse_all() -> dict:
+    return analyse_today()
+
+
+if __name__ == "__main__":
+    import sys
+    out = analyse_today(force_buteur="--force-buteur" in sys.argv)
+    print(f"Window: {out['window_start']} → {out['window_end']}")
+    print(f"Matches today: {len(out['matches'])}")
+    print(f"Credits: used={out['credits_used']}, remaining={out['credits_remaining']}\n")
+    for combo_name, combo in (("SAFE", out["safe_combo"]),
+                              ("RISKY", out["risky_combo"]),
+                              ("ULTRA-RISKY", out["ultra_combo"])):
+        print(f"-- Combo {combo_name} --")
+        print(f"  {combo['n_selected']}/{combo['n_total']} sélections · cote {combo['cote']:.2f} · proba {combo['proba']*100:.2f}%")
+        for s in combo["selections"]:
+            m, p = s["match"], s["pick"]
+            print(f"    · {m['home_team']}-{m['away_team']}: {label_for(p['market'], m['home_team'], m['away_team'])} @ {p['unibet_odd']:.2f}")
+        if combo["excluded"]:
+            print(f"  Exclus du combo (dépasse le cap):")
+            for s in combo["excluded"]:
+                m, p = s["match"], s["pick"]
+                print(f"    × {m['home_team']}-{m['away_team']}: {label_for(p['market'], m['home_team'], m['away_team'])} @ {p['unibet_odd']:.2f}")
+        print()

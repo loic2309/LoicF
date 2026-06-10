@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mondial Pronos 2026 · En attente du coup d'envoi</title>
+  <style>
+:root {
+  --bg: #fafaf9;
+  --bg-elev: #ffffff;
+  --bg-soft: #f5f5f4;
+  --ink: #18181b;
+  --ink-mid: #52525b;
+  --ink-soft: #a1a1aa;
+  --line: #e7e5e4;
+  --accent: #dc2626;
+  --accent-soft: #fef2f2;
+  --gold: #b45309;
+  --gold-soft: #fef3c7;
+  --green: #15803d;
+  --green-soft: #dcfce7;
+  --orange: #c2410c;
+  --orange-soft: #ffedd5;
+  --red: #b91c1c;
+  --red-soft: #fee2e2;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* Hero */
+.hero {
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+.hero-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.hero-title {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin: 0 0 14px;
+  line-height: 1;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-mid);
+  font-size: 14px;
+}
+.hero-meta .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.hero-progress { margin-top: 14px; max-width: 480px; }
+.hero-progress-bar {
+  height: 6px; background: var(--bg-soft); border-radius: 3px; overflow: hidden;
+}
+.hero-progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s;
+}
+.hero-progress-text { font-size: 12px; color: var(--ink-mid); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.hero-leader { margin-top: 14px; font-size: 15px; color: var(--ink); }
+.hero-leader b { font-weight: 700; }
+
+/* Cards */
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+  margin: 0 0 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .badge {
+  background: var(--bg-soft);
+  color: var(--ink-mid);
+  padding: 2px 8px; border-radius: 999px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Pre-kickoff */
+.lock-card { text-align: center; padding: 36px 28px; }
+.lock-icon { font-size: 36px; margin-bottom: 12px; }
+.lock-card h2 { font-size: 20px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.3px; }
+.lock-text { color: var(--ink-mid); max-width: 540px; margin: 0 auto; font-size: 14px; }
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.player-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  display: flex; align-items: center; gap: 12px;
+}
+.player-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg-elev);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+.player-name-pre { font-weight: 600; flex: 1; font-size: 13px; }
+.player-status { font-size: 10px; color: var(--ink-soft); }
+
+/* Table base */
+.table-wrap { overflow-x: auto; margin: -2px; padding: 2px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th {
+  background: var(--bg-soft);
+  font-weight: 600; color: var(--ink-mid);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+tbody tr:hover { background: var(--bg-soft); }
+
+/* Leaderboard */
+.leaderboard .rank-th { width: 50px; }
+.leaderboard td.rank {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.leaderboard .medal { margin-right: 4px; font-size: 16px; }
+.leaderboard .rank-num { color: var(--ink-mid); font-size: 14px; }
+.leaderboard td.player { font-weight: 600; min-width: 130px; }
+.leaderboard td.total {
+  min-width: 110px;
+}
+.leaderboard .total-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.leaderboard .total-bar {
+  height: 4px;
+  background: var(--bg-soft);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.leaderboard .total-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.leaderboard td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-mid); }
+.leaderboard td.num.zero { color: var(--ink-soft); }
+.leaderboard .lb-podium .rank-num { color: var(--ink); }
+.legend td { font-size: 10px; color: var(--ink-soft); font-style: italic; padding-top: 6px; padding-bottom: 6px; }
+.legend td.legend-num { font-style: normal; font-variant-numeric: tabular-nums; }
+.legend-row {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 11px; color: var(--ink-soft); line-height: 1.9;
+}
+.legend-row b { color: var(--ink-mid); font-weight: 700; }
+.legend-row i { color: var(--ink-soft); font-style: normal; font-size: 10px; }
+
+/* Group blocks */
+.group-block {
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+}
+.group-block:first-of-type { border-top: none; padding-top: 0; }
+.group-block summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 6px 0 14px;
+  user-select: none;
+}
+.group-block summary::-webkit-details-marker { display: none; }
+.group-label { font-size: 10px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+.group-letter { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+
+.matches td.match-date { color: var(--ink-mid); font-size: 11px; white-space: nowrap; min-width: 70px; }
+.matches td.match-date small { color: var(--ink-soft); }
+.matches td.team { font-weight: 500; }
+.matches td.t1 { text-align: right; min-width: 110px; }
+.matches td.actual {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  min-width: 70px;
+}
+.matches td.actual .dash { color: var(--ink-soft); margin: 0 3px; }
+.matches .pending { color: var(--ink-soft); }
+.matches .player-th span {
+  display: inline-block;
+  max-width: 70px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 10px;
+}
+.pred {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--ink-mid);
+}
+.pred.pred-empty { color: var(--ink-soft); }
+.pred.pred-good { color: var(--orange); background: var(--orange-soft); }
+.pred.pred-exact { color: var(--green); background: var(--green-soft); font-weight: 700; }
+.pred.pred-bad { color: var(--red); background: var(--red-soft); }
+
+/* Group rankings */
+.rankings-section { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--line); }
+.rankings-section h4 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-soft); font-weight: 600; margin: 0 0 10px;
+}
+.rankings td { font-size: 12px; vertical-align: top; padding: 10px 12px; }
+.rank-team {
+  display: flex; align-items: center; gap: 6px;
+  line-height: 1.6;
+}
+.rank-pos {
+  width: 16px; height: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ink); color: var(--bg-elev);
+  border-radius: 4px;
+  font-size: 9px; font-weight: 700;
+  flex-shrink: 0;
+}
+.actual-rank { background: var(--gold-soft); }
+.actual-rank .rank-pos { background: var(--gold); }
+.rank-cell { background: var(--bg-soft); }
+.rank-cell.rank-good { background: var(--green-soft); }
+.rank-cell.rank-good .rank-pos { background: var(--green); }
+.rank-cell.rank-bad { background: var(--red-soft); }
+.rank-cell.rank-bad .rank-pos { background: var(--red); }
+
+/* Knockout */
+.ko-round {
+  margin-bottom: 26px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.ko-round:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.ko-round-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.ko-round h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
+.ko-rule-tag {
+  font-size: 10px; color: var(--ink-soft); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.ko-actual {
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px; margin-bottom: 14px;
+  font-size: 12px; color: var(--ink-mid);
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+}
+.ko-actual b { color: var(--ink); font-weight: 600; }
+.ko-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.ko-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: var(--bg-elev);
+}
+.ko-card-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.ko-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.team-chip {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--bg-soft);
+  color: var(--ink-mid);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.team-chip.hit { background: var(--green-soft); color: var(--green); font-weight: 600; }
+.team-chip.actual { background: var(--gold-soft); color: var(--gold); font-weight: 600; }
+.ko-score { margin-top: 8px; font-size: 11px; color: var(--green); font-weight: 700; }
+
+/* Top scorer */
+.ts-actual {
+  background: var(--bg-soft);
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  margin-bottom: 14px; font-size: 13px;
+}
+.ts-actual b { font-weight: 600; }
+.ts-actual-name { font-weight: 700; color: var(--gold); }
+.topscorer td.ts-player { font-weight: 600; width: 35%; }
+.topscorer td.ts-pick { color: var(--ink-mid); }
+
+/* Footer */
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .page { padding: 20px 14px 60px; }
+  .hero-title { font-size: 30px; }
+  .card { padding: 18px 16px; }
+}
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-eyebrow">Concours · Coupe du monde FIFA 2026</div>
+      <h1 class="hero-title">Mondial Pronos</h1>
+      <div class="hero-meta">
+        <span class="dot"></span>
+        Coup d'envoi le 11 juin 2026 · 1j
+      </div>
+    </header>
+
+    <section class="card lock-card">
+      <div class="lock-icon">🔒</div>
+      <h2>Les pronostics sont scellés</h2>
+      <p class="lock-text">
+        Pour préserver l'équité, les paris de chacun restent privés jusqu'au coup d'envoi du premier match.
+        Dès que le tournoi commence, vous verrez le classement, les résultats live, et les paris de tout le monde sur cette même page.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Joueurs inscrits <span class="badge">9</span></h2>
+      <div class="players-grid">
+        <div class="player-card">
+          <div class="player-avatar">A</div>
+          <div class="player-name-pre">ADK</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">A</div>
+          <div class="player-name-pre">Alex Le Clercq</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">G</div>
+          <div class="player-name-pre">Ge10 ft Mistral</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">K</div>
+          <div class="player-name-pre">Karlo</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">L</div>
+          <div class="player-name-pre">Loïc F</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">M</div>
+          <div class="player-name-pre">Martin Sion</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">N</div>
+          <div class="player-name-pre">Nathan Peeters</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">R</div>
+          <div class="player-name-pre">Robin</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        
+        <div class="player-card">
+          <div class="player-avatar">S</div>
+          <div class="player-name-pre">Seb Lejeune</div>
+          <div class="player-status">🔒 Pronostic enregistré</div>
+        </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+      Mis à jour 10 Jun 2026 à 14:56 · Belgique (CEST)
+    </footer>
+  </div>
+</body>
+</html>

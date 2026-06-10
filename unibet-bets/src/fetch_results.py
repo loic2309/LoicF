@@ -19,14 +19,32 @@ RESULTS_PATH = DATA_DIR / "results_history.json"
 
 
 def fetch_scores(days_from: int = 3) -> dict:
-    """Call /scores and return parsed payload + remaining credits."""
+    """Call /scores and return parsed payload + remaining credits.
+
+    The Odds API returns HTTP 422 when the sport has no completed events in
+    the requested window (typical case before the tournament starts). We
+    treat that as "empty results" rather than an error so the pipeline keeps
+    running and the page can still regenerate from odds alone.
+    """
+    import urllib.error
     params = {
         "apiKey": API_KEY,
         "daysFrom": str(days_from),
         "dateFormat": "iso",
     }
     url = f"{BASE_URL}/sports/{SPORT_KEY}/scores/?{urllib.parse.urlencode(params)}"
-    body, headers = _http_get(url)
+    try:
+        body, headers = _http_get(url)
+    except urllib.error.HTTPError as e:
+        if e.code == 422:
+            return {
+                "events": [],
+                "fetched_at": datetime.now(timezone.utc).isoformat(),
+                "remaining_credits": e.headers.get("x-requests-remaining"),
+                "used_credits": e.headers.get("x-requests-used"),
+                "note": "no completed events yet (422 from /scores)",
+            }
+        raise
     return {
         "events": body,
         "fetched_at": datetime.now(timezone.utc).isoformat(),

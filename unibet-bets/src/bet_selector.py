@@ -40,6 +40,7 @@ from model import predict_match, load_elo
 from fetch_odds import (
     fetch_and_cache,
     fetch_buteur_for_today,
+    fetch_advanced_for_today,
     extract_event_odds,
     devigged_probs_from_odds,
     UNIBET_KEYS,
@@ -115,13 +116,65 @@ def label_for(market_key: str, home: str, away: str) -> str:
         return f"Victoire {away}"
     if market_key == "h2h_draw":
         return "Match nul"
+    if market_key == "dc_1X":
+        return f"{home} ou Nul (Double chance)"
+    if market_key == "dc_X2":
+        return f"Nul ou {away} (Double chance)"
+    if market_key == "dc_12":
+        return f"{home} ou {away} (pas de nul)"
+    if market_key == "dnb_home":
+        return f"{home} gagne (Nul remboursé)"
+    if market_key == "dnb_away":
+        return f"{away} gagne (Nul remboursé)"
     if market_key.startswith("over_"):
-        return f"Plus de {market_key.split('_')[1]} buts"
+        return f"Plus de {market_key.split('_')[1]} buts (match)"
     if market_key.startswith("under_"):
-        return f"Moins de {market_key.split('_')[1]} buts"
+        return f"Moins de {market_key.split('_')[1]} buts (match)"
+    if market_key == "btts_yes":
+        return "Les deux équipes marquent"
+    if market_key == "btts_no":
+        return "Au moins une équipe ne marque pas"
+    if market_key.startswith("team_home_over_"):
+        return f"{home} marque + de {market_key.split('_')[-1]} buts"
+    if market_key.startswith("team_home_under_"):
+        return f"{home} marque − de {market_key.split('_')[-1]} buts"
+    if market_key.startswith("team_away_over_"):
+        return f"{away} marque + de {market_key.split('_')[-1]} buts"
+    if market_key.startswith("team_away_under_"):
+        return f"{away} marque − de {market_key.split('_')[-1]} buts"
     if market_key.startswith("scorer_"):
         return f"{market_key[len('scorer_'):]} buteur"
     return market_key
+
+
+# Score-matrix compatibility: enumerate all reasonable final scores and check
+# that at least one makes BOTH bets pay. Robust for any market combination.
+def _bet_wins(market: str, h: int, a: int) -> bool:
+    if market == "h2h_home": return h > a
+    if market == "h2h_draw": return h == a
+    if market == "h2h_away": return a > h
+    if market == "dc_1X": return h >= a
+    if market == "dc_X2": return h <= a
+    if market == "dc_12": return h != a
+    if market == "dnb_home": return h > a  # draw refunds (treated as not-winning here)
+    if market == "dnb_away": return a > h
+    if market.startswith("over_"):
+        return (h + a) > float(market.split("_")[1])
+    if market.startswith("under_"):
+        return (h + a) < float(market.split("_")[1])
+    if market == "btts_yes": return h >= 1 and a >= 1
+    if market == "btts_no": return not (h >= 1 and a >= 1)
+    if market.startswith("team_home_over_"):
+        return h > float(market.split("_")[-1])
+    if market.startswith("team_home_under_"):
+        return h < float(market.split("_")[-1])
+    if market.startswith("team_away_over_"):
+        return a > float(market.split("_")[-1])
+    if market.startswith("team_away_under_"):
+        return a < float(market.split("_")[-1])
+    if market.startswith("scorer_"): return True  # independent of score
+    if market.startswith("ah_"): return True  # not used in picks today
+    return True  # unknown → don't block
 
 
 def belgian_day_window(now: datetime | None = None) -> tuple[datetime, datetime]:
@@ -168,42 +221,82 @@ def _blend(m_prob, c_prob):
     return min(blended, MAX_MODEL_OVER_MARKET * c_prob)
 
 
-def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dict) -> list:
+def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dict,
+                       advanced_odds: dict | None = None) -> list:
+    """
+    Build the full candidate row list across every market we have data for:
+      - Unibet h2h + totals (primary cotes the user actually plays at)
+      - Advanced markets (BTTS, DC, alt totals, team totals): cotes from
+        median of EU/UK bookmakers (Unibet doesn't expose these on the API
+        — user must verify on unibet.be before placing).
+    Each row carries the source flag so the UI can mark "consensus cote" picks.
+    """
     rows = []
-    for mkey, odd in unibet_odds.items():
+    # Track which markets are sourced from Unibet vs consensus
+    def add(mkey, odd, source, note=None):
         m_prob = model_probs.get(mkey)
         c_prob = consensus_probs.get(mkey)
         if m_prob is None and c_prob is None:
-            continue
+            return
         fair = _blend(m_prob, c_prob)
         fair, edge = cap_edge(fair, odd)
-        rows.append({
+        row = {
             "market": mkey, "model_prob": m_prob, "consensus_prob": c_prob,
             "fair_prob": fair, "unibet_odd": odd, "edge": edge,
-        })
+            "source": source,
+        }
+        if note:
+            row["note"] = note
+        rows.append(row)
+
+    # Unibet primary odds (h2h_*, over_X, under_X)
+    for mkey, odd in unibet_odds.items():
+        add(mkey, odd, source="unibet")
+
+    if not advanced_odds:
+        return rows
+
+    note_consensus = "Cote indicative (consensus marché). À vérifier sur unibet.be."
+
+    # BTTS
+    btts = advanced_odds.get("btts", {})
+    if "yes" in btts: add("btts_yes", btts["yes"], "consensus", note_consensus)
+    if "no" in btts:  add("btts_no",  btts["no"],  "consensus", note_consensus)
+
+    # Double chance
+    dc = advanced_odds.get("dc", {})
+    if "1X" in dc: add("dc_1X", dc["1X"], "consensus", note_consensus)
+    if "X2" in dc: add("dc_X2", dc["X2"], "consensus", note_consensus)
+    if "12" in dc: add("dc_12", dc["12"], "consensus", note_consensus)
+
+    # Alternate totals (Over/Under for 0.5, 1.5, 3.5, 4.5)
+    alt = advanced_odds.get("alt_totals", {})
+    for label, odd in alt.items():
+        add(label, odd, "consensus", note_consensus)
+
+    # Team-specific totals (l'équipe X marque +/- N buts)
+    for side in ("team_home", "team_away"):
+        tt = advanced_odds.get(f"{side}_totals", {})
+        for label, odd in tt.items():
+            side_key, line = label.split("_")
+            add(f"{side}_{side_key}_{line}", odd, "consensus", note_consensus)
+
     return rows
 
 
 def are_compatible(market_a: str, market_b: str) -> bool:
+    """Two markets are compatible iff there exists at least one final score
+    (h, a) ∈ [0..7]² where both bets pay. Computed by enumeration — robust
+    to any market combination without hand-coded rules per pair."""
     if market_a == market_b:
         return True
     if market_a.startswith("scorer_") or market_b.startswith("scorer_"):
-        return True  # scorer markets independent of h2h/totals
-    is_h2h_a = market_a.startswith("h2h_")
-    is_h2h_b = market_b.startswith("h2h_")
-    if is_h2h_a and is_h2h_b:
-        return False
-    is_t_a = market_a.startswith(("over_", "under_"))
-    is_t_b = market_b.startswith(("over_", "under_"))
-    if is_t_a and is_t_b:
-        ka, la = market_a.split("_")[0], float(market_a.split("_")[1])
-        kb, lb = market_b.split("_")[0], float(market_b.split("_")[1])
-        if ka == kb:
-            return True
-        over_line = la if ka == "over" else lb
-        under_line = la if ka == "under" else lb
-        return over_line < under_line
-    return True
+        return True  # scorer markets are independent of the score outcome
+    for h in range(8):
+        for a in range(8):
+            if _bet_wins(market_a, h, a) and _bet_wins(market_b, h, a):
+                return True
+    return False
 
 
 def pick_safe_and_risky(rows: list) -> tuple[dict | None, dict | None]:
@@ -282,6 +375,7 @@ def pick_ultra_risky(
                 "edge": edge,
                 "is_buteur": True,
                 "team": team,
+                "source": "consensus",
                 "note": "Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.",
             })
 
@@ -308,6 +402,7 @@ def pick_ultra_risky(
             "unibet_odd": odd,
             "edge": edge,
             "is_buteur": False,
+            "source": "unibet" if mkey in ("h2h_home", "h2h_draw", "h2h_away") or mkey.startswith(("over_", "under_")) else "consensus",
         })
 
     if not candidates:
@@ -317,7 +412,9 @@ def pick_ultra_risky(
     return best
 
 
-def analyse_event(event: dict, elo: dict, form_data: dict, buteur_odds: dict | None = None) -> dict:
+def analyse_event(event: dict, elo: dict, form_data: dict,
+                  buteur_odds: dict | None = None,
+                  advanced_odds: dict | None = None) -> dict:
     home, away = event["home_team"], event["away_team"]
     if home not in elo or away not in elo:
         return None
@@ -326,22 +423,33 @@ def analyse_event(event: dict, elo: dict, form_data: dict, buteur_odds: dict | N
     prediction = predict_match(home, away, elo, neutral_venue=neutral, form_data=form_data)
     odds = extract_event_odds(event)
 
-    if not odds["unibet"]:
+    if not odds["unibet"] and not advanced_odds:
         return {
             "event_id": event["id"], "home_team": home, "away_team": away,
             "commence_time": event["commence_time"], "prediction": prediction,
-            "skipped_reason": "no Unibet odds available", "safe": None,
+            "skipped_reason": "no odds available", "safe": None,
             "risky": None, "ultra_risky": None, "outcomes": [],
         }
 
     consensus_probs = consensus_probs_for_event(odds["consensus"])
-    rows = evaluate_outcomes(prediction["probs"], consensus_probs, odds["unibet"])
+    rows = evaluate_outcomes(
+        prediction["probs"], consensus_probs, odds["unibet"],
+        advanced_odds=advanced_odds,
+    )
     safe, risky = pick_safe_and_risky(rows)
+
+    # Buteur picks still come from the dedicated buteur fetch (which only
+    # pulls player_goal_scorer_anytime; redundant with advanced_odds.scorers
+    # but kept for backward compat with already-cached files).
+    scorer_odds_merged = dict(buteur_odds or {})
+    if advanced_odds and "scorers" in advanced_odds:
+        for name, odd in advanced_odds["scorers"].items():
+            scorer_odds_merged.setdefault(name, {"odd": odd, "n_books": 1})
 
     ultra_risky = pick_ultra_risky(
         home, away,
         prediction["lambda_home"], prediction["lambda_away"],
-        buteur_odds or {}, prediction["probs"], odds["unibet"],
+        scorer_odds_merged, prediction["probs"], odds["unibet"],
         consensus_probs,
     )
     if ultra_risky and safe and not are_compatible(safe["market"], ultra_risky["market"]):
@@ -468,21 +576,31 @@ def analyse_today(force_buteur: bool = False) -> dict:
                 auto_rolled = True
                 break
 
-    # Buteur odds: only for today's matches (per-event credits cost)
+    # Per-event fetches for today's matches:
+    #   - buteur_anytime (kept for legacy cache)
+    #   - advanced bundle: BTTS, double chance, alternate totals, team
+    #     totals, scorers (in ONE call to economize credits)
     buteur_by_event = {}
+    advanced_by_event = {}
     last_remaining_after_buteur = None
     if todays_events:
-        buteur_by_event = fetch_buteur_for_today(
-            [e["id"] for e in todays_events], force=force_buteur,
-        )
+        ev_ids = [e["id"] for e in todays_events]
+        buteur_by_event = fetch_buteur_for_today(ev_ids, force=force_buteur)
         last_remaining_after_buteur = buteur_by_event.pop("_last_remaining", None)
+        advanced_by_event = fetch_advanced_for_today(ev_ids, force=force_buteur)
+        rem = advanced_by_event.pop("_last_remaining", None)
+        if rem:
+            last_remaining_after_buteur = rem
 
     results = []
     for ev in todays_events:
         ev_buteur = buteur_by_event.get(ev["id"], {})
-        # Strip private fields before passing to picker
+        ev_advanced = advanced_by_event.get(ev["id"], {})
         clean_buteur = {k: v for k, v in ev_buteur.items() if not k.startswith("_")}
-        r = analyse_event(ev, elo, form_data, buteur_odds=clean_buteur)
+        clean_advanced = {k: v for k, v in ev_advanced.items() if not k.startswith("_")}
+        r = analyse_event(ev, elo, form_data,
+                          buteur_odds=clean_buteur,
+                          advanced_odds=clean_advanced)
         if r is not None:
             results.append(r)
 

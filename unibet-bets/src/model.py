@@ -127,14 +127,16 @@ def score_matrix(lam_h: float, lam_a: float, rho: float = DIXON_COLES_RHO) -> li
 def derive_market_probs(matrix: list[list[float]]) -> dict:
     """
     Derive implied probabilities for every market we care about from the
-    full-time score matrix.
+    full-time score matrix. Every market reduces to summing the cells (i,j)
+    where the bet wins.
     """
     probs = {}
+    N = len(matrix)
 
     # 1X2 — home, draw, away
     p_home, p_draw, p_away = 0.0, 0.0, 0.0
-    for i in range(len(matrix)):
-        for j in range(len(matrix)):
+    for i in range(N):
+        for j in range(N):
             p = matrix[i][j]
             if i > j:
                 p_home += p
@@ -146,11 +148,26 @@ def derive_market_probs(matrix: list[list[float]]) -> dict:
     probs["h2h_draw"] = p_draw
     probs["h2h_away"] = p_away
 
-    # Over / Under totals
+    # Double chance — 1X, X2, 12
+    probs["dc_1X"] = p_home + p_draw
+    probs["dc_X2"] = p_draw + p_away
+    probs["dc_12"] = p_home + p_away
+
+    # Draw No Bet — equivalent to conditional P(team wins | not draw)
+    # We treat DNB as winning when the team wins; in a draw the stake is
+    # refunded (we model this as "not winning" but not as a loss when
+    # computing edge — bet_wins() in bet_selector treats it consistently).
+    if (1.0 - p_draw) > 0:
+        probs["dnb_home"] = p_home / (1.0 - p_draw)
+        probs["dnb_away"] = p_away / (1.0 - p_draw)
+    else:
+        probs["dnb_home"] = probs["dnb_away"] = 0.0
+
+    # Match totals — every reasonable line
     for line in [0.5, 1.5, 2.5, 3.5, 4.5]:
         over = 0.0
-        for i in range(len(matrix)):
-            for j in range(len(matrix)):
+        for i in range(N):
+            for j in range(N):
                 if i + j > line:
                     over += matrix[i][j]
         probs[f"over_{line}"] = over
@@ -158,18 +175,33 @@ def derive_market_probs(matrix: list[list[float]]) -> dict:
 
     # BTTS
     btts_yes = 0.0
-    for i in range(1, len(matrix)):
-        for j in range(1, len(matrix)):
+    for i in range(1, N):
+        for j in range(1, N):
             btts_yes += matrix[i][j]
     probs["btts_yes"] = btts_yes
     probs["btts_no"] = 1.0 - btts_yes
 
+    # Team-specific totals — "L'équipe X marque + de N buts"
+    # P(home_score > line) = sum over j of sum over i>line of P(i,j)
+    for line in [0.5, 1.5, 2.5]:
+        p_home_over = 0.0
+        p_away_over = 0.0
+        for i in range(N):
+            for j in range(N):
+                if i > line:
+                    p_home_over += matrix[i][j]
+                if j > line:
+                    p_away_over += matrix[i][j]
+        probs[f"team_home_over_{line}"] = p_home_over
+        probs[f"team_home_under_{line}"] = 1.0 - p_home_over
+        probs[f"team_away_over_{line}"] = p_away_over
+        probs[f"team_away_under_{line}"] = 1.0 - p_away_over
+
     # Asian Handicap (half-goal lines, no push possible)
     for h in [-2.5, -1.5, -0.5, 0.5, 1.5, 2.5]:
-        # Home covers handicap h means: home_score + h > away_score
         p_home_covers = 0.0
-        for i in range(len(matrix)):
-            for j in range(len(matrix)):
+        for i in range(N):
+            for j in range(N):
                 if i + h > j:
                     p_home_covers += matrix[i][j]
         probs[f"ah_home_{h:+.1f}"] = p_home_covers

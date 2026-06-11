@@ -169,6 +169,107 @@ def devigged_probs_from_odds(odds_by_outcome: dict[str, float]) -> dict[str, flo
     return {k: v / total for k, v in raw.items()}
 
 
+ADVANCED_MARKETS = ["btts", "double_chance", "alternate_totals", "team_totals", "player_goal_scorer_anytime"]
+
+
+def fetch_advanced_odds(event_id: str) -> dict:
+    """
+    Per-event call for advanced markets (BTTS, double chance, alternate
+    totals, team totals, anytime scorer). Cost: 5 credits per event when
+    all 5 markets are returned (1 per market × 1 region). Cached per event
+    so a refresh on the same day costs nothing.
+
+    Returns a structured dict:
+      {
+        "btts": {"yes": odd, "no": odd},
+        "dc":   {"1X": odd, "X2": odd, "12": odd},
+        "alt_totals": {"over_0.5": odd, "under_0.5": odd, ...},
+        "team_home_totals": {"over_0.5": odd, ...},
+        "team_away_totals": {"over_0.5": odd, ...},
+        "scorers": {"Player Name": odd, ...},
+        "_remaining": "...",
+      }
+    Per-market: median across all books that quoted that line.
+    """
+    import urllib.error
+    from collections import defaultdict
+    params = {
+        "apiKey": API_KEY,
+        "regions": "eu,uk",
+        "markets": ",".join(ADVANCED_MARKETS),
+        "oddsFormat": "decimal",
+        "dateFormat": "iso",
+    }
+    url = f"{BASE_URL}/sports/{SPORT_KEY}/events/{event_id}/odds?{urllib.parse.urlencode(params)}"
+    try:
+        body, headers = _http_get(url)
+    except urllib.error.HTTPError as e:
+        if e.code in (404, 422):
+            return {"_remaining": e.headers.get("x-requests-remaining")}
+        raise
+    except Exception:
+        return {}
+
+    home = body.get("home_team")
+    away = body.get("away_team")
+    by_market = defaultdict(lambda: defaultdict(list))  # market_key -> outcome_label -> [prices]
+
+    for book in body.get("bookmakers", []):
+        for market in book.get("markets", []):
+            mkey = market.get("key")
+            for o in market.get("outcomes", []):
+                price = o.get("price")
+                if not price or price <= 1.0:
+                    continue
+                name = o.get("name", "")
+                point = o.get("point")
+                desc = o.get("description")  # player name for scorer markets
+
+                if mkey == "btts":
+                    if name == "Yes":
+                        by_market["btts"]["yes"].append(price)
+                    elif name == "No":
+                        by_market["btts"]["no"].append(price)
+
+                elif mkey == "double_chance":
+                    # Outcome names vary: "Home/Draw", "Draw/Away", "Home/Away" or "1X", "X2", "12"
+                    nm = name.lower()
+                    if nm in ("home or draw", "home/draw", "1x", "1 or x") or (home and home.lower() in nm and "draw" in nm):
+                        by_market["dc"]["1X"].append(price)
+                    elif nm in ("draw or away", "draw/away", "x2", "x or 2") or (away and away.lower() in nm and "draw" in nm):
+                        by_market["dc"]["X2"].append(price)
+                    elif nm in ("home or away", "home/away", "12", "1 or 2"):
+                        by_market["dc"]["12"].append(price)
+
+                elif mkey == "alternate_totals":
+                    if point is None: continue
+                    label = "over" if name == "Over" else "under" if name == "Under" else None
+                    if label is None: continue
+                    by_market["alt_totals"][f"{label}_{point:.1f}"].append(price)
+
+                elif mkey == "team_totals":
+                    if point is None: continue
+                    # The outcome carries the team name in 'description', side in 'name' (Over/Under)
+                    side = "over" if name == "Over" else "under" if name == "Under" else None
+                    if side is None: continue
+                    team_label = desc or ""
+                    if home and team_label == home:
+                        by_market["team_home_totals"][f"{side}_{point:.1f}"].append(price)
+                    elif away and team_label == away:
+                        by_market["team_away_totals"][f"{side}_{point:.1f}"].append(price)
+
+                elif mkey == "player_goal_scorer_anytime":
+                    player = desc or name
+                    by_market["scorers"][player].append(price)
+
+    # Reduce: take the median across books for each (market, outcome)
+    result = {}
+    for mkey, outcomes in by_market.items():
+        result[mkey] = {label: median(prices) for label, prices in outcomes.items() if prices}
+    result["_remaining"] = headers.get("remaining")
+    return result
+
+
 def fetch_player_goalscorer_odds(event_id: str) -> dict:
     """
     Per-event call for player_goal_scorer_anytime. Returns {player_name:
@@ -210,6 +311,33 @@ def fetch_player_goalscorer_odds(event_id: str) -> dict:
 def cache_buteur_path_for_event(event_id: str) -> Path:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     return CACHE_DIR / f"buteur_{today}_{event_id}.json"
+
+
+def cache_advanced_path_for_event(event_id: str) -> Path:
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return CACHE_DIR / f"advanced_{today}_{event_id}.json"
+
+
+def fetch_advanced_for_today(event_ids: list, force: bool = False) -> dict:
+    """Per-event fetch of advanced markets (BTTS, DC, alt totals, team totals,
+    scorers) for today's events, cached per-event-per-day."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    out = {}
+    last_remaining = None
+    for ev_id in event_ids:
+        path = cache_advanced_path_for_event(ev_id)
+        if path.exists() and not force:
+            with open(path) as f:
+                out[ev_id] = json.load(f)
+            continue
+        data = fetch_advanced_odds(ev_id)
+        if "_remaining" in data and data["_remaining"]:
+            last_remaining = data["_remaining"]
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        out[ev_id] = data
+    out["_last_remaining"] = last_remaining
+    return out
 
 
 def fetch_buteur_for_today(today_event_ids: list, force: bool = False) -> dict:

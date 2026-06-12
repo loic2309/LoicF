@@ -253,10 +253,17 @@ def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dic
     for mkey, odd in unibet_odds.items():
         add(mkey, odd, source="unibet")
 
-    # Advanced markets beyond Unibet's h2h+totals are no longer fetched
-    # to keep the API budget viable across the full tournament. Scorers
-    # are still fetched (used by pick_ultra_risky) but they don't feed
-    # the main row pool — they're handled separately.
+    if not advanced_odds:
+        return rows
+
+    note_consensus = "Cote indicative (consensus marché). À vérifier sur unibet.be."
+
+    # BTTS — both teams to score yes/no
+    btts = advanced_odds.get("btts", {})
+    if "yes" in btts: add("btts_yes", btts["yes"], "consensus", note_consensus)
+    if "no" in btts:  add("btts_no",  btts["no"],  "consensus", note_consensus)
+
+    # Scorers feed pick_ultra_risky separately (not part of the row pool).
     return rows
 
 

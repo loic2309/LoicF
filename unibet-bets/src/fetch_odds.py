@@ -169,14 +169,14 @@ def devigged_probs_from_odds(odds_by_outcome: dict[str, float]) -> dict[str, flo
     return {k: v / total for k, v in raw.items()}
 
 
-# Budget reality check: 500 credits/month, ~37 tournament days remaining,
-# ~100 events to fetch advanced markets for, ~2 credits/day fixed (bulk
-# h2h+totals) + 2/day (scores) = 148 daily fixed alone. That leaves ~140
-# for per-event advanced. So we cap advanced at ONE market per event:
-# scorers — the only market that genuinely adds picks not derivable from
-# Unibet's own h2h/totals. BTTS, double-chance, alternate-totals were nice
-# but the model + bulk h2h/totals already covers most of their signal.
-ADVANCED_MARKETS = ["player_goal_scorer_anytime"]
+# Budget horizon: group stage only (12-27 June, ~16 days, 68 events left).
+# Daily fixed cost = 4 credits (bulk h2h+totals + scores) → 64 over 16d.
+# That leaves ~165 credits → 2 markets per event (68 × 2 = 136). Margin ~31.
+# Markets chosen:
+#   - btts: most popular "diversifying" market beyond pure totals
+#   - player_goal_scorer_anytime: only source for ultra-risky scorer picks
+# Knockout phase will be re-budgeted separately based on what's left.
+ADVANCED_MARKETS = ["btts", "player_goal_scorer_anytime"]
 
 
 def fetch_advanced_odds(event_id: str) -> dict:
@@ -235,7 +235,13 @@ def fetch_advanced_odds(event_id: str) -> dict:
                 point = o.get("point")
                 desc = o.get("description")  # player name for scorer markets
 
-                if mkey == "player_goal_scorer_anytime":
+                if mkey == "btts":
+                    if name == "Yes":
+                        by_market["btts"]["yes"].append(price)
+                    elif name == "No":
+                        by_market["btts"]["no"].append(price)
+
+                elif mkey == "player_goal_scorer_anytime":
                     player = desc or name
                     by_market["scorers"][player].append(price)
 

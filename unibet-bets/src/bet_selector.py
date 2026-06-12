@@ -286,6 +286,15 @@ def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dic
     if "X2" in dc: add("dc_X2", dc["X2"], "consensus", note_consensus)
     if "12" in dc: add("dc_12", dc["12"], "consensus", note_consensus)
 
+    # Alternate totals (Over/Under at lines other than the main 2.5)
+    # When present in cache, expands the goal totals search drastically.
+    alt = advanced_odds.get("alt_totals", {})
+    for label, odd in alt.items():
+        # Skip if same as the main totals already added from Unibet bulk
+        if label in unibet_odds:
+            continue
+        add(label, odd, "consensus", note_consensus)
+
     # Scorers feed pick_ultra_risky separately (not part of the row pool).
     return rows
 

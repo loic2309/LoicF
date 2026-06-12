@@ -190,14 +190,15 @@ def devigged_probs_from_odds(odds_by_outcome: dict[str, float]) -> dict[str, flo
     return {k: v / total for k, v in raw.items()}
 
 
-# Budget horizon: group stage only (12-27 June, ~16 days, 68 events left).
-# Daily fixed cost = 4 credits (bulk h2h+totals + scores) → 64 over 16d.
-# That leaves ~165 credits → 2 markets per event (68 × 2 = 136). Margin ~31.
-# Markets chosen:
-#   - btts: most popular "diversifying" market beyond pure totals
-#   - player_goal_scorer_anytime: only source for ultra-risky scorer picks
-# Knockout phase will be re-budgeted separately based on what's left.
-ADVANCED_MARKETS = ["btts", "player_goal_scorer_anytime"]
+# Budget horizon: group stage only (12-27 June). With ESPN handling
+# scores (free), daily fixed cost is 2 credits (bulk h2h+totals only).
+# Per-event advanced bundle:
+#   - btts                          (1) diversifying signal beyond totals
+#   - alternate_totals              (1) 30+ goal lines, finds value risky
+#   - player_goal_scorer_anytime    (1) only source for ultra scorer picks
+# Total per event = 3 credits, ~60 remaining events × 3 = 180. Daily
+# bulk 2 × 15 days = 30. Total ~210, fits in remaining quota.
+ADVANCED_MARKETS = ["btts", "alternate_totals", "player_goal_scorer_anytime"]
 
 
 def fetch_advanced_odds(event_id: str) -> dict:
@@ -270,6 +271,12 @@ def fetch_advanced_odds(event_id: str) -> dict:
                         by_market["dc"]["X2"].append(price)
                     elif nm in ("12", "home/away", "home or away"):
                         by_market["dc"]["12"].append(price)
+
+                elif mkey == "alternate_totals":
+                    if point is None: continue
+                    label = "over" if name == "Over" else "under" if name == "Under" else None
+                    if label is None: continue
+                    by_market["alt_totals"][f"{label}_{point:.1f}"].append(price)
 
                 elif mkey == "player_goal_scorer_anytime":
                     player = desc or name

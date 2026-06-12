@@ -66,17 +66,17 @@
     "commence_time": "2026-06-12T19:00:00Z",
     "safe": {
       "market": "btts_no",
-      "cote": 1.75,
+      "cote": 1.745,
       "fair_prob": 0.627,
-      "edge": 0.09725000000000006,
+      "edge": 0.09411500000000017,
       "has_value": true,
       "is_buteur": false
     },
     "risky": {
       "market": "over_2.5",
       "cote": 2.25,
-      "fair_prob": 0.42550597402597407,
-      "edge": -0.042611558441558395,
+      "fair_prob": 0.4251764980544747,
+      "edge": -0.04335287937743193,
       "has_value": false,
       "is_buteur": false
     },
@@ -97,26 +97,26 @@
     "safe": {
       "market": "under_2.5",
       "cote": 1.67,
-      "fair_prob": 0.5788841612483746,
-      "edge": -0.033263450715214415,
+      "fair_prob": 0.5798665284974094,
+      "edge": -0.031622897409326334,
       "has_value": false,
       "is_buteur": false
     },
     "risky": {
       "market": "btts_yes",
-      "cote": 2.0549999999999997,
+      "cote": 2.065,
       "fair_prob": 0.493,
-      "edge": 0.013114999999999766,
+      "edge": 0.018044999999999867,
       "has_value": false,
       "is_buteur": false
     },
     "ultra_risky": {
-      "market": "h2h_away",
-      "cote": 4.2,
-      "fair_prob": 0.30713974257383936,
-      "edge": 0.2899869188101254,
+      "market": "scorer_Antonio Sanabria",
+      "cote": 4.35,
+      "fair_prob": 0.2875460496387935,
+      "edge": 0.2508253159287517,
       "has_value": true,
-      "is_buteur": false
+      "is_buteur": true
     }
   }
 }

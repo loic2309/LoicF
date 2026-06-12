@@ -84,6 +84,16 @@
     .form-chip.form-slump   { background:#e6f1fb; }
     .lambdas { color:var(--ink-soft); font-size:12px; font-variant-numeric:tabular-nums; background:var(--pitch-light); padding:3px 9px; border-radius:10px; }
     .match-insight { font-size:12.5px; color:var(--ink-soft); margin:0 0 10px; padding:7px 11px; background:var(--pitch-light); border-left:3px solid var(--pitch); border-radius:0 4px 4px 0; line-height:1.45; }
+    .must-play {
+      font-size: 12.5px; color: var(--ink); margin: 0 0 10px;
+      padding: 9px 13px; background: #fff7e0;
+      border-left: 4px solid var(--yellow-card);
+      border-radius: 0 4px 4px 0;
+    }
+    .must-play-label { font-weight: 700; color: var(--risky-strong); margin-right: 10px; }
+    .must-play-pick { background: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 8px;
+                       border: 1px solid rgba(245,197,24,.5); font-variant-numeric: tabular-nums; }
+    .must-play-edge { color: var(--safe-strong); font-weight: 700; margin-left: 4px; }
     .match-insight b { color:var(--ink); font-weight:600; }
     .match-players { font-size:11.5px; color:var(--ink-soft); margin:0 0 12px; padding:0 4px; display:flex; gap:12px; flex-wrap:wrap; }
     .match-odds { display:flex; gap:10px; font-size:12.5px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--line); }
@@ -234,8 +244,8 @@
     <div class="sub">
       <span class="pill">Vendredi 12 juin 2026 · matchs entre 15:00 et 06:00 (heure belge)</span>
       <span class="pill">Mise: 10€ safe · 8€ risqué · 2€ ultra</span>
-      <span class="pill">Mise à jour 12/06/2026 09:17</span>
-      <span class="pill">API : 279/500 utilisés · 221 restants</span>
+      <span class="pill">Mise à jour 12/06/2026 09:50</span>
+      <span class="pill">API : 285/500 utilisés · 215 restants</span>
     </div>
     <div class="header-actions">
       <button id="refresh-btn" class="refresh-btn" onclick="doRefresh()">🔄 Rafraîchir les paris du jour</button>
@@ -317,6 +327,7 @@
           <span class="lambdas" title="Buts attendus (forme incluse)">⚽ 1.83 – 0.56</span>
         </div>
         <div class="match-insight">💡 <b>Canada</b> ultra-favori (modèle&nbsp;67%) · modèle plus optimiste que le marché sur Canada (67% vs 52%).</div>
+        
         <div class="match-players">⭐ <span class="player-side"><b>Canada</b> : Alphonso Davies (Bayern), Jonathan David (Juventus)</span> · <span class="player-side"><b>Bosnia &amp; Herzegovina</b> : Edin Džeko (Fenerbahçe), Miralem Pjanić (CSKA Moscow)</span></div>
         <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>1.85</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.60</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.90</b></span></div>
         <div class="picks three">
@@ -327,7 +338,7 @@
         <div class="pick-odd">@ 1.75</div>
         <div class="pick-stats">
           <span>Proba équitable <b>62.7%</b></span>
-          <span class="edge">Edge +9.7%</span>
+          <span class="edge">Edge +9.4%</span>
         </div>
         <div class="pick-detail"><span>Modèle: 62.7%</span></div>
         <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
@@ -338,7 +349,7 @@
         <div class="pick-name">Plus de 2.5 buts (match)</div>
         <div class="pick-odd">@ 2.25</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>42.6%</b></span>
+          <span>Proba équitable <b>42.5%</b></span>
           <span class="edge">Edge -4.3%</span>
         </div>
         <div class="pick-detail"><span>Modèle: 42.9%</span><span>Marché: 42.3%</span></div>
@@ -366,8 +377,9 @@
           <span class="lambdas" title="Buts attendus (forme incluse)">⚽ 1.06 – 1.30</span>
         </div>
         <div class="match-insight">💡 match&nbsp;<b>ouvert</b>, <b>Paraguay</b> légèrement favori (40%) · modèle plus pessimiste que le marché sur USA (29% vs 47%) · <b>USA</b> garde 29% de surprendre.</div>
+        <div class="must-play"><span class="must-play-label">🚨 Opportunité forte (à jouer en simple — incompatible avec le combo)</span> <span class="must-play-pick"><b>Victoire Paraguay</b> @ 4.20 <span class="must-play-edge">+29.2%</span></span></div>
         <div class="match-players">⭐ <span class="player-side"><b>USA</b> : Christian Pulisic (Milan), Weston McKennie (Juventus)</span> · <span class="player-side"><b>Paraguay</b> : Miguel Almirón (Atlanta United), Antonio Sanabria (Cremonese)</span></div>
-        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.08</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.40</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.20</b></span></div>
+        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.05</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.40</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.20</b></span></div>
         <div class="picks three">
           
       <div class="pick safe no-value">
@@ -375,20 +387,20 @@
         <div class="pick-name">Moins de 2.5 buts (match)</div>
         <div class="pick-odd">@ 1.67</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>57.9%</b></span>
-          <span class="edge">Edge -3.3%</span>
+          <span>Proba équitable <b>58.0%</b></span>
+          <span class="edge">Edge -3.2%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 57.9%</span><span>Marché: 57.9%</span></div>
+        <div class="pick-detail"><span>Modèle: 57.9%</span><span>Marché: 58.0%</span></div>
         
       </div>
           
       <div class="pick risky no-value">
         <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
         <div class="pick-name">Les deux équipes marquent</div>
-        <div class="pick-odd">@ 2.05</div>
+        <div class="pick-odd">@ 2.06</div>
         <div class="pick-stats">
           <span>Proba équitable <b>49.3%</b></span>
-          <span class="edge">Edge +1.3%</span>
+          <span class="edge">Edge +1.8%</span>
         </div>
         <div class="pick-detail"><span>Modèle: 49.3%</span></div>
         <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
@@ -396,14 +408,14 @@
           
       <div class="pick ultra has-value">
         <div class="pick-label">🎲 ULTRA-RISQUÉ <span class="value-tag yes">★ VALEUR</span></div>
-        <div class="pick-name">Victoire Paraguay</div>
-        <div class="pick-odd">@ 4.20</div>
+        <div class="pick-name">Antonio Sanabria buteur</div>
+        <div class="pick-odd">@ 4.35</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>30.7%</b></span>
-          <span class="edge">Edge +29.0%</span>
+          <span>Proba équitable <b>28.8%</b></span>
+          <span class="edge">Edge +25.1%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 40.4%</span><span>Marché: 24.2%</span></div>
-        
+        <div class="pick-detail"><span>Modèle: 28.8%</span><span>Marché: 23.0%</span></div>
+        <div class="pick-note">⚠️ Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.</div>
       </div>
         </div>
       </div></div>
@@ -414,34 +426,34 @@
           <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Au moins une équipe ne marque pas</b> @ 1.75</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Moins de 2.5 buts (match)</b> @ 1.67</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">2.92</span></span>
-            <span>Proba 36.30%</span>
-            <span>EV +6.1%</span>
-            <span class="payout">Mise 10€ → gain 29.22€</span>
+            <span class="total-main">Cote combinée <span class="cote">2.91</span></span>
+            <span>Proba 36.36%</span>
+            <span>EV +6.0%</span>
+            <span class="payout">Mise 10€ → gain 29.14€</span>
           </div>
         </div>
         
         <div class="combo risky">
           <h3>⚡ Combiné RISQUÉ <span class="combo-meta">Cap 25 · Mise 8€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><b> Plus de 2.5 buts (match)</b> @ 2.25</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Les deux équipes marquent</b> @ 2.05</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><b> Plus de 2.5 buts (match)</b> @ 2.25</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Les deux équipes marquent</b> @ 2.06</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">4.62</span></span>
-            <span>Proba 20.98%</span>
-            <span>EV -3.0%</span>
-            <span class="payout">Mise 8€ → gain 36.99€</span>
+            <span class="total-main">Cote combinée <span class="cote">4.65</span></span>
+            <span>Proba 20.96%</span>
+            <span>EV -2.6%</span>
+            <span class="payout">Mise 8€ → gain 37.17€</span>
           </div>
         </div>
         
         <div class="combo ultra">
           <h3>🎲 Combiné ULTRA-RISQUÉ <span class="combo-meta">Sans plafond · Mise 2€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Jonathan David buteur</b> @ 2.48</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Victoire Paraguay</b> @ 4.20</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Jonathan David buteur</b> @ 2.48</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Antonio Sanabria buteur</b> @ 4.35</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">10.42</span></span>
-            <span>Proba 13.63%</span>
-            <span>EV +42.0%</span>
-            <span class="payout">Mise 2€ → gain 20.83€</span>
+            <span class="total-main">Cote combinée <span class="cote">10.79</span></span>
+            <span>Proba 12.76%</span>
+            <span>EV +37.7%</span>
+            <span class="payout">Mise 2€ → gain 21.58€</span>
           </div>
         </div>
       </div>
@@ -528,20 +540,20 @@
                 <td class="status outcome-lost">✗</td>
                 <td class="pl"><span class="loss">-8.00€</span></td>
               </tr>
-              <tr class="row-manual_pending">
+              <tr class="row-refund">
                 <td class="date">11/06</td>
                 <td class="cat">🎲 Ultra</td>
                 <td class="legs">Hwang Hee-chan buteur @ 4.50 × Santiago Gimenez buteur @ 2.45</td>
                 <td class="cote">11.03</td>
                 <td class="stake">2€</td>
-                <td class="status outcome-manual">?</td>
+                <td class="status outcome-refund">≈</td>
                 <td class="pl"></td>
               </tr>
               <tr class="row-pending">
                 <td class="date">12/06</td>
                 <td class="cat">🛡️ Safe</td>
                 <td class="legs">Moins de 2.5 buts (match) @ 1.67 × Au moins une équipe ne marque pas @ 1.75</td>
-                <td class="cote">2.92</td>
+                <td class="cote">2.91</td>
                 <td class="stake">10€</td>
                 <td class="status outcome-pending">⏳</td>
                 <td class="pl"></td>
@@ -549,19 +561,19 @@
               <tr class="row-pending">
                 <td class="date">12/06</td>
                 <td class="cat">⚡ Risqué</td>
-                <td class="legs">Les deux équipes marquent @ 2.05 × Plus de 2.5 buts (match) @ 2.25</td>
-                <td class="cote">4.62</td>
+                <td class="legs">Les deux équipes marquent @ 2.06 × Plus de 2.5 buts (match) @ 2.25</td>
+                <td class="cote">4.65</td>
                 <td class="stake">8€</td>
                 <td class="status outcome-pending">⏳</td>
                 <td class="pl"></td>
               </tr>
-              <tr class="row-pending">
+              <tr class="row-manual_pending">
                 <td class="date">12/06</td>
                 <td class="cat">🎲 Ultra</td>
-                <td class="legs">Victoire Paraguay @ 4.20 × Jonathan David buteur @ 2.48</td>
-                <td class="cote">10.42</td>
+                <td class="legs">Antonio Sanabria buteur @ 4.35 × Jonathan David buteur @ 2.48</td>
+                <td class="cote">10.79</td>
                 <td class="stake">2€</td>
-                <td class="status outcome-pending">⏳</td>
+                <td class="status outcome-manual">?</td>
                 <td class="pl"></td>
               </tr></tbody>
           </table>
@@ -600,21 +612,21 @@
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">⚡</td>
                 <td class="pick">Les deux équipes marquent</td>
-                <td class="cote">@ 2.05</td>
+                <td class="cote">@ 2.06</td>
                 <td class="stake">8€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
                 <td class="pl"></td>
               </tr>
-              <tr class="row-pending">
+              <tr class="row-manual_pending">
                 <td class="date">13/06 03:00</td>
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">🎲</td>
-                <td class="pick">Victoire Paraguay</td>
-                <td class="cote">@ 4.20</td>
+                <td class="pick">Antonio Sanabria buteur</td>
+                <td class="cote">@ 4.35</td>
                 <td class="stake">2€</td>
                 <td class="result">—</td>
-                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
+                <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('c12986f447a515fbe641addd786dbb24','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('c12986f447a515fbe641addd786dbb24','ultra_risky','lost')">✗</button></td>
                 <td class="pl"></td>
               </tr>
               <tr class="row-pending">
@@ -672,7 +684,7 @@
                 <td class="status outcome-won" title="Pari gagné">✓ </td>
                 <td class="pl"><span class="gain">+14.00€</span></td>
               </tr>
-              <tr class="row-manual_pending">
+              <tr class="row-refund">
                 <td class="date">12/06 04:00</td>
                 <td class="match">South Korea – Czech Republic</td>
                 <td class="cat">🎲</td>
@@ -680,7 +692,7 @@
                 <td class="cote">@ 4.50</td>
                 <td class="stake">2€</td>
                 <td class="result">—</td>
-                <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('384cbb5d76b535896a24fe65f93cfac8','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('384cbb5d76b535896a24fe65f93cfac8','ultra_risky','lost')">✗</button></td>
+                <td class="status outcome-refund" title="Pari remboursé (joueur n'a pas joué, etc.)">≈ </td>
                 <td class="pl"></td>
               </tr>
               <tr class="row-won">
@@ -705,7 +717,7 @@
                 <td class="status outcome-lost" title="Pari perdu">✗ </td>
                 <td class="pl"><span class="loss">-8.00€</span></td>
               </tr>
-              <tr class="row-manual_pending">
+              <tr class="row-refund">
                 <td class="date">11/06 21:00</td>
                 <td class="match">Mexico – South Africa</td>
                 <td class="cat">🎲</td>
@@ -713,7 +725,7 @@
                 <td class="cote">@ 2.45</td>
                 <td class="stake">2€</td>
                 <td class="result">—</td>
-                <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('80d82d1113934bfbea4ce8daf37a2433','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('80d82d1113934bfbea4ce8daf37a2433','ultra_risky','lost')">✗</button></td>
+                <td class="status outcome-refund" title="Pari remboursé (joueur n'a pas joué, etc.)">≈ </td>
                 <td class="pl"></td>
               </tr></tbody>
           </table>
@@ -739,6 +751,16 @@
     async function doRefresh() {
       const btn = document.getElementById('refresh-btn');
       const status = document.getElementById('refresh-status');
+      // On GitHub Pages there's no /refresh backend — point the user to
+      // GitHub Actions where they can trigger the workflow manually with
+      // one click on "Run workflow".
+      const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
+      if (isLive) {
+        const url = 'https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml';
+        window.open(url, '_blank');
+        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>" → "Run workflow". La page live se met à jour ~1 min après.';
+        return;
+      }
       btn.disabled = true;
       status.textContent = '⏳ Rafraîchissement en cours…';
       try {
@@ -759,6 +781,14 @@
 
     async function updateResults() {
       const status = document.getElementById('update-status');
+      const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
+      if (isLive) {
+        // ESPN results are auto-fetched (free) by the daily cron. Manual
+        // trigger redirects to the same workflow page.
+        window.open('https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml', '_blank');
+        status.innerHTML = '↗ Refresh global déclenchable via GitHub Actions.';
+        return;
+      }
       status.textContent = '⏳ Récupération des scores…';
       try {
         const r = await fetch('/update-results', {method: 'POST'});

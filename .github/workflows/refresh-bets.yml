@@ -22,38 +22,19 @@ jobs:
       run:
         working-directory: unibet-bets
     steps:
-      - name: Hold gate (preserve Day 1 simple picks until 2026-06-12)
-        id: gate
-        run: |
-          today=$(date -u +%Y-%m-%d)
-          # The deep-rework logic kicks in from 2026-06-12 onwards. Before
-          # that date we skip the refresh so the live snapshot stays on the
-          # original Day 1 picks (Mexico-SA + South Korea-Czech).
-          if [[ "$today" < "2026-06-12" ]]; then
-            echo "🛑 Refresh gated until 2026-06-12. Today=$today."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "✓ Past the gate, running normal refresh. Today=$today."
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.gate.outputs.skip != 'true'
 
       - uses: actions/setup-python@v5
-        if: steps.gate.outputs.skip != 'true'
         with:
           python-version: '3.11'
 
       - name: Refresh Elo ratings TSV
-        if: steps.gate.outputs.skip != 'true'
         run: |
           curl -fsS -H "User-Agent: Mozilla/5.0" \
             "https://www.eloratings.net/World.tsv" -o data/elo_raw.tsv || \
             echo "(elo refresh skipped — keeping last known TSV)"
 
       - name: Update tournament results
-        if: steps.gate.outputs.skip != 'true'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
@@ -65,7 +46,6 @@ jobs:
           "
 
       - name: Regenerate page with fresh odds
-        if: steps.gate.outputs.skip != 'true'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
@@ -73,7 +53,6 @@ jobs:
           cp bets.html index.html
 
       - name: Commit & push if changed
-        if: steps.gate.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

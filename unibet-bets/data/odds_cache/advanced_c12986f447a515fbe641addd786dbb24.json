@@ -51,5 +51,9 @@
     "Gustavo Gomez": 11.5,
     "Jose Maria Canale Dominguez": 17.0
   },
-  "_remaining": "227"
+  "_remaining": "227",
+  "dc": {
+    "X2": 1.77,
+    "1X": 1.27
+  }
 }

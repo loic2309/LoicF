@@ -277,6 +277,14 @@ def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dic
     if "yes" in btts: add("btts_yes", btts["yes"], "consensus", note_consensus)
     if "no" in btts:  add("btts_no",  btts["no"],  "consensus", note_consensus)
 
+    # Double chance — fetched ad-hoc per event (not in the default
+    # ADVANCED_MARKETS set for budget reasons). When present in cache,
+    # unlocks "Home ou Nul" / "Nul ou Away" / "Home ou Away" picks.
+    dc = advanced_odds.get("dc", {})
+    if "1X" in dc: add("dc_1X", dc["1X"], "consensus", note_consensus)
+    if "X2" in dc: add("dc_X2", dc["X2"], "consensus", note_consensus)
+    if "12" in dc: add("dc_12", dc["12"], "consensus", note_consensus)
+
     # Scorers feed pick_ultra_risky separately (not part of the row pool).
     return rows
 

@@ -241,6 +241,15 @@ def fetch_advanced_odds(event_id: str) -> dict:
                     elif name == "No":
                         by_market["btts"]["no"].append(price)
 
+                elif mkey == "double_chance":
+                    nm = (name or "").lower()
+                    if nm in ("1x", "home/draw", "home or draw") or (home and home.lower() in nm and "draw" in nm):
+                        by_market["dc"]["1X"].append(price)
+                    elif nm in ("x2", "draw/away", "draw or away") or (away and away.lower() in nm and "draw" in nm):
+                        by_market["dc"]["X2"].append(price)
+                    elif nm in ("12", "home/away", "home or away"):
+                        by_market["dc"]["12"].append(price)
+
                 elif mkey == "player_goal_scorer_anytime":
                     player = desc or name
                     by_market["scorers"][player].append(price)

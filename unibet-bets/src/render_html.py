@@ -130,6 +130,27 @@ def match_card(match: dict) -> str:
     if match.get("insight"):
         insight_html = f'<div class="match-insight">💡 {match["insight"]}</div>'
 
+    # "Must-play" alerts: high-edge picks that don't fit the combo due to
+    # joint-compatibility constraints. Surfaced as standalone opportunities
+    # to play in simple if the user has conviction.
+    must_play = match.get("must_play") or []
+    must_play_html = ''
+    if must_play:
+        chips = []
+        for c in must_play:
+            lbl = label_for(c["market"], home, away)
+            chips.append(
+                f'<span class="must-play-pick">'
+                f'<b>{html.escape(lbl)}</b> @ {c["unibet_odd"]:.2f} '
+                f'<span class="must-play-edge">+{c["edge"]*100:.1f}%</span></span>'
+            )
+        must_play_html = (
+            f'<div class="must-play">'
+            f'<span class="must-play-label">🚨 Opportunité forte (à jouer en simple — incompatible avec le combo)</span> '
+            f'{" · ".join(chips)}'
+            f'</div>'
+        )
+
     players_html = ''
     if players_h or players_a:
         bits = []
@@ -147,6 +168,7 @@ def match_card(match: dict) -> str:
           <span class="lambdas" title="Buts attendus (forme incluse)">⚽ {pred['lambda_home']:.2f} – {pred['lambda_away']:.2f}</span>
         </div>
         {insight_html}
+        {must_play_html}
         {players_html}
         <div class="match-odds">{h2h_line}</div>
         <div class="picks three">
@@ -531,6 +553,16 @@ def render(analysis: dict) -> str:
     .form-chip.form-slump   {{ background:#e6f1fb; }}
     .lambdas {{ color:var(--ink-soft); font-size:12px; font-variant-numeric:tabular-nums; background:var(--pitch-light); padding:3px 9px; border-radius:10px; }}
     .match-insight {{ font-size:12.5px; color:var(--ink-soft); margin:0 0 10px; padding:7px 11px; background:var(--pitch-light); border-left:3px solid var(--pitch); border-radius:0 4px 4px 0; line-height:1.45; }}
+    .must-play {{
+      font-size: 12.5px; color: var(--ink); margin: 0 0 10px;
+      padding: 9px 13px; background: #fff7e0;
+      border-left: 4px solid var(--yellow-card);
+      border-radius: 0 4px 4px 0;
+    }}
+    .must-play-label {{ font-weight: 700; color: var(--risky-strong); margin-right: 10px; }}
+    .must-play-pick {{ background: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 8px;
+                       border: 1px solid rgba(245,197,24,.5); font-variant-numeric: tabular-nums; }}
+    .must-play-edge {{ color: var(--safe-strong); font-weight: 700; margin-left: 4px; }}
     .match-insight b {{ color:var(--ink); font-weight:600; }}
     .match-players {{ font-size:11.5px; color:var(--ink-soft); margin:0 0 12px; padding:0 4px; display:flex; gap:12px; flex-wrap:wrap; }}
     .match-odds {{ display:flex; gap:10px; font-size:12.5px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--line); }}

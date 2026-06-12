@@ -276,15 +276,30 @@ def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dic
 
 def are_compatible(market_a: str, market_b: str) -> bool:
     """Two markets are compatible iff there exists at least one final score
-    (h, a) ∈ [0..7]² where both bets pay. Computed by enumeration — robust
-    to any market combination without hand-coded rules per pair."""
-    if market_a == market_b:
+    (h, a) ∈ [0..7]² where both bets pay."""
+    return jointly_compatible(market_a, market_b)
+
+
+def jointly_compatible(*markets) -> bool:
+    """N markets are jointly compatible iff there exists at least one
+    final score where every one of them pays. Pairwise compatibility
+    doesn't imply triple compatibility — e.g. Under 2.5 + BTTS yes +
+    Victoire Paraguay are pairwise OK but jointly impossible (forces
+    home=1, away=2, total=3 which violates Under 2.5)."""
+    markets = [m for m in markets if m]
+    # Scorer markets are independent of the final score (player either
+    # scored or didn't, decoupled from h/a outcome). Strip them out.
+    deterministic = [m for m in markets if not m.startswith("scorer_")]
+    if not deterministic:
         return True
-    if market_a.startswith("scorer_") or market_b.startswith("scorer_"):
-        return True  # scorer markets are independent of the score outcome
+    if len(deterministic) == 1:
+        return True
+    if any(deterministic.count(m) > 1 for m in deterministic):
+        # Same market repeated — trivially compatible
+        deterministic = list(set(deterministic))
     for h in range(8):
         for a in range(8):
-            if _bet_wins(market_a, h, a) and _bet_wins(market_b, h, a):
+            if all(_bet_wins(m, h, a) for m in deterministic):
                 return True
     return False
 
@@ -320,6 +335,7 @@ def pick_ultra_risky(
     buteur_odds: dict, model_probs: dict, unibet_odds: dict,
     consensus_probs: dict,
     exclude_markets: set | None = None,
+    compat_with: list | None = None,
 ) -> dict | None:
     """
     Ultra-risky pool combines several long-shot market types and picks the
@@ -343,8 +359,14 @@ def pick_ultra_risky(
     exclude_markets: set of market keys already used by safe/risky for this
     match. The ultra pick must come from a different market so the three
     categories don't all bet on the exact same outcome.
+
+    compat_with: list of market keys (safe + risky picks) that the ultra
+    pick must be jointly compatible with — i.e. there must exist at least
+    one final score where all three bets pay simultaneously. Pairwise
+    compatibility isn't enough.
     """
     exclude = exclude_markets or set()
+    compat_with = compat_with or []
     candidates = []
 
     # (a) Buteur candidates. Sanity-check: the market often knows better than
@@ -411,14 +433,61 @@ def pick_ultra_risky(
             "source": "unibet" if mkey in ("h2h_home", "h2h_draw", "h2h_away") or mkey.startswith(("over_", "under_")) else "consensus",
         })
 
-    # Filter buteur candidates against exclude too (just in case scorer key
-    # collision with safe/risky — unlikely but safe).
+    # Exclude same-market repeats, then enforce JOINT compatibility with
+    # safe + risky picks (not just pairwise).
     candidates = [c for c in candidates if c["market"] not in exclude]
+    candidates = [
+        c for c in candidates
+        if jointly_compatible(c["market"], *compat_with)
+    ]
     if not candidates:
         return None
     best = max(candidates, key=lambda r: r["edge"])
     best["has_value"] = best["edge"] >= ULTRA_VALUE_EDGE
     return best
+
+
+# Edge above which an excluded pick gets surfaced as a "must-play" alert
+MUST_PLAY_EDGE_THRESHOLD = 0.20
+
+
+def find_must_play_alerts(
+    home: str, away: str, lam_h: float, lam_a: float,
+    buteur_odds: dict, model_probs: dict, unibet_odds: dict,
+    consensus_probs: dict,
+    chosen_markets: list,
+) -> list:
+    """
+    Find picks with edge ≥ MUST_PLAY_EDGE_THRESHOLD that got excluded from
+    the combo because they're incompatible with the chosen safe/risky/ultra
+    picks. These are "play it solo if you have conviction" opportunities.
+    """
+    chosen_set = set(chosen_markets)
+    candidates = []
+
+    # h2h/totals/BTTS/DC/etc. — anything in the row pool with strong edge
+    for mkey, odd in unibet_odds.items():
+        m_prob = model_probs.get(mkey)
+        c_prob = consensus_probs.get(mkey)
+        if m_prob is None and c_prob is None:
+            continue
+        fair = _blend(m_prob, c_prob)
+        fair, edge = cap_edge(fair, odd)
+        if edge < MUST_PLAY_EDGE_THRESHOLD:
+            continue
+        if mkey in chosen_set:
+            continue
+        if jointly_compatible(mkey, *chosen_markets):
+            continue  # fits the combo, not a "must-play simple"
+        candidates.append({
+            "market": mkey, "unibet_odd": odd, "fair_prob": fair, "edge": edge,
+            "source": "unibet" if mkey in ("h2h_home","h2h_draw","h2h_away") or mkey.startswith(("over_","under_")) else "consensus",
+        })
+
+    # Buteur candidates with strong edge — but scorers are independent so
+    # they're never "incompatible". Skip from must-play.
+
+    return sorted(candidates, key=lambda c: -c["edge"])[:3]
 
 
 def analyse_event(event: dict, elo: dict, form_data: dict,
@@ -455,11 +524,16 @@ def analyse_event(event: dict, elo: dict, form_data: dict,
         for name, odd in advanced_odds["scorers"].items():
             scorer_odds_merged.setdefault(name, {"odd": odd, "n_books": 1})
 
-    # Build exclusion set so ultra doesn't pick the exact same outcome as
-    # safe or risky (e.g. both Risqué and Ultra landing on "Victoire X").
+    # Build exclusion + joint-compatibility constraints so the three picks
+    # can all pay out at the same final score (not just pairwise).
     exclude = set()
-    if safe is not None: exclude.add(safe["market"])
-    if risky is not None: exclude.add(risky["market"])
+    compat_chain = []
+    if safe is not None:
+        exclude.add(safe["market"])
+        compat_chain.append(safe["market"])
+    if risky is not None:
+        exclude.add(risky["market"])
+        compat_chain.append(risky["market"])
 
     ultra_risky = pick_ultra_risky(
         home, away,
@@ -467,6 +541,19 @@ def analyse_event(event: dict, elo: dict, form_data: dict,
         scorer_odds_merged, prediction["probs"], odds["unibet"],
         consensus_probs,
         exclude_markets=exclude,
+        compat_with=compat_chain,
+    )
+
+    # Surface high-edge picks that got dropped due to joint-compat
+    chosen = list(compat_chain)
+    if ultra_risky is not None:
+        chosen.append(ultra_risky["market"])
+    must_play = find_must_play_alerts(
+        home, away,
+        prediction["lambda_home"], prediction["lambda_away"],
+        scorer_odds_merged, prediction["probs"], odds["unibet"],
+        consensus_probs,
+        chosen_markets=chosen,
     )
     if ultra_risky and safe and not are_compatible(safe["market"], ultra_risky["market"]):
         ultra_risky = None  # fallback path — shouldn't trigger because scorer is always compatible
@@ -485,6 +572,7 @@ def analyse_event(event: dict, elo: dict, form_data: dict,
         "key_players_away": get_key_players(away),
         "buteur_odds_count": len(buteur_odds) if buteur_odds else 0,
     }
+    result["must_play"] = must_play
     result["insight"] = generate_insight(result, form_data=form_data)
     return result
 

@@ -413,7 +413,10 @@ def render_performance_tab(perf: dict, combos: list, combo_totals: dict, standin
 
     return f"""
     <div class="perf-tools">
-      <button class="refresh-btn small" onclick="updateResults()">🔄 Mettre à jour les résultats</button>
+      <a class="refresh-btn small"
+         href="https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml"
+         target="_blank" rel="noopener"
+         onclick="return updateResults(event)">🔄 Mettre à jour les résultats</a>
       <span id="update-status" class="refresh-status"></span>
       <span class="perf-note">ROI calculé sur les combinés. Un combo perd si UNE seule jambe perd.</span>
     </div>
@@ -506,6 +509,8 @@ def render(analysis: dict) -> str:
       background: var(--yellow-card); color: var(--ink); border:0; padding: 10px 16px; border-radius:6px;
       font-weight:700; cursor:pointer; font-size:13px; box-shadow: 0 2px 8px rgba(0,0,0,.18);
       transition: transform .12s, opacity .12s;
+      text-decoration: none;
+      display: inline-block;
     }}
     .refresh-btn:hover {{ transform: translateY(-1px); }}
     .refresh-btn:disabled {{ opacity:.6; cursor: wait; transform: none; }}
@@ -717,7 +722,10 @@ def render(analysis: dict) -> str:
       <span class="pill">API : {cu}/500 utilisés · {cr} restants</span>
     </div>
     <div class="header-actions">
-      <button id="refresh-btn" class="refresh-btn" onclick="doRefresh()">🔄 Rafraîchir les paris du jour</button>
+      <a id="refresh-btn" class="refresh-btn"
+         href="https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml"
+         target="_blank" rel="noopener"
+         onclick="return doRefresh(event)">🔄 Rafraîchir les paris du jour</a>
       <span id="refresh-status" class="refresh-status"></span>
     </div>
   </header>
@@ -805,20 +813,21 @@ def render(analysis: dict) -> str:
     // Restore tab from URL hash
     if (location.hash === '#perf') showTab('perf');
 
-    async function doRefresh() {{
-      const btn = document.getElementById('refresh-btn');
+    async function doRefresh(event) {{
       const status = document.getElementById('refresh-status');
-      // On GitHub Pages there's no /refresh backend — point the user to
-      // GitHub Actions where they can trigger the workflow manually with
-      // one click on "Run workflow".
+      // On GitHub Pages (HTTPS), the anchor's href + target=_blank handles
+      // navigation natively — no popup blocker, always works. We just
+      // update the status text and let the browser navigate.
       const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
       if (isLive) {{
-        const url = 'https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml';
-        window.open(url, '_blank');
-        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>" → "Run workflow". La page live se met à jour ~1 min après.';
-        return;
+        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>" → "Run workflow". Reviens ici dans ~1 min et fais Cmd+Shift+R.';
+        return true;  // let the anchor navigate
       }}
-      btn.disabled = true;
+      // Local dev server: prevent navigation, do the POST instead
+      event.preventDefault();
+      const btn = document.getElementById('refresh-btn');
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '.6';
       status.textContent = '⏳ Rafraîchissement en cours…';
       try {{
         const r = await fetch('/refresh', {{method: 'POST'}});
@@ -828,24 +837,23 @@ def render(analysis: dict) -> str:
           setTimeout(() => location.reload(), 400);
         }} else {{
           status.textContent = '⚠ Erreur: ' + (j.detail || 'inconnue');
-          btn.disabled = false;
+          btn.style.pointerEvents = ''; btn.style.opacity = '';
         }}
       }} catch (e) {{
         status.textContent = '⚠ Pas de serveur local (lance `python3 serve.py`).';
-        btn.disabled = false;
+        btn.style.pointerEvents = ''; btn.style.opacity = '';
       }}
+      return false;
     }}
 
-    async function updateResults() {{
+    async function updateResults(event) {{
       const status = document.getElementById('update-status');
       const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
       if (isLive) {{
-        // ESPN results are auto-fetched (free) by the daily cron. Manual
-        // trigger redirects to the same workflow page.
-        window.open('https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml', '_blank');
-        status.innerHTML = '↗ Refresh global déclenchable via GitHub Actions.';
-        return;
+        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>".';
+        return true;
       }}
+      event.preventDefault();
       status.textContent = '⏳ Récupération des scores…';
       try {{
         const r = await fetch('/update-results', {{method: 'POST'}});
@@ -859,6 +867,7 @@ def render(analysis: dict) -> str:
       }} catch (e) {{
         status.textContent = '⚠ Pas de serveur local.';
       }}
+      return false;
     }}
 
     async function markOutcome(eventId, category, outcome) {{

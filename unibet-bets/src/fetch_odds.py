@@ -190,15 +190,15 @@ def devigged_probs_from_odds(odds_by_outcome: dict[str, float]) -> dict[str, flo
     return {k: v / total for k, v in raw.items()}
 
 
-# Budget horizon: group stage only (12-27 June). With ESPN handling
-# scores (free), daily fixed cost is 2 credits (bulk h2h+totals only).
-# Per-event advanced bundle:
+# Budget-disciplined default. Per-event auto-fetch limited to 2 markets:
 #   - btts                          (1) diversifying signal beyond totals
-#   - alternate_totals              (1) 30+ goal lines, finds value risky
 #   - player_goal_scorer_anytime    (1) only source for ultra scorer picks
-# Total per event = 3 credits, ~60 remaining events × 3 = 180. Daily
-# bulk 2 × 15 days = 30. Total ~210, fits in remaining quota.
-ADVANCED_MARKETS = ["btts", "alternate_totals", "player_goal_scorer_anytime"]
+# alternate_totals and double_chance are NOT auto-fetched (each adds
+# ~65 credits over remaining group stage). Pull them on-demand only
+# when a specific match clearly needs richer search — the parser
+# handles them when they appear in the cache. Manual one-off fetch
+# pattern: see scripts in the conversation history.
+ADVANCED_MARKETS = ["btts", "player_goal_scorer_anytime"]
 
 
 def fetch_advanced_odds(event_id: str) -> dict:

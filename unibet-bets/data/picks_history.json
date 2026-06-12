@@ -58,5 +58,65 @@
       "has_value": true,
       "is_buteur": true
     }
+  },
+  "d1f4f946c70a0b4e81f5d43e9d32361c": {
+    "event_id": "d1f4f946c70a0b4e81f5d43e9d32361c",
+    "home_team": "Canada",
+    "away_team": "Bosnia & Herzegovina",
+    "commence_time": "2026-06-12T19:00:00Z",
+    "safe": {
+      "market": "team_away_under_0.5",
+      "cote": 2.24,
+      "fair_prob": 0.5705,
+      "edge": 0.27792000000000017,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "under_2.0",
+      "cote": 2.265,
+      "fair_prob": 0.43410852713178294,
+      "edge": -0.016744186046511622,
+      "has_value": false,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "scorer_Jonathan David",
+      "cote": 2.48,
+      "fair_prob": 0.44376254579820396,
+      "edge": 0.1005311135795457,
+      "has_value": true,
+      "is_buteur": true
+    }
+  },
+  "c12986f447a515fbe641addd786dbb24": {
+    "event_id": "c12986f447a515fbe641addd786dbb24",
+    "home_team": "USA",
+    "away_team": "Paraguay",
+    "commence_time": "2026-06-13T01:00:00Z",
+    "safe": {
+      "market": "dc_X2",
+      "cote": 1.78,
+      "fair_prob": 0.7146,
+      "edge": 0.2719880000000001,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "h2h_away",
+      "cote": 4.1,
+      "fair_prob": 0.3073871945733066,
+      "edge": 0.26028749775055693,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "h2h_away",
+      "cote": 4.1,
+      "fair_prob": 0.3073871945733066,
+      "edge": 0.26028749775055693,
+      "has_value": true,
+      "is_buteur": false
+    }
   }
 }

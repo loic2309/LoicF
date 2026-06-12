@@ -72,12 +72,30 @@ def save_manual_outcome(event_id: str, category: str, outcome: str) -> None:
 
 
 def record_picks(matches: list) -> None:
-    """Persist today's picks into the history file (keyed by event_id)."""
+    """
+    Persist today's picks into the history file (keyed by event_id).
+
+    Past picks are immutable: once a match has kicked off, we never
+    overwrite its picks. This protects the performance log against later
+    re-runs of the pipeline (test sessions, code changes, manual reruns)
+    that would otherwise rewrite history with different picks than the
+    user actually saw on the live page when they took their bets.
+    """
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc)
     history = load_picks_history()
     for m in matches:
         event_id = m.get("event_id")
         if not event_id:
             continue
+        # Lock picks for matches that have already started
+        try:
+            kickoff = datetime.fromisoformat(m["commence_time"].replace("Z", "+00:00"))
+            if kickoff <= now and event_id in history:
+                continue
+        except (ValueError, KeyError):
+            pass
+
         entry = history.get(event_id, {})
         entry.update({
             "event_id": event_id,
@@ -104,19 +122,55 @@ def record_picks(matches: list) -> None:
 # ---------- evaluation ----------
 
 def evaluate_pick(market: str, home_score: int, away_score: int) -> str:
-    """Returns 'won' | 'lost' for h2h/totals; raises ValueError for unsupported."""
+    """
+    Returns 'won' | 'lost' | 'refund' for any deterministic market.
+    Raises ValueError for markets that need manual marking (scorer_*).
+    Covers every market type the deep-rework selector can emit:
+      h2h, double-chance, draw-no-bet, BTTS, match totals (over/under),
+      team-specific totals.
+    """
     if market == "h2h_home":
         return "won" if home_score > away_score else "lost"
     if market == "h2h_away":
         return "won" if away_score > home_score else "lost"
     if market == "h2h_draw":
         return "won" if home_score == away_score else "lost"
+    if market == "dc_1X":
+        return "won" if home_score >= away_score else "lost"
+    if market == "dc_X2":
+        return "won" if home_score <= away_score else "lost"
+    if market == "dc_12":
+        return "won" if home_score != away_score else "lost"
+    if market == "dnb_home":
+        if home_score == away_score:
+            return "refund"
+        return "won" if home_score > away_score else "lost"
+    if market == "dnb_away":
+        if home_score == away_score:
+            return "refund"
+        return "won" if away_score > home_score else "lost"
+    if market == "btts_yes":
+        return "won" if (home_score >= 1 and away_score >= 1) else "lost"
+    if market == "btts_no":
+        return "won" if not (home_score >= 1 and away_score >= 1) else "lost"
     if market.startswith("over_"):
         line = float(market.split("_")[1])
         return "won" if (home_score + away_score) > line else "lost"
     if market.startswith("under_"):
         line = float(market.split("_")[1])
         return "won" if (home_score + away_score) < line else "lost"
+    if market.startswith("team_home_over_"):
+        line = float(market.split("_")[-1])
+        return "won" if home_score > line else "lost"
+    if market.startswith("team_home_under_"):
+        line = float(market.split("_")[-1])
+        return "won" if home_score < line else "lost"
+    if market.startswith("team_away_over_"):
+        line = float(market.split("_")[-1])
+        return "won" if away_score > line else "lost"
+    if market.startswith("team_away_under_"):
+        line = float(market.split("_")[-1])
+        return "won" if away_score < line else "lost"
     raise ValueError(f"auto-eval not supported for market: {market}")
 
 
@@ -179,6 +233,10 @@ def evaluate_all() -> dict:
             elif outcome == "lost":
                 payout = 0.0
                 profit = -stake
+            elif outcome == "refund":
+                # Draw-no-bet pushed → stake refunded, zero profit/loss
+                payout = stake
+                profit = 0.0
             else:
                 payout = 0.0
                 profit = 0.0
@@ -213,6 +271,8 @@ def evaluate_all() -> dict:
                 agg["losses"] += 1
                 agg["stake_total"] += stake
                 agg["profit"] += profit
+            elif outcome == "refund":
+                agg["stake_total"] += stake
             else:
                 agg["pending"] += 1
 

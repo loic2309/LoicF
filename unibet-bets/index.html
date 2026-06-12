@@ -227,8 +227,8 @@
     <div class="sub">
       <span class="pill">Vendredi 12 juin 2026 · matchs entre 15:00 et 06:00 (heure belge)</span>
       <span class="pill">Mise: 10€ safe · 8€ risqué · 2€ ultra</span>
-      <span class="pill">Mise à jour 12/06/2026 08:49</span>
-      <span class="pill">API : 241/500 utilisés · 259 restants</span>
+      <span class="pill">Mise à jour 12/06/2026 08:50</span>
+      <span class="pill">API : 267/500 utilisés · 233 restants</span>
     </div>
     <div class="header-actions">
       <button id="refresh-btn" class="refresh-btn" onclick="doRefresh()">🔄 Rafraîchir les paris du jour</button>
@@ -449,36 +449,36 @@
     </div>
     
       <div class="grand-total">
-        <div><span class="gt-num gain">+0.00€</span><span class="gt-lbl">profit total</span></div>
-        <div><span class="gt-num gain">+0.0%</span><span class="gt-lbl">ROI cumulé</span></div>
+        <div><span class="gt-num gain">+0.30€</span><span class="gt-lbl">profit total</span></div>
+        <div><span class="gt-num gain">+0.8%</span><span class="gt-lbl">ROI cumulé</span></div>
         <div><span class="gt-num">12</span><span class="gt-lbl">paris suivis</span></div>
-        <div><span class="gt-num">0€</span><span class="gt-lbl">mise totale</span></div>
+        <div><span class="gt-num">36€</span><span class="gt-lbl">mise totale</span></div>
       </div>
     <div class="perf-summary">
         <div class="perf-card safe">
           <div class="perf-card-head">🛡️ Safe · mise 10€</div>
           <div class="perf-card-pl">
-            <span class="pl-amount gain">+0.00€</span>
-            <span class="pl-roi gain">ROI +0.0%</span>
+            <span class="pl-amount loss">-5.70€</span>
+            <span class="pl-roi loss">ROI -28.5%</span>
           </div>
           <div class="perf-card-stats">
-            <div><span class="stat-num">0</span><span class="stat-lbl">gagnés</span></div>
-            <div><span class="stat-num">0</span><span class="stat-lbl">perdus</span></div>
-            <div><span class="stat-num">4</span><span class="stat-lbl">attente</span></div>
-            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">gagnés</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">perdus</span></div>
+            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">50%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div>
         <div class="perf-card risky">
           <div class="perf-card-head">⚡ Risqué · mise 8€</div>
           <div class="perf-card-pl">
-            <span class="pl-amount gain">+0.00€</span>
-            <span class="pl-roi gain">ROI +0.0%</span>
+            <span class="pl-amount gain">+6.00€</span>
+            <span class="pl-roi gain">ROI +37.5%</span>
           </div>
           <div class="perf-card-stats">
-            <div><span class="stat-num">0</span><span class="stat-lbl">gagnés</span></div>
-            <div><span class="stat-num">0</span><span class="stat-lbl">perdus</span></div>
-            <div><span class="stat-num">4</span><span class="stat-lbl">attente</span></div>
-            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">gagnés</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">perdus</span></div>
+            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">50%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div>
         <div class="perf-card ultra">
@@ -494,7 +494,14 @@
             <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div></div>
-    <div class="standings empty">📊 Classement à venir — aucun match terminé pour le moment.</div>
+    
+        <div class="standings">
+          <h3>📊 Classement du tournoi (équipes ayant joué)</h3>
+          <table class="standings-table">
+            <thead><tr><th>Équipe</th><th>J</th><th>V</th><th>N</th><th>D</th><th>Buts</th><th>+/−</th><th>Pts</th></tr></thead>
+            <tbody><tr><td>Mexico</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2-0</td><td class="gd">+2</td><td class="pts">3</td></tr><tr><td>South Korea</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2-1</td><td class="gd">+1</td><td class="pts">3</td></tr><tr><td>Czech Republic</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1-2</td><td class="gd">-1</td><td class="pts">0</td></tr><tr><td>South Africa</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0-2</td><td class="gd">-2</td><td class="pts">0</td></tr></tbody>
+          </table>
+        </div>
     
         <div class="history">
           <h3>📋 Historique des paris (12)</h3>
@@ -570,27 +577,27 @@
                 <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('d1f4f946c70a0b4e81f5d43e9d32361c','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('d1f4f946c70a0b4e81f5d43e9d32361c','ultra_risky','lost')">✗</button></td>
                 <td class="pl"></td>
               </tr>
-              <tr class="row-pending">
+              <tr class="row-lost">
                 <td class="date">12/06 04:00</td>
                 <td class="match">South Korea – Czech Republic</td>
                 <td class="cat">🛡️</td>
                 <td class="pick">Moins de 2.5 buts (match)</td>
                 <td class="cote">@ 1.70</td>
                 <td class="stake">10€</td>
-                <td class="result">—</td>
-                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
-                <td class="pl"></td>
+                <td class="result">2-1</td>
+                <td class="status outcome-lost" title="Pari perdu">✗ </td>
+                <td class="pl"><span class="loss">-10.00€</span></td>
               </tr>
-              <tr class="row-pending">
+              <tr class="row-won">
                 <td class="date">12/06 04:00</td>
                 <td class="match">South Korea – Czech Republic</td>
                 <td class="cat">⚡</td>
                 <td class="pick">Victoire South Korea</td>
                 <td class="cote">@ 2.75</td>
                 <td class="stake">8€</td>
-                <td class="result">—</td>
-                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
-                <td class="pl"></td>
+                <td class="result">2-1</td>
+                <td class="status outcome-won" title="Pari gagné">✓ </td>
+                <td class="pl"><span class="gain">+14.00€</span></td>
               </tr>
               <tr class="row-manual_pending">
                 <td class="date">12/06 04:00</td>
@@ -603,27 +610,27 @@
                 <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('384cbb5d76b535896a24fe65f93cfac8','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('384cbb5d76b535896a24fe65f93cfac8','ultra_risky','lost')">✗</button></td>
                 <td class="pl"></td>
               </tr>
-              <tr class="row-pending">
+              <tr class="row-won">
                 <td class="date">11/06 21:00</td>
                 <td class="match">Mexico – South Africa</td>
                 <td class="cat">🛡️</td>
                 <td class="pick">Victoire Mexico</td>
                 <td class="cote">@ 1.43</td>
                 <td class="stake">10€</td>
-                <td class="result">—</td>
-                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
-                <td class="pl"></td>
+                <td class="result">2-0</td>
+                <td class="status outcome-won" title="Pari gagné">✓ </td>
+                <td class="pl"><span class="gain">+4.30€</span></td>
               </tr>
-              <tr class="row-pending">
+              <tr class="row-lost">
                 <td class="date">11/06 21:00</td>
                 <td class="match">Mexico – South Africa</td>
                 <td class="cat">⚡</td>
                 <td class="pick">Plus de 2.5 buts (match)</td>
                 <td class="cote">@ 2.23</td>
                 <td class="stake">8€</td>
-                <td class="result">—</td>
-                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
-                <td class="pl"></td>
+                <td class="result">2-0</td>
+                <td class="status outcome-lost" title="Pari perdu">✗ </td>
+                <td class="pl"><span class="loss">-8.00€</span></td>
               </tr>
               <tr class="row-manual_pending">
                 <td class="date">11/06 21:00</td>

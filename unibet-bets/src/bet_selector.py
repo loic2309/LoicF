@@ -41,6 +41,7 @@ from fetch_odds import (
     fetch_and_cache,
     fetch_buteur_for_today,
     fetch_advanced_for_today,
+    fetch_current_credits,
     extract_event_odds,
     devigged_probs_from_odds,
     UNIBET_KEYS,
@@ -748,8 +749,16 @@ def analyse_today(force_buteur: bool = False) -> dict:
     if results:
         record_picks(results)
 
-    remaining = last_remaining_after_fetch or payload["remaining_credits"]
-    used = (500 - int(remaining)) if remaining else payload["used_credits"]
+    # The cached value can be stale (multiple workflow runs, manual ops in
+    # between). Hit /sports (FREE — doesn't count against quota) to refresh
+    # the displayed counter at render time.
+    fresh = fetch_current_credits()
+    if fresh and fresh.get("remaining"):
+        remaining = fresh["remaining"]
+        used = fresh["used"] or str(500 - int(remaining))
+    else:
+        remaining = last_remaining_after_fetch or payload["remaining_credits"]
+        used = (500 - int(remaining)) if remaining else payload["used_credits"]
 
     return {
         "window_start": start.isoformat(),

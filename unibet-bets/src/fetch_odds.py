@@ -11,6 +11,7 @@ Budget cost: 2 markets × 1 region = 2 credits per /odds call.
 Strategy: fetch once per day, cache per-day. ~60 credits over the full
 tournament, leaving a comfortable safety margin in the 500-credit budget.
 """
+from __future__ import annotations
 
 import json
 import os
@@ -67,6 +68,26 @@ def _http_get(url: str) -> tuple[dict, dict]:
         }
         body = json.loads(resp.read().decode("utf-8"))
     return body, headers
+
+
+def fetch_current_credits() -> dict | None:
+    """Hit /sports to read the live remaining/used credit headers.
+
+    The /sports endpoint is FREE per The Odds API pricing (it does not
+    consume from the monthly quota). Useful to display an accurate
+    credit counter on the page without spending anything.
+    """
+    import urllib.error
+    url = f"{BASE_URL}/sports?apiKey={API_KEY}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "wc2026-bets/1.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return {
+                "remaining": resp.headers.get("x-requests-remaining"),
+                "used": resp.headers.get("x-requests-used"),
+            }
+    except Exception:
+        return None
 
 
 def fetch_bulk_odds() -> dict:

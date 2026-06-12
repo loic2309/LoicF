@@ -222,6 +222,7 @@ OUTCOME_STYLE = {
     "lost":           ("✗",  "outcome-lost",   "Pari perdu"),
     "pending":        ("⏳", "outcome-pending","En attente du résultat"),
     "manual_pending": ("?",  "outcome-manual", "Pari buteur — à marquer manuellement"),
+    "refund":         ("≈",  "outcome-refund", "Pari remboursé (joueur n'a pas joué, etc.)"),
 }
 
 

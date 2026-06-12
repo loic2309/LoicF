@@ -65,8 +65,14 @@ def load_manual_outcomes() -> dict:
 
 
 def save_manual_outcome(event_id: str, category: str, outcome: str) -> None:
-    """outcome must be 'won' | 'lost'."""
-    if outcome not in ("won", "lost", "pending"):
+    """outcome ∈ {'won', 'lost', 'refund', 'pending'}.
+
+    'refund' = leg voided (e.g. buteur pick where the player didn't play).
+    In a combo, refunded legs are treated as cote=1.0: combo wins on the
+    product of non-refunded legs; if every leg is refunded, the whole
+    combo is refunded (stake returned, P/L = 0).
+    """
+    if outcome not in ("won", "lost", "refund", "pending"):
         raise ValueError(f"invalid outcome: {outcome}")
     data = load_manual_outcomes()
     data.setdefault(event_id, {})[category] = outcome
@@ -342,11 +348,13 @@ def evaluate_combos(rows: list) -> list:
     The user actually plays the COMBINED bet of all picks in a category for
     a given day. So P/L and ROI are computed on the combo, not on legs.
 
-    Combo outcome rule:
-      - any leg lost  → combo LOST  → P/L = −stake
-      - any leg pending → combo pending  → P/L = 0
-      - any leg manual_pending → combo manual_pending → P/L = 0
-      - all legs won  → combo WON  → P/L = stake × product(cotes) − stake
+    Combo outcome rule (industry-standard refund handling):
+      - any leg lost     → combo LOST            P/L = −stake
+      - any leg pending  → combo PENDING         P/L = 0
+      - any leg manual_pending → MANUAL_PENDING  P/L = 0
+      - every leg refunded     → combo REFUND    P/L = 0 (stake back)
+      - all legs won OR refunded (≥1 won) → WON  P/L = stake × ∏(cotes of WON legs) − stake
+        (refunded legs collapse to cote=1.0)
     """
     by_day_cat = defaultdict(lambda: defaultdict(list))
     for r in rows:
@@ -360,6 +368,8 @@ def evaluate_combos(rows: list) -> list:
             if not picks:
                 continue
             stake = STAKES[category]
+            # Natural product (informational — what the combo would pay if
+            # every leg won)
             cote = 1.0
             for p in picks:
                 cote *= p["cote"]
@@ -374,9 +384,17 @@ def evaluate_combos(rows: list) -> list:
             elif "manual_pending" in outcomes:
                 co = "manual_pending"
                 profit = 0.0
+            elif all(o == "refund" for o in outcomes):
+                co = "refund"
+                profit = 0.0
             else:
+                # at least one won, possibly some refunded → product of WON legs
+                effective_cote = 1.0
+                for p in picks:
+                    if p["outcome"] == "won":
+                        effective_cote *= p["cote"]
                 co = "won"
-                profit = stake * cote - stake
+                profit = stake * effective_cote - stake
 
             combos.append({
                 "belgian_day": bday,

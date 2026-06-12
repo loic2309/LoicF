@@ -286,12 +286,18 @@ def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dic
     if "X2" in dc: add("dc_X2", dc["X2"], "consensus", note_consensus)
     if "12" in dc: add("dc_12", dc["12"], "consensus", note_consensus)
 
-    # Alternate totals (Over/Under at lines other than the main 2.5)
-    # When present in cache, expands the goal totals search drastically.
+    # Alternate totals — only at standard half-goal lines (0.5, 1.5, 2.5,
+    # 3.5, 4.5, 5.5). Unibet's website doesn't offer Asian/quarter lines
+    # like 2.0, 1.8, 3.2 etc. — those come from Pinnacle's pricing only,
+    # so recommending them would mean the user can't actually place the
+    # bet on Unibet. Filter to half-lines for playable picks only.
     alt = advanced_odds.get("alt_totals", {})
+    HALF_LINES = {"0.5", "1.5", "2.5", "3.5", "4.5", "5.5"}
     for label, odd in alt.items():
-        # Skip if same as the main totals already added from Unibet bulk
         if label in unibet_odds:
+            continue  # already from Unibet bulk
+        parts = label.split("_")
+        if len(parts) != 2 or parts[1] not in HALF_LINES:
             continue
         add(label, odd, "consensus", note_consensus)
 

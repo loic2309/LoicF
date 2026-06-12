@@ -808,6 +808,16 @@ def render(analysis: dict) -> str:
     async function doRefresh() {{
       const btn = document.getElementById('refresh-btn');
       const status = document.getElementById('refresh-status');
+      // On GitHub Pages there's no /refresh backend — point the user to
+      // GitHub Actions where they can trigger the workflow manually with
+      // one click on "Run workflow".
+      const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
+      if (isLive) {{
+        const url = 'https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml';
+        window.open(url, '_blank');
+        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>" → "Run workflow". La page live se met à jour ~1 min après.';
+        return;
+      }}
       btn.disabled = true;
       status.textContent = '⏳ Rafraîchissement en cours…';
       try {{
@@ -828,6 +838,14 @@ def render(analysis: dict) -> str:
 
     async function updateResults() {{
       const status = document.getElementById('update-status');
+      const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
+      if (isLive) {{
+        // ESPN results are auto-fetched (free) by the daily cron. Manual
+        // trigger redirects to the same workflow page.
+        window.open('https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml', '_blank');
+        status.innerHTML = '↗ Refresh global déclenchable via GitHub Actions.';
+        return;
+      }}
       status.textContent = '⏳ Récupération des scores…';
       try {{
         const r = await fetch('/update-results', {{method: 'POST'}});

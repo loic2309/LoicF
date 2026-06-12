@@ -91,6 +91,12 @@ SAFE_MIN_PROB = 0.50
 RISKY_MIN_PROB = 0.18
 RISKY_MAX_PROB = 0.50
 
+# Hard cap on individual safe pick cote. The combo cap (5.0) is on the
+# product, but each leg of the safe combo must itself be a "safe" cote.
+# Cote > 2.0 implies market-perceived prob < 50%, which contradicts the
+# "safe" label even if our model disagrees.
+SAFE_MAX_INDIVIDUAL_ODD = 2.00
+
 # Value flag thresholds (edge above which a pick earns the VALEUR badge)
 SAFE_VALUE_EDGE = 0.02
 RISKY_VALUE_EDGE = 0.05
@@ -283,7 +289,11 @@ def are_compatible(market_a: str, market_b: str) -> bool:
 
 
 def pick_safe_and_risky(rows: list) -> tuple[dict | None, dict | None]:
-    safe_pool = [r for r in rows if r["fair_prob"] >= SAFE_MIN_PROB]
+    safe_pool = [
+        r for r in rows
+        if r["fair_prob"] >= SAFE_MIN_PROB
+        and r["unibet_odd"] <= SAFE_MAX_INDIVIDUAL_ODD
+    ]
     risky_pool = [r for r in rows if RISKY_MIN_PROB <= r["fair_prob"] < RISKY_MAX_PROB]
     safe = max(safe_pool, key=lambda r: r["edge"]) if safe_pool else None
     if safe is not None:

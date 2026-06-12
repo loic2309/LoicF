@@ -19,7 +19,11 @@ for the performance tab.
 from __future__ import annotations
 import json
 from collections import defaultdict
+from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BE_TZ = ZoneInfo("Europe/Brussels")
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 PICKS_PATH = DATA_DIR / "picks_history.json"
@@ -321,6 +325,95 @@ def tournament_standings(group_definitions: dict | None = None) -> dict:
         row["gd"] = row["gf"] - row["ga"]
     # Sort
     return dict(sorted(table.items(), key=lambda kv: (-kv[1]["pts"], -kv[1]["gd"], -kv[1]["gf"])))
+
+
+def belgian_day_of(iso: str) -> str:
+    """Belgian-window day key: matches kicking off 15h–05h59 next day group
+    together under the SAME Belgian day (the one whose 15h started the window)."""
+    dt = datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(BE_TZ)
+    if dt.hour < 6:
+        return (dt.date() - timedelta(days=1)).isoformat()
+    return dt.date().isoformat()
+
+
+def evaluate_combos(rows: list) -> list:
+    """
+    Aggregate individual pick outcomes into per-Belgian-day combo outcomes.
+    The user actually plays the COMBINED bet of all picks in a category for
+    a given day. So P/L and ROI are computed on the combo, not on legs.
+
+    Combo outcome rule:
+      - any leg lost  → combo LOST  → P/L = −stake
+      - any leg pending → combo pending  → P/L = 0
+      - any leg manual_pending → combo manual_pending → P/L = 0
+      - all legs won  → combo WON  → P/L = stake × product(cotes) − stake
+    """
+    by_day_cat = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        bday = belgian_day_of(r["kickoff"])
+        by_day_cat[bday][r["category"]].append(r)
+
+    combos = []
+    for bday in sorted(by_day_cat):
+        for category in ("safe", "risky", "ultra_risky"):
+            picks = by_day_cat[bday].get(category, [])
+            if not picks:
+                continue
+            stake = STAKES[category]
+            cote = 1.0
+            for p in picks:
+                cote *= p["cote"]
+
+            outcomes = [p["outcome"] for p in picks]
+            if "lost" in outcomes:
+                co = "lost"
+                profit = -stake
+            elif "pending" in outcomes:
+                co = "pending"
+                profit = 0.0
+            elif "manual_pending" in outcomes:
+                co = "manual_pending"
+                profit = 0.0
+            else:
+                co = "won"
+                profit = stake * cote - stake
+
+            combos.append({
+                "belgian_day": bday,
+                "category": category,
+                "n_picks": len(picks),
+                "cote_combined": cote,
+                "stake": stake,
+                "outcome": co,
+                "profit": profit,
+                "legs": picks,
+            })
+    return combos
+
+
+def aggregate_combos(combos: list) -> dict:
+    totals = defaultdict(lambda: {
+        "n_combos": 0, "wins": 0, "losses": 0, "pending": 0,
+        "stake_total": 0.0, "profit": 0.0,
+    })
+    for c in combos:
+        t = totals[c["category"]]
+        t["n_combos"] += 1
+        if c["outcome"] == "won":
+            t["wins"] += 1
+            t["stake_total"] += c["stake"]
+            t["profit"] += c["profit"]
+        elif c["outcome"] == "lost":
+            t["losses"] += 1
+            t["stake_total"] += c["stake"]
+            t["profit"] += c["profit"]
+        else:
+            t["pending"] += 1
+    for cat, t in totals.items():
+        decided = t["wins"] + t["losses"]
+        t["roi"] = (t["profit"] / t["stake_total"]) if t["stake_total"] > 0 else 0.0
+        t["hit_rate"] = (t["wins"] / decided) if decided > 0 else 0.0
+    return dict(totals)
 
 
 if __name__ == "__main__":

@@ -19,7 +19,10 @@ from bet_selector import (
     SAFE_STAKE, RISKY_STAKE, ULTRA_STAKE,
     belgian_day_window,
 )
-from performance import evaluate_all, tournament_standings, CATEGORY_LABELS, STAKES
+from performance import (
+    evaluate_all, evaluate_combos, aggregate_combos,
+    tournament_standings, CATEGORY_LABELS, STAKES,
+)
 
 OUT = Path(__file__).parent.parent / "bets.html"
 BE_TZ = ZoneInfo("Europe/Brussels")
@@ -222,30 +225,35 @@ OUTCOME_STYLE = {
 }
 
 
-def render_performance_tab(perf: dict, standings: dict) -> str:
+def render_performance_tab(perf: dict, combos: list, combo_totals: dict, standings: dict) -> str:
+    """
+    Combo-based reporting. The user actually plays the combo of all picks
+    in a category — a combo wins iff every leg wins. Individual leg outcomes
+    are still kept in the history table for transparency, but ROI/P&L are
+    computed on combos.
+    """
     rows = perf["rows"]
-    totals = perf["totals"]
 
-    # Summary cards per category
+    # Summary cards per category — combo-based
     summary_cards = []
     for category in ("safe", "risky", "ultra_risky"):
-        t = totals.get(category, {"n":0,"wins":0,"losses":0,"pending":0,
-                                  "profit":0,"roi":0,"hit_rate":0,
-                                  "stake_total":0,"payout_total":0})
+        t = combo_totals.get(category, {"n_combos":0,"wins":0,"losses":0,
+                                       "pending":0,"profit":0,"roi":0,
+                                       "hit_rate":0,"stake_total":0})
         css = {"safe":"safe","risky":"risky","ultra_risky":"ultra"}[category]
         profit_sign = "+" if t["profit"] >= 0 else ""
         roi_sign = "+" if t["roi"] >= 0 else ""
         summary_cards.append(f"""
         <div class="perf-card {css}">
-          <div class="perf-card-head">{CATEGORY_LABELS[category]} · mise {STAKES[category]:.0f}€</div>
+          <div class="perf-card-head">{CATEGORY_LABELS[category]} · mise {STAKES[category]:.0f}€/combo</div>
           <div class="perf-card-pl">
             <span class="pl-amount {'gain' if t['profit'] >= 0 else 'loss'}">{profit_sign}{t['profit']:.2f}€</span>
             <span class="pl-roi {'gain' if t['roi'] >= 0 else 'loss'}">ROI {roi_sign}{t['roi']*100:.1f}%</span>
           </div>
           <div class="perf-card-stats">
-            <div><span class="stat-num">{t['wins']}</span><span class="stat-lbl">gagnés</span></div>
-            <div><span class="stat-num">{t['losses']}</span><span class="stat-lbl">perdus</span></div>
-            <div><span class="stat-num">{t['pending']}</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">{t['wins']}</span><span class="stat-lbl">combos gagnés</span></div>
+            <div><span class="stat-num">{t['losses']}</span><span class="stat-lbl">combos perdus</span></div>
+            <div><span class="stat-num">{t['pending']}</span><span class="stat-lbl">en attente</span></div>
             <div><span class="stat-num">{t['hit_rate']*100:.0f}%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div>""")
@@ -327,30 +335,72 @@ def render_performance_tab(perf: dict, standings: dict) -> str:
         history_html = ('<div class="history empty">📋 Aucun pari enregistré pour le moment. '
                         'Reviens après le premier match.</div>')
 
-    # Grand total
-    total_n = sum(t.get("n",0) for t in totals.values())
-    total_profit = sum(t.get("profit",0) for t in totals.values())
-    total_stake = sum(t.get("stake_total",0) for t in totals.values())
+    # Grand total — combo-based
+    total_n = sum(t.get("n_combos",0) for t in combo_totals.values())
+    total_profit = sum(t.get("profit",0) for t in combo_totals.values())
+    total_stake = sum(t.get("stake_total",0) for t in combo_totals.values())
     total_roi = (total_profit / total_stake) if total_stake > 0 else 0
     sign = "+" if total_profit >= 0 else ""
     grand_total_html = f"""
       <div class="grand-total">
-        <div><span class="gt-num {'gain' if total_profit>=0 else 'loss'}">{sign}{total_profit:.2f}€</span><span class="gt-lbl">profit total</span></div>
+        <div><span class="gt-num {'gain' if total_profit>=0 else 'loss'}">{sign}{total_profit:.2f}€</span><span class="gt-lbl">profit total (combos)</span></div>
         <div><span class="gt-num {'gain' if total_roi>=0 else 'loss'}">{sign}{total_roi*100:.1f}%</span><span class="gt-lbl">ROI cumulé</span></div>
-        <div><span class="gt-num">{total_n}</span><span class="gt-lbl">paris suivis</span></div>
+        <div><span class="gt-num">{total_n}</span><span class="gt-lbl">combos joués</span></div>
         <div><span class="gt-num">{total_stake:.0f}€</span><span class="gt-lbl">mise totale</span></div>
       </div>"""
+
+    # Combo history — one row per (Belgian day × category)
+    combo_html = ""
+    if combos:
+        crows = []
+        for c in combos:
+            cat_icon = {"safe":"🛡️","risky":"⚡","ultra_risky":"🎲"}[c["category"]]
+            cat_label = {"safe":"Safe","risky":"Risqué","ultra_risky":"Ultra"}[c["category"]]
+            day_label = c["belgian_day"][8:10] + "/" + c["belgian_day"][5:7]
+            icon, css, _ = OUTCOME_STYLE.get(c["outcome"], ("?","outcome-pending","?"))
+            sign = "+" if c["profit"] >= 0 else ""
+            profit_cell = f'<span class="{"gain" if c["profit"]>=0 else "loss"}">{sign}{c["profit"]:.2f}€</span>' if c["outcome"] in ("won","lost") else ""
+            legs_txt = " × ".join(
+                f'{label_for(p["market"], p["home"], p["away"])} @ {p["cote"]:.2f}'
+                for p in c["legs"]
+            )
+            crows.append(f"""
+              <tr class="row-{c['outcome']}">
+                <td class="date">{day_label}</td>
+                <td class="cat">{cat_icon} {cat_label}</td>
+                <td class="legs">{html.escape(legs_txt)}</td>
+                <td class="cote">{c['cote_combined']:.2f}</td>
+                <td class="stake">{c['stake']:.0f}€</td>
+                <td class="status {css}">{icon}</td>
+                <td class="pl">{profit_cell}</td>
+              </tr>""")
+        combo_html = f"""
+        <div class="history">
+          <h3>🎯 Combinés joués ({len(combos)})</h3>
+          <table class="history-table combo-history-table">
+            <thead><tr>
+              <th>Date</th><th>Cat</th><th>Sélections</th>
+              <th>Cote</th><th>Mise</th><th>Statut</th><th>P/L</th>
+            </tr></thead>
+            <tbody>{''.join(crows)}</tbody>
+          </table>
+        </div>"""
+    else:
+        combo_html = '<div class="history empty">🎯 Aucun combiné joué pour le moment.</div>'
 
     return f"""
     <div class="perf-tools">
       <button class="refresh-btn small" onclick="updateResults()">🔄 Mettre à jour les résultats</button>
       <span id="update-status" class="refresh-status"></span>
-      <span class="perf-note">Buteur : non-couvert par /scores → cliquer ✓ / ✗ pour marquer manuellement.</span>
+      <span class="perf-note">ROI calculé sur les combinés. Un combo perd si UNE seule jambe perd.</span>
     </div>
     {grand_total_html}
     <div class="perf-summary">{''.join(summary_cards)}</div>
+    {combo_html}
     {standings_html}
-    {history_html}"""
+    <details class="leg-details"><summary>Détail des paris individuels (transparence)</summary>
+      {history_html}
+    </details>"""
 
 
 def render(analysis: dict) -> str:
@@ -358,6 +408,8 @@ def render(analysis: dict) -> str:
     window_label = fmt_window_label(analysis["window_start"], analysis["window_end"])
 
     perf = evaluate_all()
+    combos = evaluate_combos(perf["rows"])
+    combo_totals = aggregate_combos(combos)
     standings = tournament_standings()
 
     rolled_banner = ""
@@ -604,6 +656,13 @@ def render(analysis: dict) -> str:
     .history-table tr.row-won {{ background: rgba(46,160,67,.04); }}
     .history-table tr.row-lost {{ background: rgba(196,68,26,.04); }}
     .history-table td.pl {{ text-align:right; font-weight:600; font-variant-numeric: tabular-nums; }}
+    .leg-details {{ margin-top: 20px; background: var(--white); border:1px solid var(--line); border-radius: 8px; }}
+    .leg-details > summary {{ padding: 12px 18px; cursor:pointer; font-size: 13px; font-weight: 600; color: var(--ink-soft); list-style: none; }}
+    .leg-details > summary::-webkit-details-marker {{ display: none; }}
+    .leg-details > summary::before {{ content: "▸ "; }}
+    .leg-details[open] > summary::before {{ content: "▾ "; }}
+    .leg-details .history {{ border: none; margin: 0; padding: 0 18px 18px; }}
+    .combo-history-table td.legs {{ font-size: 11.5px; color: var(--ink-soft); }}
     .mini-btn {{ font-size:10px; padding: 2px 6px; border:1px solid var(--line); background:var(--white); border-radius:3px; cursor:pointer; margin-left:4px; font-weight:700; }}
     .mini-btn.mini-win:hover {{ background: var(--safe-soft); color: var(--safe-strong); border-color: var(--safe); }}
     .mini-btn.mini-lose:hover {{ background: var(--risky-soft); color: var(--risky-strong); border-color: var(--risky); }}
@@ -695,7 +754,7 @@ def render(analysis: dict) -> str:
       {body}
     </div>
     <div class="tab-content" data-tab="perf">
-      {render_performance_tab(perf, standings)}
+      {render_performance_tab(perf, combos, combo_totals, standings)}
     </div>
   </main>
 

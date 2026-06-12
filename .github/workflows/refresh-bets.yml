@@ -45,20 +45,27 @@ jobs:
           print(summary)
           "
 
-      - name: Regenerate page with fresh odds
+      - name: Regenerate page with fresh odds (cron only)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
-          python3 run.py --force
+          # Scheduled cron: --force pulls today's fresh Unibet h2h/totals
+          # (2 credits). Manual dispatches re-use the cache → 0 credits.
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            python3 run.py --force
+          else
+            python3 run.py
+          fi
           cp bets.html index.html
 
       - name: Commit & push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Persistent per-event advanced cache: once fetched, kept forever
-          # so subsequent runs don't re-spend credits on the same events.
-          git add data/odds_cache/advanced_*.json 2>/dev/null || true
+          # All odds caches now persisted on the repo so manual refreshes
+          # reuse them at zero credit cost. Daily bulk and per-event
+          # advanced files both included.
+          git add data/odds_cache/odds_*.json data/odds_cache/advanced_*.json 2>/dev/null || true
           git add -f index.html data/picks_history.json data/results_history.json data/elo_raw.tsv 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No changes — nothing to commit."

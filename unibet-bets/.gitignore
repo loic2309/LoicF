@@ -1,13 +1,12 @@
 # Secrets
 .env
 
-# Cache policy:
-#   - advanced_<event_id>.json  → PERSISTENT (committed). Once an event's
-#     advanced markets are fetched, we never re-fetch them.
-#   - odds_YYYY-MM-DD.json      → daily bulk h2h+totals. Regenerated each
-#     morning so today's cotes are fresh; not committed (transient).
-#   - buteur_*                  → legacy, deprecated.
-data/odds_cache/odds_*.json
+# Cache policy: everything in odds_cache/ is now persistent on the repo.
+#   - advanced_<event_id>.json — fetched once per event, kept forever.
+#   - odds_YYYY-MM-DD.json     — daily bulk h2h+totals fetched once each
+#                                morning by the cron. Manual refreshes
+#                                reuse the cached file → 0 credits.
+#   - buteur_*                 — legacy, deprecated.
 data/odds_cache/buteur_*.json
 data/buteur_*.json
 

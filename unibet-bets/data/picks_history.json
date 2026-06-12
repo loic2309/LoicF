@@ -65,18 +65,18 @@
     "away_team": "Bosnia & Herzegovina",
     "commence_time": "2026-06-12T19:00:00Z",
     "safe": {
-      "market": "team_away_under_0.5",
-      "cote": 2.23,
-      "fair_prob": 0.5705,
-      "edge": 0.2722150000000001,
+      "market": "btts_no",
+      "cote": 1.75,
+      "fair_prob": 0.627,
+      "edge": 0.09725000000000006,
       "has_value": true,
       "is_buteur": false
     },
     "risky": {
-      "market": "under_2.0",
-      "cote": 2.265,
-      "fair_prob": 0.43410852713178294,
-      "edge": -0.016744186046511622,
+      "market": "over_2.5",
+      "cote": 2.25,
+      "fair_prob": 0.42550597402597407,
+      "edge": -0.042611558441558395,
       "has_value": false,
       "is_buteur": false
     },
@@ -95,28 +95,28 @@
     "away_team": "Paraguay",
     "commence_time": "2026-06-13T01:00:00Z",
     "safe": {
-      "market": "dc_X2",
-      "cote": 1.78,
-      "fair_prob": 0.7146,
-      "edge": 0.2719880000000001,
-      "has_value": true,
+      "market": "under_2.5",
+      "cote": 1.67,
+      "fair_prob": 0.5788841612483746,
+      "edge": -0.033263450715214415,
+      "has_value": false,
       "is_buteur": false
     },
     "risky": {
-      "market": "h2h_away",
-      "cote": 4.1,
-      "fair_prob": 0.3067118673592528,
-      "edge": 0.25751865617293657,
-      "has_value": true,
+      "market": "btts_yes",
+      "cote": 2.0549999999999997,
+      "fair_prob": 0.493,
+      "edge": 0.013114999999999766,
+      "has_value": false,
       "is_buteur": false
     },
     "ultra_risky": {
-      "market": "scorer_Antonio Sanabria",
-      "cote": 4.35,
-      "fair_prob": 0.2875460496387935,
-      "edge": 0.2508253159287517,
+      "market": "h2h_away",
+      "cote": 4.2,
+      "fair_prob": 0.30713974257383936,
+      "edge": 0.2899869188101254,
       "has_value": true,
-      "is_buteur": true
+      "is_buteur": false
     }
   }
 }

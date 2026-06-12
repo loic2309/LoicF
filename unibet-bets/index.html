@@ -210,6 +210,13 @@
     .history-table tr.row-won { background: rgba(46,160,67,.04); }
     .history-table tr.row-lost { background: rgba(196,68,26,.04); }
     .history-table td.pl { text-align:right; font-weight:600; font-variant-numeric: tabular-nums; }
+    .leg-details { margin-top: 20px; background: var(--white); border:1px solid var(--line); border-radius: 8px; }
+    .leg-details > summary { padding: 12px 18px; cursor:pointer; font-size: 13px; font-weight: 600; color: var(--ink-soft); list-style: none; }
+    .leg-details > summary::-webkit-details-marker { display: none; }
+    .leg-details > summary::before { content: "▸ "; }
+    .leg-details[open] > summary::before { content: "▾ "; }
+    .leg-details .history { border: none; margin: 0; padding: 0 18px 18px; }
+    .combo-history-table td.legs { font-size: 11.5px; color: var(--ink-soft); }
     .mini-btn { font-size:10px; padding: 2px 6px; border:1px solid var(--line); background:var(--white); border-radius:3px; cursor:pointer; margin-left:4px; font-weight:700; }
     .mini-btn.mini-win:hover { background: var(--safe-soft); color: var(--safe-strong); border-color: var(--safe); }
     .mini-btn.mini-lose:hover { background: var(--risky-soft); color: var(--risky-strong); border-color: var(--risky); }
@@ -227,8 +234,8 @@
     <div class="sub">
       <span class="pill">Vendredi 12 juin 2026 · matchs entre 15:00 et 06:00 (heure belge)</span>
       <span class="pill">Mise: 10€ safe · 8€ risqué · 2€ ultra</span>
-      <span class="pill">Mise à jour 12/06/2026 08:50</span>
-      <span class="pill">API : 267/500 utilisés · 233 restants</span>
+      <span class="pill">Mise à jour 12/06/2026 09:17</span>
+      <span class="pill">API : 279/500 utilisés · 221 restants</span>
     </div>
     <div class="header-actions">
       <button id="refresh-btn" class="refresh-btn" onclick="doRefresh()">🔄 Rafraîchir les paris du jour</button>
@@ -311,31 +318,31 @@
         </div>
         <div class="match-insight">💡 <b>Canada</b> ultra-favori (modèle&nbsp;67%) · modèle plus optimiste que le marché sur Canada (67% vs 52%).</div>
         <div class="match-players">⭐ <span class="player-side"><b>Canada</b> : Alphonso Davies (Bayern), Jonathan David (Juventus)</span> · <span class="player-side"><b>Bosnia &amp; Herzegovina</b> : Edin Džeko (Fenerbahçe), Miralem Pjanić (CSKA Moscow)</span></div>
-        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>1.83</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.60</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.90</b></span></div>
+        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>1.85</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.60</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.90</b></span></div>
         <div class="picks three">
           
       <div class="pick safe has-value">
         <div class="pick-label">🛡️ SAFE <span class="value-tag yes">★ VALEUR</span></div>
-        <div class="pick-name">Bosnia &amp; Herzegovina marque − de 0.5 buts</div>
-        <div class="pick-odd">@ 2.23</div>
+        <div class="pick-name">Au moins une équipe ne marque pas</div>
+        <div class="pick-odd">@ 1.75</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>57.0%</b></span>
-          <span class="edge">Edge +27.2%</span>
+          <span>Proba équitable <b>62.7%</b></span>
+          <span class="edge">Edge +9.7%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 57.0%</span></div>
+        <div class="pick-detail"><span>Modèle: 62.7%</span></div>
         <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
       </div>
           
       <div class="pick risky no-value">
         <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
-        <div class="pick-name">Moins de 2.0 buts (match)</div>
-        <div class="pick-odd">@ 2.27</div>
+        <div class="pick-name">Plus de 2.5 buts (match)</div>
+        <div class="pick-odd">@ 2.25</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>43.4%</b></span>
-          <span class="edge">Edge -1.7%</span>
+          <span>Proba équitable <b>42.6%</b></span>
+          <span class="edge">Edge -4.3%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 0.0%</span><span>Marché: 43.4%</span></div>
-        <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
+        <div class="pick-detail"><span>Modèle: 42.9%</span><span>Marché: 42.3%</span></div>
+        
       </div>
           
       <div class="pick ultra has-value">
@@ -360,43 +367,43 @@
         </div>
         <div class="match-insight">💡 match&nbsp;<b>ouvert</b>, <b>Paraguay</b> légèrement favori (40%) · modèle plus pessimiste que le marché sur USA (29% vs 47%) · <b>USA</b> garde 29% de surprendre.</div>
         <div class="match-players">⭐ <span class="player-side"><b>USA</b> : Christian Pulisic (Milan), Weston McKennie (Juventus)</span> · <span class="player-side"><b>Paraguay</b> : Miguel Almirón (Atlanta United), Antonio Sanabria (Cremonese)</span></div>
-        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.05</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.40</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.10</b></span></div>
+        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.08</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.40</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.20</b></span></div>
         <div class="picks three">
           
-      <div class="pick safe has-value">
-        <div class="pick-label">🛡️ SAFE <span class="value-tag yes">★ VALEUR</span></div>
-        <div class="pick-name">Nul ou Paraguay (Double chance)</div>
-        <div class="pick-odd">@ 1.78</div>
+      <div class="pick safe no-value">
+        <div class="pick-label">🛡️ SAFE <span class="value-tag no">pas de valeur</span></div>
+        <div class="pick-name">Moins de 2.5 buts (match)</div>
+        <div class="pick-odd">@ 1.67</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>71.5%</b></span>
-          <span class="edge">Edge +27.2%</span>
+          <span>Proba équitable <b>57.9%</b></span>
+          <span class="edge">Edge -3.3%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 71.5%</span></div>
-        <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
+        <div class="pick-detail"><span>Modèle: 57.9%</span><span>Marché: 57.9%</span></div>
+        
       </div>
           
-      <div class="pick risky has-value">
-        <div class="pick-label">⚡ RISQUÉ <span class="value-tag yes">★ VALEUR</span></div>
-        <div class="pick-name">Victoire Paraguay</div>
-        <div class="pick-odd">@ 4.10</div>
+      <div class="pick risky no-value">
+        <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
+        <div class="pick-name">Les deux équipes marquent</div>
+        <div class="pick-odd">@ 2.05</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>30.7%</b></span>
-          <span class="edge">Edge +25.8%</span>
+          <span>Proba équitable <b>49.3%</b></span>
+          <span class="edge">Edge +1.3%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 40.4%</span><span>Marché: 24.2%</span></div>
-        
+        <div class="pick-detail"><span>Modèle: 49.3%</span></div>
+        <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
       </div>
           
       <div class="pick ultra has-value">
         <div class="pick-label">🎲 ULTRA-RISQUÉ <span class="value-tag yes">★ VALEUR</span></div>
-        <div class="pick-name">Antonio Sanabria buteur</div>
-        <div class="pick-odd">@ 4.35</div>
+        <div class="pick-name">Victoire Paraguay</div>
+        <div class="pick-odd">@ 4.20</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>28.8%</b></span>
-          <span class="edge">Edge +25.1%</span>
+          <span>Proba équitable <b>30.7%</b></span>
+          <span class="edge">Edge +29.0%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 28.8%</span><span>Marché: 23.0%</span></div>
-        <div class="pick-note">⚠️ Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.</div>
+        <div class="pick-detail"><span>Modèle: 40.4%</span><span>Marché: 24.2%</span></div>
+        
       </div>
         </div>
       </div></div>
@@ -404,37 +411,37 @@
         
         <div class="combo safe">
           <h3>🛡️ Combiné SAFE <span class="combo-meta">Cap 5 · Mise 10€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Bosnia &amp; Herzegovina marque − de 0.5 buts</b> @ 2.23</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Nul ou Paraguay (Double chance)</b> @ 1.78</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Au moins une équipe ne marque pas</b> @ 1.75</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Moins de 2.5 buts (match)</b> @ 1.67</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">3.97</span></span>
-            <span>Proba 40.77%</span>
-            <span>EV +61.8%</span>
-            <span class="payout">Mise 10€ → gain 39.69€</span>
+            <span class="total-main">Cote combinée <span class="cote">2.92</span></span>
+            <span>Proba 36.30%</span>
+            <span>EV +6.1%</span>
+            <span class="payout">Mise 10€ → gain 29.22€</span>
           </div>
         </div>
         
         <div class="combo risky">
           <h3>⚡ Combiné RISQUÉ <span class="combo-meta">Cap 25 · Mise 8€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><b> Moins de 2.0 buts (match)</b> @ 2.27</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Victoire Paraguay</b> @ 4.10</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><b> Plus de 2.5 buts (match)</b> @ 2.25</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Les deux équipes marquent</b> @ 2.05</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">9.29</span></span>
-            <span>Proba 13.31%</span>
-            <span>EV +23.6%</span>
-            <span class="payout">Mise 8€ → gain 74.29€</span>
+            <span class="total-main">Cote combinée <span class="cote">4.62</span></span>
+            <span>Proba 20.98%</span>
+            <span>EV -3.0%</span>
+            <span class="payout">Mise 8€ → gain 36.99€</span>
           </div>
         </div>
         
         <div class="combo ultra">
           <h3>🎲 Combiné ULTRA-RISQUÉ <span class="combo-meta">Sans plafond · Mise 2€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Jonathan David buteur</b> @ 2.48</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Antonio Sanabria buteur</b> @ 4.35</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b>⚽ Jonathan David buteur</b> @ 2.48</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Victoire Paraguay</b> @ 4.20</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">10.79</span></span>
-            <span>Proba 12.76%</span>
-            <span>EV +37.7%</span>
-            <span class="payout">Mise 2€ → gain 21.58€</span>
+            <span class="total-main">Cote combinée <span class="cote">10.42</span></span>
+            <span>Proba 13.63%</span>
+            <span>EV +42.0%</span>
+            <span class="payout">Mise 2€ → gain 20.83€</span>
           </div>
         </div>
       </div>
@@ -445,55 +452,120 @@
     <div class="perf-tools">
       <button class="refresh-btn small" onclick="updateResults()">🔄 Mettre à jour les résultats</button>
       <span id="update-status" class="refresh-status"></span>
-      <span class="perf-note">Buteur : non-couvert par /scores → cliquer ✓ / ✗ pour marquer manuellement.</span>
+      <span class="perf-note">ROI calculé sur les combinés. Un combo perd si UNE seule jambe perd.</span>
     </div>
     
       <div class="grand-total">
-        <div><span class="gt-num gain">+0.30€</span><span class="gt-lbl">profit total</span></div>
-        <div><span class="gt-num gain">+0.8%</span><span class="gt-lbl">ROI cumulé</span></div>
-        <div><span class="gt-num">12</span><span class="gt-lbl">paris suivis</span></div>
-        <div><span class="gt-num">36€</span><span class="gt-lbl">mise totale</span></div>
+        <div><span class="gt-num loss">-18.00€</span><span class="gt-lbl">profit total (combos)</span></div>
+        <div><span class="gt-num loss">-100.0%</span><span class="gt-lbl">ROI cumulé</span></div>
+        <div><span class="gt-num">6</span><span class="gt-lbl">combos joués</span></div>
+        <div><span class="gt-num">18€</span><span class="gt-lbl">mise totale</span></div>
       </div>
     <div class="perf-summary">
         <div class="perf-card safe">
-          <div class="perf-card-head">🛡️ Safe · mise 10€</div>
+          <div class="perf-card-head">🛡️ Safe · mise 10€/combo</div>
           <div class="perf-card-pl">
-            <span class="pl-amount loss">-5.70€</span>
-            <span class="pl-roi loss">ROI -28.5%</span>
+            <span class="pl-amount loss">-10.00€</span>
+            <span class="pl-roi loss">ROI -100.0%</span>
           </div>
           <div class="perf-card-stats">
-            <div><span class="stat-num">1</span><span class="stat-lbl">gagnés</span></div>
-            <div><span class="stat-num">1</span><span class="stat-lbl">perdus</span></div>
-            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
-            <div><span class="stat-num">50%</span><span class="stat-lbl">hit-rate</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">combos gagnés</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">combos perdus</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">en attente</span></div>
+            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div>
         <div class="perf-card risky">
-          <div class="perf-card-head">⚡ Risqué · mise 8€</div>
+          <div class="perf-card-head">⚡ Risqué · mise 8€/combo</div>
           <div class="perf-card-pl">
-            <span class="pl-amount gain">+6.00€</span>
-            <span class="pl-roi gain">ROI +37.5%</span>
+            <span class="pl-amount loss">-8.00€</span>
+            <span class="pl-roi loss">ROI -100.0%</span>
           </div>
           <div class="perf-card-stats">
-            <div><span class="stat-num">1</span><span class="stat-lbl">gagnés</span></div>
-            <div><span class="stat-num">1</span><span class="stat-lbl">perdus</span></div>
-            <div><span class="stat-num">2</span><span class="stat-lbl">attente</span></div>
-            <div><span class="stat-num">50%</span><span class="stat-lbl">hit-rate</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">combos gagnés</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">combos perdus</span></div>
+            <div><span class="stat-num">1</span><span class="stat-lbl">en attente</span></div>
+            <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div>
         <div class="perf-card ultra">
-          <div class="perf-card-head">🎲 Ultra-risqué · mise 2€</div>
+          <div class="perf-card-head">🎲 Ultra-risqué · mise 2€/combo</div>
           <div class="perf-card-pl">
             <span class="pl-amount gain">+0.00€</span>
             <span class="pl-roi gain">ROI +0.0%</span>
           </div>
           <div class="perf-card-stats">
-            <div><span class="stat-num">0</span><span class="stat-lbl">gagnés</span></div>
-            <div><span class="stat-num">0</span><span class="stat-lbl">perdus</span></div>
-            <div><span class="stat-num">4</span><span class="stat-lbl">attente</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">combos gagnés</span></div>
+            <div><span class="stat-num">0</span><span class="stat-lbl">combos perdus</span></div>
+            <div><span class="stat-num">2</span><span class="stat-lbl">en attente</span></div>
             <div><span class="stat-num">0%</span><span class="stat-lbl">hit-rate</span></div>
           </div>
         </div></div>
+    
+        <div class="history">
+          <h3>🎯 Combinés joués (6)</h3>
+          <table class="history-table combo-history-table">
+            <thead><tr>
+              <th>Date</th><th>Cat</th><th>Sélections</th>
+              <th>Cote</th><th>Mise</th><th>Statut</th><th>P/L</th>
+            </tr></thead>
+            <tbody>
+              <tr class="row-lost">
+                <td class="date">11/06</td>
+                <td class="cat">🛡️ Safe</td>
+                <td class="legs">Moins de 2.5 buts (match) @ 1.70 × Victoire Mexico @ 1.43</td>
+                <td class="cote">2.43</td>
+                <td class="stake">10€</td>
+                <td class="status outcome-lost">✗</td>
+                <td class="pl"><span class="loss">-10.00€</span></td>
+              </tr>
+              <tr class="row-lost">
+                <td class="date">11/06</td>
+                <td class="cat">⚡ Risqué</td>
+                <td class="legs">Victoire South Korea @ 2.75 × Plus de 2.5 buts (match) @ 2.23</td>
+                <td class="cote">6.13</td>
+                <td class="stake">8€</td>
+                <td class="status outcome-lost">✗</td>
+                <td class="pl"><span class="loss">-8.00€</span></td>
+              </tr>
+              <tr class="row-manual_pending">
+                <td class="date">11/06</td>
+                <td class="cat">🎲 Ultra</td>
+                <td class="legs">Hwang Hee-chan buteur @ 4.50 × Santiago Gimenez buteur @ 2.45</td>
+                <td class="cote">11.03</td>
+                <td class="stake">2€</td>
+                <td class="status outcome-manual">?</td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-pending">
+                <td class="date">12/06</td>
+                <td class="cat">🛡️ Safe</td>
+                <td class="legs">Moins de 2.5 buts (match) @ 1.67 × Au moins une équipe ne marque pas @ 1.75</td>
+                <td class="cote">2.92</td>
+                <td class="stake">10€</td>
+                <td class="status outcome-pending">⏳</td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-pending">
+                <td class="date">12/06</td>
+                <td class="cat">⚡ Risqué</td>
+                <td class="legs">Les deux équipes marquent @ 2.05 × Plus de 2.5 buts (match) @ 2.25</td>
+                <td class="cote">4.62</td>
+                <td class="stake">8€</td>
+                <td class="status outcome-pending">⏳</td>
+                <td class="pl"></td>
+              </tr>
+              <tr class="row-pending">
+                <td class="date">12/06</td>
+                <td class="cat">🎲 Ultra</td>
+                <td class="legs">Victoire Paraguay @ 4.20 × Jonathan David buteur @ 2.48</td>
+                <td class="cote">10.42</td>
+                <td class="stake">2€</td>
+                <td class="status outcome-pending">⏳</td>
+                <td class="pl"></td>
+              </tr></tbody>
+          </table>
+        </div>
     
         <div class="standings">
           <h3>📊 Classement du tournoi (équipes ayant joué)</h3>
@@ -502,7 +574,8 @@
             <tbody><tr><td>Mexico</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2-0</td><td class="gd">+2</td><td class="pts">3</td></tr><tr><td>South Korea</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2-1</td><td class="gd">+1</td><td class="pts">3</td></tr><tr><td>Czech Republic</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1-2</td><td class="gd">-1</td><td class="pts">0</td></tr><tr><td>South Africa</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0-2</td><td class="gd">-2</td><td class="pts">0</td></tr></tbody>
           </table>
         </div>
-    
+    <details class="leg-details"><summary>Détail des paris individuels (transparence)</summary>
+      
         <div class="history">
           <h3>📋 Historique des paris (12)</h3>
           <table class="history-table">
@@ -515,8 +588,8 @@
                 <td class="date">13/06 03:00</td>
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">🛡️</td>
-                <td class="pick">Nul ou Paraguay (Double chance)</td>
-                <td class="cote">@ 1.78</td>
+                <td class="pick">Moins de 2.5 buts (match)</td>
+                <td class="cote">@ 1.67</td>
                 <td class="stake">10€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -526,30 +599,30 @@
                 <td class="date">13/06 03:00</td>
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">⚡</td>
-                <td class="pick">Victoire Paraguay</td>
-                <td class="cote">@ 4.10</td>
+                <td class="pick">Les deux équipes marquent</td>
+                <td class="cote">@ 2.05</td>
                 <td class="stake">8€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
                 <td class="pl"></td>
               </tr>
-              <tr class="row-manual_pending">
+              <tr class="row-pending">
                 <td class="date">13/06 03:00</td>
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">🎲</td>
-                <td class="pick">Antonio Sanabria buteur</td>
-                <td class="cote">@ 4.35</td>
+                <td class="pick">Victoire Paraguay</td>
+                <td class="cote">@ 4.20</td>
                 <td class="stake">2€</td>
                 <td class="result">—</td>
-                <td class="status outcome-manual" title="Pari buteur — à marquer manuellement">? <button class="mini-btn mini-win" onclick="markOutcome('c12986f447a515fbe641addd786dbb24','ultra_risky','won')">✓</button><button class="mini-btn mini-lose" onclick="markOutcome('c12986f447a515fbe641addd786dbb24','ultra_risky','lost')">✗</button></td>
+                <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
                 <td class="pl"></td>
               </tr>
               <tr class="row-pending">
                 <td class="date">12/06 21:00</td>
                 <td class="match">Canada – Bosnia &amp; Herzegovina</td>
                 <td class="cat">🛡️</td>
-                <td class="pick">Bosnia &amp; Herzegovina marque − de 0.5 buts</td>
-                <td class="cote">@ 2.23</td>
+                <td class="pick">Au moins une équipe ne marque pas</td>
+                <td class="cote">@ 1.75</td>
                 <td class="stake">10€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -559,8 +632,8 @@
                 <td class="date">12/06 21:00</td>
                 <td class="match">Canada – Bosnia &amp; Herzegovina</td>
                 <td class="cat">⚡</td>
-                <td class="pick">Moins de 2.0 buts (match)</td>
-                <td class="cote">@ 2.27</td>
+                <td class="pick">Plus de 2.5 buts (match)</td>
+                <td class="cote">@ 2.25</td>
                 <td class="stake">8€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -645,6 +718,7 @@
               </tr></tbody>
           </table>
         </div>
+    </details>
     </div>
   </main>
 

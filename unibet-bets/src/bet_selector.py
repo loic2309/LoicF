@@ -253,34 +253,10 @@ def evaluate_outcomes(model_probs: dict, consensus_probs: dict, unibet_odds: dic
     for mkey, odd in unibet_odds.items():
         add(mkey, odd, source="unibet")
 
-    if not advanced_odds:
-        return rows
-
-    note_consensus = "Cote indicative (consensus marché). À vérifier sur unibet.be."
-
-    # BTTS
-    btts = advanced_odds.get("btts", {})
-    if "yes" in btts: add("btts_yes", btts["yes"], "consensus", note_consensus)
-    if "no" in btts:  add("btts_no",  btts["no"],  "consensus", note_consensus)
-
-    # Double chance
-    dc = advanced_odds.get("dc", {})
-    if "1X" in dc: add("dc_1X", dc["1X"], "consensus", note_consensus)
-    if "X2" in dc: add("dc_X2", dc["X2"], "consensus", note_consensus)
-    if "12" in dc: add("dc_12", dc["12"], "consensus", note_consensus)
-
-    # Alternate totals (Over/Under for 0.5, 1.5, 3.5, 4.5)
-    alt = advanced_odds.get("alt_totals", {})
-    for label, odd in alt.items():
-        add(label, odd, "consensus", note_consensus)
-
-    # Team-specific totals (l'équipe X marque +/- N buts)
-    for side in ("team_home", "team_away"):
-        tt = advanced_odds.get(f"{side}_totals", {})
-        for label, odd in tt.items():
-            side_key, line = label.split("_")
-            add(f"{side}_{side_key}_{line}", odd, "consensus", note_consensus)
-
+    # Advanced markets beyond Unibet's h2h+totals are no longer fetched
+    # to keep the API budget viable across the full tournament. Scorers
+    # are still fetched (used by pick_ultra_risky) but they don't feed
+    # the main row pool — they're handled separately.
     return rows
 
 
@@ -594,30 +570,26 @@ def analyse_today(force_buteur: bool = False) -> dict:
                 auto_rolled = True
                 break
 
-    # Per-event fetches for today's matches:
-    #   - buteur_anytime (kept for legacy cache)
-    #   - advanced bundle: BTTS, double chance, alternate totals, team
-    #     totals, scorers (in ONE call to economize credits)
-    buteur_by_event = {}
+    # Per-event fetch for today's matches: ONE bundle (BTTS + DC + alt
+    # totals + scorers) per event, cached forever — re-fetch only when a
+    # new event first enters the window. The legacy buteur-only call is
+    # gone (scorers are inside the bundle).
     advanced_by_event = {}
-    last_remaining_after_buteur = None
+    last_remaining_after_fetch = None
     if todays_events:
         ev_ids = [e["id"] for e in todays_events]
-        buteur_by_event = fetch_buteur_for_today(ev_ids, force=force_buteur)
-        last_remaining_after_buteur = buteur_by_event.pop("_last_remaining", None)
         advanced_by_event = fetch_advanced_for_today(ev_ids, force=force_buteur)
-        rem = advanced_by_event.pop("_last_remaining", None)
-        if rem:
-            last_remaining_after_buteur = rem
+        last_remaining_after_fetch = advanced_by_event.pop("_last_remaining", None)
 
     results = []
     for ev in todays_events:
-        ev_buteur = buteur_by_event.get(ev["id"], {})
         ev_advanced = advanced_by_event.get(ev["id"], {})
-        clean_buteur = {k: v for k, v in ev_buteur.items() if not k.startswith("_")}
         clean_advanced = {k: v for k, v in ev_advanced.items() if not k.startswith("_")}
+        # Build scorer dict from the bundle so pick_ultra_risky still works
+        scorer_odds = {name: {"odd": odd, "n_books": 1}
+                       for name, odd in clean_advanced.get("scorers", {}).items()}
         r = analyse_event(ev, elo, form_data,
-                          buteur_odds=clean_buteur,
+                          buteur_odds=scorer_odds,
                           advanced_odds=clean_advanced)
         if r is not None:
             results.append(r)
@@ -632,7 +604,7 @@ def analyse_today(force_buteur: bool = False) -> dict:
     if results:
         record_picks(results)
 
-    remaining = last_remaining_after_buteur or payload["remaining_credits"]
+    remaining = last_remaining_after_fetch or payload["remaining_credits"]
     used = (500 - int(remaining)) if remaining else payload["used_credits"]
 
     return {

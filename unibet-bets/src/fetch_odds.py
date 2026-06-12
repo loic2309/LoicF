@@ -169,7 +169,14 @@ def devigged_probs_from_odds(odds_by_outcome: dict[str, float]) -> dict[str, flo
     return {k: v / total for k, v in raw.items()}
 
 
-ADVANCED_MARKETS = ["btts", "double_chance", "alternate_totals", "team_totals", "player_goal_scorer_anytime"]
+# Budget reality check: 500 credits/month, ~37 tournament days remaining,
+# ~100 events to fetch advanced markets for, ~2 credits/day fixed (bulk
+# h2h+totals) + 2/day (scores) = 148 daily fixed alone. That leaves ~140
+# for per-event advanced. So we cap advanced at ONE market per event:
+# scorers — the only market that genuinely adds picks not derivable from
+# Unibet's own h2h/totals. BTTS, double-chance, alternate-totals were nice
+# but the model + bulk h2h/totals already covers most of their signal.
+ADVANCED_MARKETS = ["player_goal_scorer_anytime"]
 
 
 def fetch_advanced_odds(event_id: str) -> dict:
@@ -195,7 +202,10 @@ def fetch_advanced_odds(event_id: str) -> dict:
     from collections import defaultdict
     params = {
         "apiKey": API_KEY,
-        "regions": "eu,uk",
+        # Single region keeps cost = num_markets, not num_markets × regions.
+        # eu has Pinnacle + most major BTTS/DC coverage; uk would double the
+        # cost for marginal extra signal.
+        "regions": "eu",
         "markets": ",".join(ADVANCED_MARKETS),
         "oddsFormat": "decimal",
         "dateFormat": "iso",
@@ -225,40 +235,7 @@ def fetch_advanced_odds(event_id: str) -> dict:
                 point = o.get("point")
                 desc = o.get("description")  # player name for scorer markets
 
-                if mkey == "btts":
-                    if name == "Yes":
-                        by_market["btts"]["yes"].append(price)
-                    elif name == "No":
-                        by_market["btts"]["no"].append(price)
-
-                elif mkey == "double_chance":
-                    # Outcome names vary: "Home/Draw", "Draw/Away", "Home/Away" or "1X", "X2", "12"
-                    nm = name.lower()
-                    if nm in ("home or draw", "home/draw", "1x", "1 or x") or (home and home.lower() in nm and "draw" in nm):
-                        by_market["dc"]["1X"].append(price)
-                    elif nm in ("draw or away", "draw/away", "x2", "x or 2") or (away and away.lower() in nm and "draw" in nm):
-                        by_market["dc"]["X2"].append(price)
-                    elif nm in ("home or away", "home/away", "12", "1 or 2"):
-                        by_market["dc"]["12"].append(price)
-
-                elif mkey == "alternate_totals":
-                    if point is None: continue
-                    label = "over" if name == "Over" else "under" if name == "Under" else None
-                    if label is None: continue
-                    by_market["alt_totals"][f"{label}_{point:.1f}"].append(price)
-
-                elif mkey == "team_totals":
-                    if point is None: continue
-                    # The outcome carries the team name in 'description', side in 'name' (Over/Under)
-                    side = "over" if name == "Over" else "under" if name == "Under" else None
-                    if side is None: continue
-                    team_label = desc or ""
-                    if home and team_label == home:
-                        by_market["team_home_totals"][f"{side}_{point:.1f}"].append(price)
-                    elif away and team_label == away:
-                        by_market["team_away_totals"][f"{side}_{point:.1f}"].append(price)
-
-                elif mkey == "player_goal_scorer_anytime":
+                if mkey == "player_goal_scorer_anytime":
                     player = desc or name
                     by_market["scorers"][player].append(price)
 
@@ -314,13 +291,16 @@ def cache_buteur_path_for_event(event_id: str) -> Path:
 
 
 def cache_advanced_path_for_event(event_id: str) -> Path:
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    return CACHE_DIR / f"advanced_{today}_{event_id}.json"
+    """Persistent per-event cache (no date in filename). Advanced markets
+    don't change enough day-to-day to justify a re-fetch — once we've
+    pulled an event's BTTS/DC/alt_totals/scorers, that data is good until
+    kickoff. Saves significant credits across the tournament."""
+    return CACHE_DIR / f"advanced_{event_id}.json"
 
 
 def fetch_advanced_for_today(event_ids: list, force: bool = False) -> dict:
-    """Per-event fetch of advanced markets (BTTS, DC, alt totals, team totals,
-    scorers) for today's events, cached per-event-per-day."""
+    """Per-event fetch of advanced markets (BTTS, DC, alt totals, scorers).
+    Caches forever per event — only fresh events incur API cost."""
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     out = {}
     last_remaining = None

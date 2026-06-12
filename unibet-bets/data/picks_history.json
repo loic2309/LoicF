@@ -66,9 +66,9 @@
     "commence_time": "2026-06-12T19:00:00Z",
     "safe": {
       "market": "team_away_under_0.5",
-      "cote": 2.24,
+      "cote": 2.23,
       "fair_prob": 0.5705,
-      "edge": 0.27792000000000017,
+      "edge": 0.2722150000000001,
       "has_value": true,
       "is_buteur": false
     },
@@ -105,8 +105,8 @@
     "risky": {
       "market": "h2h_away",
       "cote": 4.1,
-      "fair_prob": 0.3073871945733066,
-      "edge": 0.26028749775055693,
+      "fair_prob": 0.3067118673592528,
+      "edge": 0.25751865617293657,
       "has_value": true,
       "is_buteur": false
     },

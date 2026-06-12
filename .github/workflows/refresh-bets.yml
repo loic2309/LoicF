@@ -41,7 +41,8 @@ jobs:
           python3 -c "
           import sys; sys.path.insert(0, 'src')
           from fetch_results import update_results
-          summary = update_results(days_from=4)
+          # The Odds API rejects daysFrom > 3 with HTTP 422. Keep at 3.
+          summary = update_results(days_from=3)
           print(summary)
           "
 

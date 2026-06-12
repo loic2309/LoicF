@@ -66,9 +66,14 @@ def save_results_history(history: dict) -> None:
         json.dump(history, f, indent=2, ensure_ascii=False)
 
 
-def update_results(days_from: int = 3) -> dict:
+def update_results(days_from: int = 3, only_if_needed: bool = False) -> dict:
     """
     Fetch latest scores and merge into results_history.json.
+
+    only_if_needed=True: skip the API call entirely if every match that's
+    past its kickoff is already marked completed in the local results
+    history. Saves 2 credits per cron run on rest days / when nothing
+    new has finished.
 
     Each merged event has:
       {event_id: {
@@ -76,6 +81,36 @@ def update_results(days_from: int = 3) -> dict:
           home_score, away_score, last_update
       }}
     """
+    if only_if_needed:
+        import json as _json
+        history = load_results_history()
+        events_path = DATA_DIR / "events.json"
+        # Quick check: is there at least one event whose kickoff has passed
+        # and that we don't yet have a completed record for?
+        needs_fetch = False
+        try:
+            with open(events_path) as f:
+                events = _json.load(f)
+            now = datetime.now(timezone.utc).isoformat()
+            for e in events:
+                ev_id = e.get("id")
+                kickoff = e.get("commence_time", "")
+                if kickoff and kickoff < now:
+                    rec = history.get(ev_id)
+                    if not rec or not rec.get("completed"):
+                        needs_fetch = True
+                        break
+        except Exception:
+            needs_fetch = True  # if anything goes wrong, fetch to be safe
+
+        if not needs_fetch:
+            return {
+                "n_total": len(history), "n_new": 0, "n_updated": 0,
+                "remaining_credits": None, "used_credits": None,
+                "fetched_at": datetime.now(timezone.utc).isoformat(),
+                "skipped": "no new completed matches expected",
+            }
+
     payload = fetch_scores(days_from=days_from)
     history = load_results_history()
     n_new, n_updated = 0, 0

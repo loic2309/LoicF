@@ -34,15 +34,17 @@ jobs:
             "https://www.eloratings.net/World.tsv" -o data/elo_raw.tsv || \
             echo "(elo refresh skipped — keeping last known TSV)"
 
-      - name: Update tournament results
+      - name: Update tournament results (smart — skip if nothing new)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           python3 -c "
           import sys; sys.path.insert(0, 'src')
           from fetch_results import update_results
-          # The Odds API rejects daysFrom > 3 with HTTP 422. Keep at 3.
-          summary = update_results(days_from=3)
+          # only_if_needed: skip the /scores API call when every past-kickoff
+          # match is already marked completed locally → no credit spent on
+          # rest days or refreshes where nothing has finished since last call.
+          summary = update_results(days_from=3, only_if_needed=True)
           print(summary)
           "
 

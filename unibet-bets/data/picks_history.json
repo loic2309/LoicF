@@ -111,12 +111,12 @@
       "is_buteur": false
     },
     "ultra_risky": {
-      "market": "h2h_away",
-      "cote": 4.1,
-      "fair_prob": 0.3073871945733066,
-      "edge": 0.26028749775055693,
+      "market": "scorer_Antonio Sanabria",
+      "cote": 4.35,
+      "fair_prob": 0.2875460496387935,
+      "edge": 0.2508253159287517,
       "has_value": true,
-      "is_buteur": false
+      "is_buteur": true
     }
   }
 }

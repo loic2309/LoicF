@@ -37,6 +37,8 @@
       background: var(--yellow-card); color: var(--ink); border:0; padding: 10px 16px; border-radius:6px;
       font-weight:700; cursor:pointer; font-size:13px; box-shadow: 0 2px 8px rgba(0,0,0,.18);
       transition: transform .12s, opacity .12s;
+      text-decoration: none;
+      display: inline-block;
     }
     .refresh-btn:hover { transform: translateY(-1px); }
     .refresh-btn:disabled { opacity:.6; cursor: wait; transform: none; }
@@ -244,11 +246,14 @@
     <div class="sub">
       <span class="pill">Vendredi 12 juin 2026 · matchs entre 15:00 et 06:00 (heure belge)</span>
       <span class="pill">Mise: 10€ safe · 8€ risqué · 2€ ultra</span>
-      <span class="pill">Mise à jour 12/06/2026 09:50</span>
-      <span class="pill">API : 285/500 utilisés · 215 restants</span>
+      <span class="pill">Mise à jour 12/06/2026 08:26</span>
+      <span class="pill">API : 113/500 utilisés · 387 restants</span>
     </div>
     <div class="header-actions">
-      <button id="refresh-btn" class="refresh-btn" onclick="doRefresh()">🔄 Rafraîchir les paris du jour</button>
+      <a id="refresh-btn" class="refresh-btn"
+         href="https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml"
+         target="_blank" rel="noopener"
+         onclick="return doRefresh(event)">🔄 Rafraîchir les paris du jour</a>
       <span id="refresh-status" class="refresh-status"></span>
     </div>
   </header>
@@ -334,25 +339,25 @@
           
       <div class="pick safe has-value">
         <div class="pick-label">🛡️ SAFE <span class="value-tag yes">★ VALEUR</span></div>
-        <div class="pick-name">Au moins une équipe ne marque pas</div>
-        <div class="pick-odd">@ 1.75</div>
+        <div class="pick-name">Victoire Canada</div>
+        <div class="pick-odd">@ 1.85</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>62.7%</b></span>
-          <span class="edge">Edge +9.4%</span>
+          <span>Proba équitable <b>58.2%</b></span>
+          <span class="edge">Edge +7.6%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 62.7%</span></div>
-        <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
+        <div class="pick-detail"><span>Modèle: 66.9%</span><span>Marché: 52.3%</span></div>
+        
       </div>
           
       <div class="pick risky no-value">
         <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
         <div class="pick-name">Plus de 2.5 buts (match)</div>
-        <div class="pick-odd">@ 2.25</div>
+        <div class="pick-odd">@ 2.18</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>42.5%</b></span>
-          <span class="edge">Edge -4.3%</span>
+          <span>Proba équitable <b>43.2%</b></span>
+          <span class="edge">Edge -5.9%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 42.9%</span><span>Marché: 42.3%</span></div>
+        <div class="pick-detail"><span>Modèle: 42.9%</span><span>Marché: 43.4%</span></div>
         
       </div>
           
@@ -377,33 +382,33 @@
           <span class="lambdas" title="Buts attendus (forme incluse)">⚽ 1.06 – 1.30</span>
         </div>
         <div class="match-insight">💡 match&nbsp;<b>ouvert</b>, <b>Paraguay</b> légèrement favori (40%) · modèle plus pessimiste que le marché sur USA (29% vs 47%) · <b>USA</b> garde 29% de surprendre.</div>
-        <div class="must-play"><span class="must-play-label">🚨 Opportunité forte (à jouer en simple — incompatible avec le combo)</span> <span class="must-play-pick"><b>Victoire Paraguay</b> @ 4.20 <span class="must-play-edge">+29.2%</span></span></div>
+        
         <div class="match-players">⭐ <span class="player-side"><b>USA</b> : Christian Pulisic (Milan), Weston McKennie (Juventus)</span> · <span class="player-side"><b>Paraguay</b> : Miguel Almirón (Atlanta United), Antonio Sanabria (Cremonese)</span></div>
-        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.05</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.40</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.20</b></span></div>
+        <div class="match-odds"><span class="odd-block"><span class="o-label">1</span> <b>2.05</b></span><span class="odd-block"><span class="o-label">N</span> <b>3.40</b></span><span class="odd-block"><span class="o-label">2</span> <b>4.10</b></span></div>
         <div class="picks three">
           
-      <div class="pick safe no-value">
-        <div class="pick-label">🛡️ SAFE <span class="value-tag no">pas de valeur</span></div>
-        <div class="pick-name">Moins de 2.5 buts (match)</div>
-        <div class="pick-odd">@ 1.67</div>
+      <div class="pick safe has-value">
+        <div class="pick-label">🛡️ SAFE <span class="value-tag yes">★ VALEUR</span></div>
+        <div class="pick-name">Nul ou Paraguay (Double chance)</div>
+        <div class="pick-odd">@ 1.77</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>58.0%</b></span>
-          <span class="edge">Edge -3.2%</span>
+          <span>Proba équitable <b>71.5%</b></span>
+          <span class="edge">Edge +26.5%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 57.9%</span><span>Marché: 58.0%</span></div>
-        
+        <div class="pick-detail"><span>Modèle: 71.5%</span></div>
+        <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
       </div>
           
-      <div class="pick risky no-value">
-        <div class="pick-label">⚡ RISQUÉ <span class="value-tag no">pas de valeur</span></div>
-        <div class="pick-name">Les deux équipes marquent</div>
-        <div class="pick-odd">@ 2.06</div>
+      <div class="pick risky has-value">
+        <div class="pick-label">⚡ RISQUÉ <span class="value-tag yes">★ VALEUR</span></div>
+        <div class="pick-name">Victoire Paraguay</div>
+        <div class="pick-odd">@ 4.10</div>
         <div class="pick-stats">
-          <span>Proba équitable <b>49.3%</b></span>
-          <span class="edge">Edge +1.8%</span>
+          <span>Proba équitable <b>30.7%</b></span>
+          <span class="edge">Edge +26.0%</span>
         </div>
-        <div class="pick-detail"><span>Modèle: 49.3%</span></div>
-        <div class="pick-note">⚠️ Cote indicative (consensus marché). À vérifier sur unibet.be.</div>
+        <div class="pick-detail"><span>Modèle: 40.4%</span><span>Marché: 24.3%</span></div>
+        
       </div>
           
       <div class="pick ultra has-value">
@@ -423,25 +428,25 @@
         
         <div class="combo safe">
           <h3>🛡️ Combiné SAFE <span class="combo-meta">Cap 5 · Mise 10€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Au moins une équipe ne marque pas</b> @ 1.75</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Moins de 2.5 buts (match)</b> @ 1.67</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Victoire Canada</b> @ 1.85</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Nul ou Paraguay (Double chance)</b> @ 1.77</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">2.91</span></span>
-            <span>Proba 36.36%</span>
-            <span>EV +6.0%</span>
-            <span class="payout">Mise 10€ → gain 29.14€</span>
+            <span class="total-main">Cote combinée <span class="cote">3.27</span></span>
+            <span>Proba 41.56%</span>
+            <span>EV +36.1%</span>
+            <span class="payout">Mise 10€ → gain 32.75€</span>
           </div>
         </div>
         
         <div class="combo risky">
           <h3>⚡ Combiné RISQUÉ <span class="combo-meta">Cap 25 · Mise 8€</span></h3>
-          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><b> Plus de 2.5 buts (match)</b> @ 2.25</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><b> Les deux équipes marquent</b> @ 2.06</span></li></ul>
+          <ul><li><span class="combo-match"><span class="combo-time">21:00</span>Canada – Bosnia &amp; Herzegovina</span><span class="combo-pick"><b> Plus de 2.5 buts (match)</b> @ 2.18</span></li><li><span class="combo-match"><span class="combo-time">03:00</span>USA – Paraguay</span><span class="combo-pick"><span class="combo-tag tag-value">★ VALEUR</span><b> Victoire Paraguay</b> @ 4.10</span></li></ul>
           
           <div class="total">
-            <span class="total-main">Cote combinée <span class="cote">4.65</span></span>
-            <span>Proba 20.96%</span>
-            <span>EV -2.6%</span>
-            <span class="payout">Mise 8€ → gain 37.17€</span>
+            <span class="total-main">Cote combinée <span class="cote">8.94</span></span>
+            <span>Proba 13.27%</span>
+            <span>EV +18.6%</span>
+            <span class="payout">Mise 8€ → gain 71.50€</span>
           </div>
         </div>
         
@@ -462,7 +467,10 @@
     <div class="tab-content" data-tab="perf">
       
     <div class="perf-tools">
-      <button class="refresh-btn small" onclick="updateResults()">🔄 Mettre à jour les résultats</button>
+      <a class="refresh-btn small"
+         href="https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml"
+         target="_blank" rel="noopener"
+         onclick="return updateResults(event)">🔄 Mettre à jour les résultats</a>
       <span id="update-status" class="refresh-status"></span>
       <span class="perf-note">ROI calculé sur les combinés. Un combo perd si UNE seule jambe perd.</span>
     </div>
@@ -552,8 +560,8 @@
               <tr class="row-pending">
                 <td class="date">12/06</td>
                 <td class="cat">🛡️ Safe</td>
-                <td class="legs">Moins de 2.5 buts (match) @ 1.67 × Au moins une équipe ne marque pas @ 1.75</td>
-                <td class="cote">2.91</td>
+                <td class="legs">Nul ou Paraguay (Double chance) @ 1.77 × Victoire Canada @ 1.85</td>
+                <td class="cote">3.27</td>
                 <td class="stake">10€</td>
                 <td class="status outcome-pending">⏳</td>
                 <td class="pl"></td>
@@ -561,8 +569,8 @@
               <tr class="row-pending">
                 <td class="date">12/06</td>
                 <td class="cat">⚡ Risqué</td>
-                <td class="legs">Les deux équipes marquent @ 2.06 × Plus de 2.5 buts (match) @ 2.25</td>
-                <td class="cote">4.65</td>
+                <td class="legs">Victoire Paraguay @ 4.10 × Plus de 2.5 buts (match) @ 2.18</td>
+                <td class="cote">8.94</td>
                 <td class="stake">8€</td>
                 <td class="status outcome-pending">⏳</td>
                 <td class="pl"></td>
@@ -600,8 +608,8 @@
                 <td class="date">13/06 03:00</td>
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">🛡️</td>
-                <td class="pick">Moins de 2.5 buts (match)</td>
-                <td class="cote">@ 1.67</td>
+                <td class="pick">Nul ou Paraguay (Double chance)</td>
+                <td class="cote">@ 1.77</td>
                 <td class="stake">10€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -611,8 +619,8 @@
                 <td class="date">13/06 03:00</td>
                 <td class="match">USA – Paraguay</td>
                 <td class="cat">⚡</td>
-                <td class="pick">Les deux équipes marquent</td>
-                <td class="cote">@ 2.06</td>
+                <td class="pick">Victoire Paraguay</td>
+                <td class="cote">@ 4.10</td>
                 <td class="stake">8€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -633,8 +641,8 @@
                 <td class="date">12/06 21:00</td>
                 <td class="match">Canada – Bosnia &amp; Herzegovina</td>
                 <td class="cat">🛡️</td>
-                <td class="pick">Au moins une équipe ne marque pas</td>
-                <td class="cote">@ 1.75</td>
+                <td class="pick">Victoire Canada</td>
+                <td class="cote">@ 1.85</td>
                 <td class="stake">10€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -645,7 +653,7 @@
                 <td class="match">Canada – Bosnia &amp; Herzegovina</td>
                 <td class="cat">⚡</td>
                 <td class="pick">Plus de 2.5 buts (match)</td>
-                <td class="cote">@ 2.25</td>
+                <td class="cote">@ 2.18</td>
                 <td class="stake">8€</td>
                 <td class="result">—</td>
                 <td class="status outcome-pending" title="En attente du résultat">⏳ </td>
@@ -748,20 +756,21 @@
     // Restore tab from URL hash
     if (location.hash === '#perf') showTab('perf');
 
-    async function doRefresh() {
-      const btn = document.getElementById('refresh-btn');
+    async function doRefresh(event) {
       const status = document.getElementById('refresh-status');
-      // On GitHub Pages there's no /refresh backend — point the user to
-      // GitHub Actions where they can trigger the workflow manually with
-      // one click on "Run workflow".
+      // On GitHub Pages (HTTPS), the anchor's href + target=_blank handles
+      // navigation natively — no popup blocker, always works. We just
+      // update the status text and let the browser navigate.
       const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
       if (isLive) {
-        const url = 'https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml';
-        window.open(url, '_blank');
-        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>" → "Run workflow". La page live se met à jour ~1 min après.';
-        return;
+        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>" → "Run workflow". Reviens ici dans ~1 min et fais Cmd+Shift+R.';
+        return true;  // let the anchor navigate
       }
-      btn.disabled = true;
+      // Local dev server: prevent navigation, do the POST instead
+      event.preventDefault();
+      const btn = document.getElementById('refresh-btn');
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '.6';
       status.textContent = '⏳ Rafraîchissement en cours…';
       try {
         const r = await fetch('/refresh', {method: 'POST'});
@@ -771,24 +780,23 @@
           setTimeout(() => location.reload(), 400);
         } else {
           status.textContent = '⚠ Erreur: ' + (j.detail || 'inconnue');
-          btn.disabled = false;
+          btn.style.pointerEvents = ''; btn.style.opacity = '';
         }
       } catch (e) {
         status.textContent = '⚠ Pas de serveur local (lance `python3 serve.py`).';
-        btn.disabled = false;
+        btn.style.pointerEvents = ''; btn.style.opacity = '';
       }
+      return false;
     }
 
-    async function updateResults() {
+    async function updateResults(event) {
       const status = document.getElementById('update-status');
       const isLive = location.hostname.includes('github.io') || location.protocol === 'https:';
       if (isLive) {
-        // ESPN results are auto-fetched (free) by the daily cron. Manual
-        // trigger redirects to the same workflow page.
-        window.open('https://github.com/loic2309/LoicF/actions/workflows/refresh-bets.yml', '_blank');
-        status.innerHTML = '↗ Refresh global déclenchable via GitHub Actions.';
-        return;
+        status.innerHTML = '↗ Onglet GitHub Actions ouvert. Clique "<b>Run workflow</b>".';
+        return true;
       }
+      event.preventDefault();
       status.textContent = '⏳ Récupération des scores…';
       try {
         const r = await fetch('/update-results', {method: 'POST'});
@@ -802,6 +810,7 @@
       } catch (e) {
         status.textContent = '⚠ Pas de serveur local.';
       }
+      return false;
     }
 
     async function markOutcome(eventId, category, outcome) {

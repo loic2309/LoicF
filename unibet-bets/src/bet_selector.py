@@ -321,6 +321,7 @@ def pick_ultra_risky(
     home: str, away: str, lam_h: float, lam_a: float,
     buteur_odds: dict, model_probs: dict, unibet_odds: dict,
     consensus_probs: dict,
+    exclude_markets: set | None = None,
 ) -> dict | None:
     """
     Ultra-risky pool combines several long-shot market types and picks the
@@ -340,7 +341,12 @@ def pick_ultra_risky(
 
     "Fair prob" uses the same 40% model + 60% consensus blend as safe/risky
     when consensus is available, else the raw model probability.
+
+    exclude_markets: set of market keys already used by safe/risky for this
+    match. The ultra pick must come from a different market so the three
+    categories don't all bet on the exact same outcome.
     """
+    exclude = exclude_markets or set()
     candidates = []
 
     # (a) Buteur candidates. Sanity-check: the market often knows better than
@@ -384,6 +390,8 @@ def pick_ultra_risky(
     # blowout draws and one-sided over/under picks can't keep an absurd
     # 90%+ edge derived from model-vs-market divergence alone.
     for mkey, odd in unibet_odds.items():
+        if mkey in exclude:
+            continue
         if odd < ULTRA_MIN_ODD:
             continue
         m_prob = model_probs.get(mkey)
@@ -405,6 +413,9 @@ def pick_ultra_risky(
             "source": "unibet" if mkey in ("h2h_home", "h2h_draw", "h2h_away") or mkey.startswith(("over_", "under_")) else "consensus",
         })
 
+    # Filter buteur candidates against exclude too (just in case scorer key
+    # collision with safe/risky — unlikely but safe).
+    candidates = [c for c in candidates if c["market"] not in exclude]
     if not candidates:
         return None
     best = max(candidates, key=lambda r: r["edge"])
@@ -446,11 +457,18 @@ def analyse_event(event: dict, elo: dict, form_data: dict,
         for name, odd in advanced_odds["scorers"].items():
             scorer_odds_merged.setdefault(name, {"odd": odd, "n_books": 1})
 
+    # Build exclusion set so ultra doesn't pick the exact same outcome as
+    # safe or risky (e.g. both Risqué and Ultra landing on "Victoire X").
+    exclude = set()
+    if safe is not None: exclude.add(safe["market"])
+    if risky is not None: exclude.add(risky["market"])
+
     ultra_risky = pick_ultra_risky(
         home, away,
         prediction["lambda_home"], prediction["lambda_away"],
         scorer_odds_merged, prediction["probs"], odds["unibet"],
         consensus_probs,
+        exclude_markets=exclude,
     )
     if ultra_risky and safe and not are_compatible(safe["market"], ultra_risky["market"]):
         ultra_risky = None  # fallback path — shouldn't trigger because scorer is always compatible

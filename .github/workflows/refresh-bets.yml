@@ -34,17 +34,14 @@ jobs:
             "https://www.eloratings.net/World.tsv" -o data/elo_raw.tsv || \
             echo "(elo refresh skipped — keeping last known TSV)"
 
-      - name: Update tournament results (smart — skip if nothing new)
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      - name: Update tournament results (free — ESPN public scoreboard)
         run: |
           python3 -c "
           import sys; sys.path.insert(0, 'src')
-          from fetch_results import update_results
-          # only_if_needed: skip the /scores API call when every past-kickoff
-          # match is already marked completed locally → no credit spent on
-          # rest days or refreshes where nothing has finished since last call.
-          summary = update_results(days_from=3, only_if_needed=True)
+          from fetch_results_free import update_results_free
+          # ESPN public scoreboard — zero API credits spent.
+          # Replaces the paid /scores call from The Odds API.
+          summary = update_results_free(days_back=4)
           print(summary)
           "
 

@@ -94,9 +94,16 @@ RISKY_MAX_PROB = 0.50
 # Hard caps on individual pick cotes per category. The combo caps (5/25)
 # are on the product; these caps are on each leg so the labels stay honest:
 #   - safe leg cote ≤ 2.00 (implied market prob ≥ 50%)
-#   - risky leg cote ≤ 4.00 (above that, the bet belongs in ultra)
+#   - risky leg cote ≤ 4.50 (above that, the bet belongs in ultra)
 SAFE_MAX_INDIVIDUAL_ODD = 2.00
-RISKY_MAX_INDIVIDUAL_ODD = 4.00
+RISKY_MAX_INDIVIDUAL_ODD = 4.50
+
+# Tie-break: among picks within this edge band of the top candidate, prefer
+# h2h outcomes (Victoire X / Match nul) over derivative markets (BTTS, DC,
+# alt totals). User feedback: h2h picks feel "more natural" and pair better
+# with totals in combos — joint winning scores are more numerous.
+H2H_TIE_BAND = 0.03  # 3 percentage points
+H2H_MARKETS = {"h2h_home", "h2h_away", "h2h_draw"}
 
 # Value flag thresholds (edge above which a pick earns the VALEUR badge)
 SAFE_VALUE_EDGE = 0.02
@@ -304,6 +311,25 @@ def jointly_compatible(*markets) -> bool:
     return False
 
 
+def _pick_with_h2h_preference(pool: list) -> dict | None:
+    """Picks the max-edge candidate, but if h2h alternatives sit within
+    H2H_TIE_BAND of that max edge, prefer the h2h one. Rationale: h2h
+    outcomes (Victoire X / Nul) cover more winning final scores when
+    paired with totals than derivative markets like BTTS — joint combo
+    win probability is higher with h2h legs."""
+    if not pool:
+        return None
+    top = max(pool, key=lambda r: r["edge"])
+    h2h_candidates = [
+        r for r in pool
+        if r["market"] in H2H_MARKETS
+        and r["edge"] >= top["edge"] - H2H_TIE_BAND
+    ]
+    if h2h_candidates:
+        return max(h2h_candidates, key=lambda r: r["edge"])
+    return top
+
+
 def pick_safe_and_risky(rows: list) -> tuple[dict | None, dict | None]:
     safe_pool = [
         r for r in rows
@@ -315,10 +341,10 @@ def pick_safe_and_risky(rows: list) -> tuple[dict | None, dict | None]:
         if RISKY_MIN_PROB <= r["fair_prob"] < RISKY_MAX_PROB
         and r["unibet_odd"] <= RISKY_MAX_INDIVIDUAL_ODD
     ]
-    safe = max(safe_pool, key=lambda r: r["edge"]) if safe_pool else None
+    safe = _pick_with_h2h_preference(safe_pool)
     if safe is not None:
         risky_pool = [r for r in risky_pool if are_compatible(safe["market"], r["market"])]
-    risky = max(risky_pool, key=lambda r: r["edge"]) if risky_pool else None
+    risky = _pick_with_h2h_preference(risky_pool)
     if safe is not None:
         safe["has_value"] = safe["edge"] >= SAFE_VALUE_EDGE
     if risky is not None:

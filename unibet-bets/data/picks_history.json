@@ -231,11 +231,11 @@
       "is_buteur": false
     },
     "ultra_risky": {
-      "market": "under_0.5",
-      "cote": 9.5,
-      "fair_prob": 0.1037,
-      "edge": -0.01485000000000003,
-      "has_value": false,
+      "market": "h2h_draw",
+      "cote": 3.95,
+      "fair_prob": 0.2675758873989604,
+      "edge": 0.056924755225893575,
+      "has_value": true,
       "is_buteur": false
     }
   }

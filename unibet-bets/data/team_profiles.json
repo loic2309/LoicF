@@ -60,5 +60,61 @@
     "form": "solid", "wc_pedigree": "moderate",
     "note": "Qualified for 2026 WC without conceding a single goal. Ultra-disciplined block. Low-scoring, set-piece reliant. Hard to break down.",
     "key_players": ["Seifeddine Jaziri", "Elias Achouri", "Hannibal Mejbri"]
+  },
+  "Qatar": {
+    "matches": 8, "gf_per_game": 1.1, "ga_per_game": 1.6,
+    "style": "modest",
+    "form": "poor", "wc_pedigree": "weak",
+    "note": "LOW CONFIDENCE profile (estimated). Elo 1421, deep slump since hosting 2022 (lost all 3). Weak both ends vs quality opposition. AFC-level only.",
+    "key_players": ["Akram Afif", "Almoez Ali"]
+  },
+  "Switzerland": {
+    "matches": 10, "gf_per_game": 2.0, "ga_per_game": 0.8,
+    "style": "balanced",
+    "form": "good", "wc_pedigree": "strong",
+    "note": "22 GF / 7 GA last 10 (quals inflated by Kosovo/Slovenia). Solid block, Xhaka anchors. Leaked 4 to Germany — vulnerable vs elite attacks but ruthless vs weaker sides. Drew Australia 1-1 recently.",
+    "key_players": ["Breel Embolo", "Dan Ndoye", "Granit Xhaka"]
+  },
+  "Brazil": {
+    "matches": 8, "gf_per_game": 1.5, "ga_per_game": 0.9,
+    "style": "balanced",
+    "form": "slump", "wc_pedigree": "elite",
+    "note": "In transition under Ancelotti (4W 2D 2L). Strikingly LOW-scoring for Brazil: 1-0 Paraguay, 3-0 Chile, 0-0 Ecuador, lost 1-0 Bolivia. Elo peak gap -204. Vini/Raphinha/Neymar(34) but attack not flowing. Overrated by reputation.",
+    "key_players": ["Vinicius Junior", "Raphinha", "Neymar"]
+  },
+  "Morocco": {
+    "matches": 12, "gf_per_game": 1.7, "ga_per_game": 0.6,
+    "style": "defensive",
+    "form": "excellent", "wc_pedigree": "strong",
+    "note": "Arab Cup 2025 winners. 8W 2D 1D recent. Elite defense (0.6 GA/game). WC 2022 semi-finalists core. Beats top sides via organization + transitions. Brahim Diaz, En-Nesyri, Hakimi.",
+    "key_players": ["Brahim Diaz", "Achraf Hakimi", "Youssef En-Nesyri"]
+  },
+  "Haiti": {
+    "matches": 9, "gf_per_game": 1.2, "ga_per_game": 1.0,
+    "style": "modest",
+    "form": "mixed", "wc_pedigree": "weak",
+    "note": "First WC since 1974. CONCACAF level — conceded 3 to Honduras, drew 3-3 Costa Rica. Inconsistent. Nazon all-time scorer. Out of depth vs European sides expected.",
+    "key_players": ["Duckens Nazon", "Frantzdy Pierrot"]
+  },
+  "Scotland": {
+    "matches": 6, "gf_per_game": 2.3, "ga_per_game": 1.3,
+    "style": "attacking",
+    "form": "decent", "wc_pedigree": "weak",
+    "note": "14 GF / 8 GA in 6 quals — surprisingly attacking (beat Denmark 4-2, Greece 3-1 & 3-2). But leaky (1.3 GA/game) and Elo peak gap -322 (overall slump). McTominay/Adams. Struggles away vs quality.",
+    "key_players": ["Scott McTominay", "Che Adams", "Ryan Christie"]
+  },
+  "Australia": {
+    "matches": 10, "gf_per_game": 1.8, "ga_per_game": 0.7,
+    "style": "balanced",
+    "form": "solid", "wc_pedigree": "moderate",
+    "note": "Qualified solidly (beat Japan 1-0, drew 1-1, 2-1 Saudi). Thrashed Curaçao 5-1 in friendly. Disciplined, defensively sound under Popovic. Set-piece threat, physical.",
+    "key_players": ["Mitchell Duke", "Martin Boyle", "Riley McGree"]
+  },
+  "Turkey": {
+    "matches": 8, "gf_per_game": 2.3, "ga_per_game": 1.0,
+    "style": "attacking",
+    "form": "good", "wc_pedigree": "moderate",
+    "note": "28 GF / 11 GA — potent attack (Arda Guler, Kenan Yildiz, Akturkoglu). But conceded 0-6 to Spain — defense frail vs elite. First WC in 24 years. Montella's side plays open, attacking football.",
+    "key_players": ["Arda Guler", "Kenan Yildiz", "Kerem Akturkoglu"]
   }
 }

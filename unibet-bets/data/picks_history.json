@@ -208,5 +208,35 @@
       "has_value": true,
       "is_buteur": false
     }
+  },
+  "564084f52cc9f1abcc18187c168a7cdc": {
+    "event_id": "564084f52cc9f1abcc18187c168a7cdc",
+    "home_team": "Australia",
+    "away_team": "Turkey",
+    "commence_time": "2026-06-14T04:00:00Z",
+    "safe": {
+      "market": "under_3.5",
+      "cote": 1.29,
+      "fair_prob": 0.7728,
+      "edge": -0.0030879999999998686,
+      "has_value": false,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "h2h_draw",
+      "cote": 3.95,
+      "fair_prob": 0.2675758873989604,
+      "edge": 0.056924755225893575,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "under_0.5",
+      "cote": 9.5,
+      "fair_prob": 0.1037,
+      "edge": -0.01485000000000003,
+      "has_value": false,
+      "is_buteur": false
+    }
   }
 }

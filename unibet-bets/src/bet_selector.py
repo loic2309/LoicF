@@ -207,7 +207,9 @@ def belgian_day_window(now: datetime | None = None) -> tuple[datetime, datetime]
         start = now.replace(hour=15, minute=0, second=0, microsecond=0) - timedelta(days=1)
     else:
         start = now.replace(hour=15, minute=0, second=0, microsecond=0)
-    end = start + timedelta(hours=15)
+    # Extended to 16h so kickoffs at exactly 06:00 BE (e.g. Australia-Turkey
+    # on the WC 2026 schedule) fit inside the window. Window: [15:00, 07:00].
+    end = start + timedelta(hours=16)
     return start, end
 
 

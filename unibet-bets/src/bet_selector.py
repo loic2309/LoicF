@@ -66,7 +66,7 @@ CONSENSUS_WEIGHT = 0.60
 # market has (injury news, motivation, lineup intel, etc.). We trust the
 # market over a divergent model on the upside. The cap never *raises* a
 # probability — only prevents runaway over-confidence relative to market.
-MAX_MODEL_OVER_MARKET = 1.30
+MAX_MODEL_OVER_MARKET = 1.20
 
 # Hard edge ceiling. Realistic positive-EV opportunities at modest +3-15%
 # happen; an apparent +50%+ edge almost always reflects model bias rather
@@ -74,7 +74,7 @@ MAX_MODEL_OVER_MARKET = 1.30
 # because heavy money flows through it). When the raw edge crosses this
 # ceiling we clamp it — and back-derive a fair probability consistent with
 # that ceiling — so the combo math stays internally consistent.
-MAX_EDGE_CEILING = 0.30
+MAX_EDGE_CEILING = 0.20
 
 
 def cap_edge(fair_prob: float, odd: float) -> tuple[float, float]:
@@ -96,7 +96,7 @@ RISKY_MAX_PROB = 0.50
 # are on the product; these caps are on each leg so the labels stay honest:
 #   - safe leg cote ≤ 2.00 (implied market prob ≥ 50%)
 #   - risky leg cote ≤ 4.50 (above that, the bet belongs in ultra)
-SAFE_MAX_INDIVIDUAL_ODD = 2.00
+SAFE_MAX_INDIVIDUAL_ODD = 1.70
 RISKY_MAX_INDIVIDUAL_ODD = 4.50
 
 # Tie-break: among picks within this edge band of the top candidate, prefer
@@ -112,7 +112,7 @@ RISKY_VALUE_EDGE = 0.05
 ULTRA_VALUE_EDGE = 0.05
 
 # Daily combo caps
-SAFE_COMBO_CAP = 5.0
+SAFE_COMBO_CAP = 7.5
 RISKY_COMBO_CAP = 25.0
 # ultra-risky: no cap
 
@@ -187,7 +187,12 @@ def _bet_wins(market: str, h: int, a: int) -> bool:
         return a > float(market.split("_")[-1])
     if market.startswith("team_away_under_"):
         return a < float(market.split("_")[-1])
-    if market.startswith("scorer_"): return True  # independent of score
+    if market.startswith("scorer_"):
+        # A scorer pick requires that AT LEAST one goal be scored in the
+        # game (someone — could be this player). For joint-compat checking,
+        # this catches the pathological case where safe + risky force 0-0
+        # (no one scored), making any scorer pick impossible.
+        return (h + a) >= 1
     if market.startswith("ah_"): return True  # not used in picks today
     return True  # unknown → don't block
 
@@ -313,24 +318,18 @@ def are_compatible(market_a: str, market_b: str) -> bool:
 
 def jointly_compatible(*markets) -> bool:
     """N markets are jointly compatible iff there exists at least one
-    final score where every one of them pays. Pairwise compatibility
-    doesn't imply triple compatibility — e.g. Under 2.5 + BTTS yes +
-    Victoire Paraguay are pairwise OK but jointly impossible (forces
-    home=1, away=2, total=3 which violates Under 2.5)."""
+    final score where every one of them can pay. Scorer markets contribute
+    a weak "at least one goal in the game" constraint (since the player
+    can only score if a goal happens) — this prevents the pathological
+    case of safe+risky forcing 0-0 while ultra is a scorer."""
     markets = [m for m in markets if m]
-    # Scorer markets are independent of the final score (player either
-    # scored or didn't, decoupled from h/a outcome). Strip them out.
-    deterministic = [m for m in markets if not m.startswith("scorer_")]
-    if not deterministic:
+    if not markets:
         return True
-    if len(deterministic) == 1:
+    if len(markets) == 1:
         return True
-    if any(deterministic.count(m) > 1 for m in deterministic):
-        # Same market repeated — trivially compatible
-        deterministic = list(set(deterministic))
     for h in range(8):
         for a in range(8):
-            if all(_bet_wins(m, h, a) for m in deterministic):
+            if all(_bet_wins(m, h, a) for m in markets):
                 return True
     return False
 
@@ -386,6 +385,7 @@ def pick_ultra_risky(
     consensus_probs: dict,
     exclude_markets: set | None = None,
     compat_with: list | None = None,
+    all_rows: list | None = None,
 ) -> dict | None:
     """
     Ultra-risky pool combines several long-shot market types and picks the
@@ -419,69 +419,63 @@ def pick_ultra_risky(
     compat_with = compat_with or []
     candidates = []
 
-    # (a) Buteur candidates. Sanity-check: the market often knows better than
-    # our coarse hardcoded scorer shares (defenders vs strikers, role on
-    # national team vs club, etc.). We cap our model probability at
-    # 1.5 × market-implied probability — meaning we accept positive edge
-    # only when the market also considers the player a plausible scorer.
-    for team, lam in ((home, lam_h), (away, lam_a)):
-        for player_name, share in scorers_for(team):
-            model_p_raw = player_score_prob(lam, share)
-            matched_odd = None
-            for feed_name, info in buteur_odds.items():
-                fn = feed_name.lower()
-                pn = player_name.lower()
-                if pn in fn or fn in pn:
-                    matched_odd = info["odd"]
-                    break
-            if matched_odd is None:
-                continue
-            # Buteur consensus uses 1/cote (vig-inclusive) — slightly
-            # pessimistic, so we use a looser 1.5× cap before the global
-            # edge ceiling kicks in.
-            implied_market = 1.0 / matched_odd
-            fair_prob = min(model_p_raw, 1.5 * implied_market)
-            fair_prob, edge = cap_edge(fair_prob, matched_odd)
-            candidates.append({
-                "market": f"scorer_{player_name}",
-                "model_prob": model_p_raw,
-                "consensus_prob": implied_market,
-                "fair_prob": fair_prob,
-                "unibet_odd": matched_odd,
-                "edge": edge,
-                "is_buteur": True,
-                "team": team,
-                "source": "consensus",
-                "note": "Cote indicative (consensus marché, ~Pinnacle). À vérifier sur unibet.be.",
-            })
+    # Scorer picks disabled from ultra. Without confirmed line-ups before
+    # kickoff, a buteur bet is essentially a roll of the dice on whether
+    # the player even starts. Ultra picks must come from market-level
+    # outcomes whose resolution doesn't depend on team selection:
+    # long-shot 1X2, high/low totals, draw on lopsided matches, etc.
 
-    # (b)+(c) Long-shot 1X2 + totals at the Unibet cote.
-    # Same _blend() sanity cap applies here (fair ≤ 1.3 × consensus), so
-    # blowout draws and one-sided over/under picks can't keep an absurd
-    # 90%+ edge derived from model-vs-market divergence alone.
-    for mkey, odd in unibet_odds.items():
-        if mkey in exclude:
-            continue
-        if odd < ULTRA_MIN_ODD:
-            continue
-        m_prob = model_probs.get(mkey)
-        c_prob = consensus_probs.get(mkey)
-        if m_prob is None and c_prob is None:
-            continue
-        fair = _blend(m_prob, c_prob)
-        if fair > ULTRA_MAX_PROB:
-            continue
-        fair, edge = cap_edge(fair, odd)
-        candidates.append({
-            "market": mkey,
-            "model_prob": m_prob,
-            "consensus_prob": c_prob,
-            "fair_prob": fair,
-            "unibet_odd": odd,
-            "edge": edge,
-            "is_buteur": False,
-            "source": "unibet" if mkey in ("h2h_home", "h2h_draw", "h2h_away") or mkey.startswith(("over_", "under_")) else "consensus",
-        })
+    # (b)+(c) Long-shot non-scorer outcomes. Pulls from the FULL row pool
+    # (h2h, totals, btts, dc, alt_totals — all that evaluate_outcomes built),
+    # not just unibet_odds. Filter: cote ≥ ULTRA_MIN_ODD, fair_prob ≤
+    # ULTRA_MAX_PROB. Same _blend() sanity cap.
+    if all_rows is not None:
+        for r in all_rows:
+            mkey = r["market"]
+            if mkey in exclude:
+                continue
+            if mkey.startswith("scorer_"):
+                continue
+            odd = r["unibet_odd"]
+            fair = r["fair_prob"]
+            if odd < ULTRA_MIN_ODD:
+                continue
+            if fair > ULTRA_MAX_PROB:
+                continue
+            candidates.append({
+                "market": mkey,
+                "model_prob": r.get("model_prob"),
+                "consensus_prob": r.get("consensus_prob"),
+                "fair_prob": fair,
+                "unibet_odd": odd,
+                "edge": r["edge"],
+                "is_buteur": False,
+                "source": r.get("source", "?"),
+            })
+    else:
+        for mkey, odd in unibet_odds.items():
+            if mkey in exclude:
+                continue
+            if odd < ULTRA_MIN_ODD:
+                continue
+            m_prob = model_probs.get(mkey)
+            c_prob = consensus_probs.get(mkey)
+            if m_prob is None and c_prob is None:
+                continue
+            fair = _blend(m_prob, c_prob)
+            if fair > ULTRA_MAX_PROB:
+                continue
+            fair, edge = cap_edge(fair, odd)
+            candidates.append({
+                "market": mkey,
+                "model_prob": m_prob,
+                "consensus_prob": c_prob,
+                "fair_prob": fair,
+                "unibet_odd": odd,
+                "edge": edge,
+                "is_buteur": False,
+                "source": "unibet" if mkey in ("h2h_home", "h2h_draw", "h2h_away") or mkey.startswith(("over_", "under_")) else "consensus",
+            })
 
     # Exclude same-market repeats, then enforce JOINT compatibility with
     # safe + risky picks (not just pairwise).
@@ -592,6 +586,7 @@ def analyse_event(event: dict, elo: dict, form_data: dict,
         consensus_probs,
         exclude_markets=exclude,
         compat_with=compat_chain,
+        all_rows=rows,
     )
 
     # Surface high-edge picks that got dropped due to joint-compat
@@ -628,8 +623,12 @@ def analyse_event(event: dict, elo: dict, form_data: dict,
 
 
 def best_subset_under_cap(picks: list, cap: float) -> list:
-    """Return the subset of picks whose product of cotes is ≤ cap and
-    maximum. With ≤ ~10 picks per day, brute-force enumeration is fine."""
+    """Return the subset of picks under the cap with the highest combined
+    EV (joint_prob × combo_cote − 1, under independence assumption).
+    Maximizing pure cote dropped high-edge legs (e.g. Qatar BTTS no @1.56
+    with +30% edge would be sacrificed because its cote is low). EV
+    maximization correctly retains those because they boost the joint
+    probability. Tie break: more selections > fewer."""
     if not picks:
         return []
     natural = 1.0
@@ -640,22 +639,23 @@ def best_subset_under_cap(picks: list, cap: float) -> list:
 
     n = len(picks)
     best = []
-    best_product = 0.0
-    # Enumerate non-empty subsets (skip empty since 1.0 is trivial)
+    best_ev = -float("inf")
     for k in range(1, n + 1):
         for combo in combinations(range(n), k):
-            prod = 1.0
+            cote = 1.0
+            prob = 1.0
             for i in combo:
-                prod *= picks[i]["unibet_odd"]
-            if prod > cap:
+                cote *= picks[i]["unibet_odd"]
+                prob *= picks[i]["fair_prob"]
+            if cote > cap:
                 continue
-            # Tie break: larger subset wins, then higher product
+            ev = prob * cote - 1.0
             if (
-                prod > best_product
-                or (prod == best_product and len(combo) > len(best))
+                ev > best_ev
+                or (abs(ev - best_ev) < 1e-9 and len(combo) > len(best))
             ):
                 best = [picks[i] for i in combo]
-                best_product = prod
+                best_ev = ev
     return best
 
 

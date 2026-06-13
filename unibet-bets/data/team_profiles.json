@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "description": "Per-team quantitative + qualitative profiles feeding model_v2. Recent goals from last ~6-12 internationals (2024-2026), gathered via Wikipedia/search. Refreshed manually when needed.",
+    "intl_ref_gf_per_game": 1.6,
+    "intl_ref_ga_per_game": 1.0,
+    "last_updated": "2026-06-13"
+  },
+  "Germany": {
+    "matches": 7, "gf_per_game": 3.0, "ga_per_game": 1.0,
+    "style": "attacking",
+    "form": "strong", "wc_pedigree": "elite",
+    "note": "6-0 Slovakia, 4-3 Switzerland. Attack flowing under Nagelsmann (Wirtz, Musiala, Havertz). Schedule minnow-padded (Lux/NI/Svk) so attack slightly inflated.",
+    "key_players": ["Florian Wirtz", "Kai Havertz", "Jamal Musiala"]
+  },
+  "Curacao": {
+    "matches": 11, "gf_per_game": 1.45, "ga_per_game": 1.18,
+    "style": "modest",
+    "form": "mixed", "wc_pedigree": "debutant",
+    "note": "Smallest nation ever to qualify. Blown out 1-5 by Australia and 0-2 by China in friendlies — defense collapses vs quality. Attack padded by 7-0 vs Bermuda.",
+    "key_players": ["Leandro Bacuna", "Rangelo Janga"]
+  },
+  "Netherlands": {
+    "matches": 12, "gf_per_game": 2.0, "ga_per_game": 1.0,
+    "style": "attacking",
+    "form": "good", "wc_pedigree": "elite",
+    "note": "24 goals in 12. But warning signs: lost 0-1 Algeria (June 3), drew Ecuador 1-1. Depay/Gakpo carry the goals.",
+    "key_players": ["Memphis Depay", "Cody Gakpo", "Donyell Malen"]
+  },
+  "Japan": {
+    "matches": 12, "gf_per_game": 1.83, "ga_per_game": 0.58,
+    "style": "balanced",
+    "form": "excellent", "wc_pedigree": "strong",
+    "note": "Elite defense (0.58 GA/game). Beat Brazil 3-2, England 1-0, Scotland 1-0. In superb form. Eighth straight WC. Technical, compact, deadly transitions.",
+    "key_players": ["Takefusa Kubo", "Kaoru Mitoma", "Ayase Ueda"]
+  },
+  "Ivory Coast": {
+    "matches": 8, "gf_per_game": 2.13, "ga_per_game": 0.75,
+    "style": "attacking",
+    "form": "excellent", "wc_pedigree": "moderate",
+    "note": "Beat France 2-1, South Korea 4-0. AFCON 2023 winners core. Amad Diallo on fire (5 goals recent). Pace on the wings.",
+    "key_players": ["Amad Diallo", "Evann Guessand", "Simon Adingra"]
+  },
+  "Ecuador": {
+    "matches": 10, "gf_per_game": 1.20, "ga_per_game": 0.70,
+    "style": "defensive",
+    "form": "solid", "wc_pedigree": "moderate",
+    "note": "Beat Argentina 1-0, drew Netherlands 1-1. Very low-scoring, elite defensive organization. Caicedo anchors. Valencia (36) the focal point but ageing.",
+    "key_players": ["Enner Valencia", "Moises Caicedo", "Nilson Angulo"]
+  },
+  "Sweden": {
+    "matches": 6, "gf_per_game": 2.0, "ga_per_game": 1.5,
+    "style": "attacking",
+    "form": "inconsistent", "wc_pedigree": "moderate",
+    "note": "Qualified via play-offs (3-1 Ukraine, 3-2 Poland), didn't top group. Coach Tomasson sacked Oct 2025 after home loss to Kosovo, Graham Potter in. Isak + Gyokeres elite attack but defense leaks (1.5 GA/game).",
+    "key_players": ["Alexander Isak", "Viktor Gyokeres", "Dejan Kulusevski"]
+  },
+  "Tunisia": {
+    "matches": 6, "gf_per_game": 1.50, "ga_per_game": 0.50,
+    "style": "defensive",
+    "form": "solid", "wc_pedigree": "moderate",
+    "note": "Qualified for 2026 WC without conceding a single goal. Ultra-disciplined block. Low-scoring, set-piece reliant. Hard to break down.",
+    "key_players": ["Seifeddine Jaziri", "Elias Achouri", "Hannibal Mejbri"]
+  }
+}

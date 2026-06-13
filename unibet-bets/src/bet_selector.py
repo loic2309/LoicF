@@ -113,7 +113,7 @@ ULTRA_VALUE_EDGE = 0.05
 
 # Daily combo caps
 SAFE_COMBO_CAP = 7.5
-RISKY_COMBO_CAP = 25.0
+RISKY_COMBO_CAP = 60.0
 # ultra-risky: no cap
 
 # Stakes

@@ -133,10 +133,10 @@
       "is_buteur": false
     },
     "risky": {
-      "market": "under_1.5",
-      "cote": 4.05,
-      "fair_prob": 0.2788,
-      "edge": 0.1291399999999998,
+      "market": "under_2.5",
+      "cote": 2.28,
+      "fair_prob": 0.4597753846153846,
+      "edge": 0.04828787692307679,
       "has_value": true,
       "is_buteur": false
     },
@@ -159,7 +159,7 @@
       "cote": 1.26,
       "fair_prob": 0.7897,
       "edge": -0.004978000000000038,
-      "has_value": false,
+      "has_value": true,
       "is_buteur": false
     },
     "risky": {
@@ -167,7 +167,7 @@
       "cote": 3.85,
       "fair_prob": 0.27084463180947166,
       "edge": 0.04275183246646597,
-      "has_value": false,
+      "has_value": true,
       "is_buteur": false
     },
     "ultra_risky": {
@@ -175,7 +175,7 @@
       "cote": 3.1,
       "fair_prob": 0.3048,
       "edge": -0.05511999999999995,
-      "has_value": false,
+      "has_value": true,
       "is_buteur": false
     }
   },
@@ -201,10 +201,10 @@
       "is_buteur": false
     },
     "ultra_risky": {
-      "market": "h2h_draw",
-      "cote": 4.6,
-      "fair_prob": 0.23466198955337758,
-      "edge": 0.07944515194553681,
+      "market": "under_0.5",
+      "cote": 9.1,
+      "fair_prob": 0.1135,
+      "edge": 0.032850000000000046,
       "has_value": true,
       "is_buteur": false
     }
@@ -219,7 +219,7 @@
       "cote": 1.29,
       "fair_prob": 0.7728,
       "edge": -0.0030879999999998686,
-      "has_value": false,
+      "has_value": true,
       "is_buteur": false
     },
     "risky": {

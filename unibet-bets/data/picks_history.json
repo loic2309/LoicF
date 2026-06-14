@@ -351,11 +351,11 @@
       "is_buteur": false
     },
     "ultra_risky": {
-      "market": "under_1.5",
-      "cote": 2.92,
-      "fair_prob": 0.3131210958904109,
-      "edge": -0.08568640000000016,
-      "has_value": false,
+      "market": "h2h_draw",
+      "cote": 3.55,
+      "fair_prob": 0.3041,
+      "edge": 0.07955499999999982,
+      "has_value": true,
       "is_buteur": false
     }
   }

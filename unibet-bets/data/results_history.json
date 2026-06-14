@@ -2,65 +2,65 @@
   "80d82d1113934bfbea4ce8daf37a2433": {
     "home_team": "Mexico",
     "away_team": "South Africa",
-    "commence_time": "2026-06-11T19:00:00Z",
+    "commence_time": "2026-06-11T19:00Z",
     "completed": true,
     "home_score": 2,
     "away_score": 0,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-13T11:10:09.876519+00:00"
   },
   "384cbb5d76b535896a24fe65f93cfac8": {
     "home_team": "South Korea",
     "away_team": "Czech Republic",
-    "commence_time": "2026-06-12T02:00:00Z",
+    "commence_time": "2026-06-12T02:00Z",
     "completed": true,
     "home_score": 2,
     "away_score": 1,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-13T11:10:09.876557+00:00"
   },
   "d1f4f946c70a0b4e81f5d43e9d32361c": {
     "home_team": "Canada",
     "away_team": "Bosnia & Herzegovina",
-    "commence_time": "2026-06-12T19:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "commence_time": "2026-06-12T19:00Z",
+    "completed": true,
+    "home_score": 1,
+    "away_score": 1,
+    "last_update": "2026-06-14T10:19:33.852936+00:00"
   },
   "c12986f447a515fbe641addd786dbb24": {
     "home_team": "USA",
     "away_team": "Paraguay",
-    "commence_time": "2026-06-13T01:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "commence_time": "2026-06-13T01:00Z",
+    "completed": true,
+    "home_score": 4,
+    "away_score": 1,
+    "last_update": "2026-06-14T10:19:33.852963+00:00"
   },
   "26634922d3f78c146440816023e40de8": {
     "home_team": "Qatar",
     "away_team": "Switzerland",
-    "commence_time": "2026-06-13T19:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "commence_time": "2026-06-13T19:00Z",
+    "completed": true,
+    "home_score": 1,
+    "away_score": 1,
+    "last_update": "2026-06-14T10:19:33.852972+00:00"
   },
   "f6c8748a16516e0998f95de14235432a": {
     "home_team": "Brazil",
     "away_team": "Morocco",
-    "commence_time": "2026-06-13T22:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "commence_time": "2026-06-13T22:00Z",
+    "completed": true,
+    "home_score": 1,
+    "away_score": 1,
+    "last_update": "2026-06-14T10:19:33.852980+00:00"
   },
   "5ae41a06735c926eeb7f74006933adce": {
     "home_team": "Haiti",
     "away_team": "Scotland",
-    "commence_time": "2026-06-14T01:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "commence_time": "2026-06-14T01:00Z",
+    "completed": true,
+    "home_score": 0,
+    "away_score": 1,
+    "last_update": "2026-06-14T10:19:33.852988+00:00"
   },
   "564084f52cc9f1abcc18187c168a7cdc": {
     "home_team": "Australia",
@@ -69,7 +69,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "d79edbd6aaeb578d33e313446b18d333": {
     "home_team": "Germany",
@@ -78,7 +78,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "32ec06abda2398ac41501c86eb9aa376": {
     "home_team": "Netherlands",
@@ -87,7 +87,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "05752bb341e197001387b64f3a06b9b2": {
     "home_team": "Ivory Coast",
@@ -96,7 +96,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "b55f9569de3f4d731bc5537ff5ff43e4": {
     "home_team": "Sweden",
@@ -105,7 +105,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "c54f00b11925751d2b62988775c6c239": {
     "home_team": "Spain",
@@ -114,7 +114,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "fbfb95c62003fd6d828b309f96ee1f9b": {
     "home_team": "Belgium",
@@ -123,7 +123,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "64b91c5f2db61c7358a4f05459e83c52": {
     "home_team": "Saudi Arabia",
@@ -132,7 +132,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "ec51b9c44ad5e34552f3ab53f7262813": {
     "home_team": "Iran",
@@ -141,7 +141,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "73a4fcd14cc9766b9b9bfd50b8ca153a": {
     "home_team": "France",
@@ -150,7 +150,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "4d4f2b9b78182b557d4fbf8dcf4f4af2": {
     "home_team": "Iraq",
@@ -159,7 +159,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "f31b2ee9e1cc6f7e641467f8237eaa21": {
     "home_team": "Argentina",
@@ -168,7 +168,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "25161cf6cf0cd9be17ae2e7e224a1f45": {
     "home_team": "Austria",
@@ -177,7 +177,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "6cc871c121a1869b4612d3fb22fa9d55": {
     "home_team": "Portugal",
@@ -186,7 +186,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "689096c8cd7e2753b9fec95321943c5d": {
     "home_team": "England",
@@ -195,7 +195,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "87afdb85c977b451e1c00f5e3e632601": {
     "home_team": "Ghana",
@@ -204,7 +204,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "22083e7a8e5362c711bc05c1e1319a1f": {
     "home_team": "Uzbekistan",
@@ -213,7 +213,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "66ebb9e3f949caded535d97ce686ca09": {
     "home_team": "Czech Republic",
@@ -222,7 +222,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "289bc2e9f5adad8ae4d9a75a7c5461ad": {
     "home_team": "Switzerland",
@@ -231,7 +231,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "fa9502285b257b03e62968d50d9229fc": {
     "home_team": "Canada",
@@ -240,7 +240,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "0f2aeae6ac8e77223848d23a4ca86b0d": {
     "home_team": "Mexico",
@@ -249,7 +249,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "065b3573e875f8d23803357f73e5b99e": {
     "home_team": "USA",
@@ -258,7 +258,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "4cd769aa7bae0ad9762bd69b80ef2903": {
     "home_team": "Scotland",
@@ -267,7 +267,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "ef0f74a991d3e35798ae5af77667bce1": {
     "home_team": "Brazil",
@@ -276,7 +276,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "f955d4b3395ce6e3b5ac1031ca52ca4e": {
     "home_team": "Turkey",
@@ -285,7 +285,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "4f0c518545b0096c68326daf25bffc1e": {
     "home_team": "Netherlands",
@@ -294,7 +294,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "f1ab0f69832972a329243522ceaa7804": {
     "home_team": "Germany",
@@ -303,7 +303,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "681895f294b670b4c7b14495dfb583bc": {
     "home_team": "Ecuador",
@@ -312,7 +312,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "dfc5202cf1b8ae002cf952cd04f235b9": {
     "home_team": "Tunisia",
@@ -321,7 +321,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "73529a242e319a86bf3d00ddb4accc37": {
     "home_team": "Spain",
@@ -330,7 +330,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "5f92f257386ec5bf7c6e2498a21f3a61": {
     "home_team": "Belgium",
@@ -339,7 +339,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "852a3abe6d46820720febc0fedebff9a": {
     "home_team": "Uruguay",
@@ -348,7 +348,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "c1ec9a65f4b4cf74477b368a7d6282de": {
     "home_team": "New Zealand",
@@ -357,7 +357,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "be6c63f416c67bca1300a98f5b89c3af": {
     "home_team": "Argentina",
@@ -366,7 +366,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "7ad7a0ce2ef2618bb59b066da5642f70": {
     "home_team": "France",
@@ -375,7 +375,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "3f48473742ca0fd2a85930554720c75e": {
     "home_team": "Norway",
@@ -384,7 +384,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "fd8533b650e655030f6a7946f8795db2": {
     "home_team": "Jordan",
@@ -393,7 +393,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "8ba93d190f1f934e33862a97a6353a6e": {
     "home_team": "Portugal",
@@ -402,7 +402,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "2f49dd8deae3079dc4eb2d634d18a99c": {
     "home_team": "England",
@@ -411,7 +411,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "c1bc8c26480cd42b89a0de5329581314": {
     "home_team": "Panama",
@@ -420,7 +420,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "68bfc965eb267508e04d8e8d75c1a0ae": {
     "home_team": "Colombia",
@@ -429,7 +429,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "512ac18beb5aa936a59f7ea3e497ada2": {
     "home_team": "Bosnia & Herzegovina",
@@ -438,7 +438,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "c9ef5822ee64fd5275f7c73251bb56c7": {
     "home_team": "Switzerland",
@@ -447,7 +447,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "885ba95805db310a7bcc3fb1a7a6dd28": {
     "home_team": "Scotland",
@@ -456,7 +456,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "d1279ce7f33136a33e99ad442fc855e8": {
     "home_team": "Morocco",
@@ -465,7 +465,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "5993bd5196ca09f83990f0c3261e442e": {
     "home_team": "Czech Republic",
@@ -474,7 +474,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "c0355dfc6e26ec327e379b6ef5824a5f": {
     "home_team": "South Africa",
@@ -483,7 +483,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "a5a0b544a984ab16e564264f3e859b43": {
     "home_team": "Curaçao",
@@ -492,7 +492,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "0ec28b84ec399bd4dffbe8d1bc72b3c4": {
     "home_team": "Ecuador",
@@ -501,7 +501,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "0ed0233bddc4eafc8507f86a9c17b998": {
     "home_team": "Japan",
@@ -510,7 +510,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "f3c4657daa143a0c5bd62cb370d01ce4": {
     "home_team": "Tunisia",
@@ -519,7 +519,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "22f6ac06dfcc88a847920f62633e6459": {
     "home_team": "Paraguay",
@@ -528,7 +528,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "f41aeac9a8343a84b4950f15ea25fba2": {
     "home_team": "Turkey",
@@ -537,7 +537,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "b86b4d60f773e9e3c46c00e9a6496e79": {
     "home_team": "Norway",
@@ -546,7 +546,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "7e6aee294ea1a4792c59558791084528": {
     "home_team": "Senegal",
@@ -555,7 +555,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "e07b1926be5a4d515c7eb108dbcee9c5": {
     "home_team": "Cape Verde",
@@ -564,7 +564,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "dcff2e31c0bce001a4db5caaf4fa8822": {
     "home_team": "Uruguay",
@@ -573,7 +573,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "581691da05dcd75b5c6d3be91ee9d2ab": {
     "home_team": "New Zealand",
@@ -582,7 +582,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "3e3b5fa2b3c963e74cf044c60db0b573": {
     "home_team": "Egypt",
@@ -591,7 +591,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "537c0997cd899394f47f16545b7068b2": {
     "home_team": "Croatia",
@@ -600,7 +600,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "4be17c8e1ccfecb0f2a5ef79e045c415": {
     "home_team": "Panama",
@@ -609,7 +609,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "67ae5751c401a98409b8566ae4897069": {
     "home_team": "Colombia",
@@ -618,7 +618,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "13eab94a136b9c264ba974cf437a5f71": {
     "home_team": "DR Congo",
@@ -627,7 +627,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "8756200e539155e571557c4f2e0d7f05": {
     "home_team": "Algeria",
@@ -636,7 +636,7 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   },
   "54697f453437ab26276d773be1d72e9b": {
     "home_team": "Jordan",
@@ -645,6 +645,6 @@
     "completed": false,
     "home_score": null,
     "away_score": null,
-    "last_update": "2026-06-12T06:50:26.638787+00:00"
+    "last_update": "2026-06-12T06:38:07.863179+00:00"
   }
 }

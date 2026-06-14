@@ -71,7 +71,7 @@ def pick_card(pick: dict | None, kind: str, home: str, away: str, label_text: st
     fair_pct = pick["fair_prob"] * 100
     model_pct = (pick["model_prob"] or 0) * 100
     cons_pct = (pick["consensus_prob"] or 0) * 100
-    label = label_for(pick["market"], home, away)
+    label = pick.get("label") or label_for(pick["market"], home, away)
     odd = pick["unibet_odd"]
     has_value = pick.get("has_value", False)
     badge = '<span class="value-tag yes">★ VALEUR</span>' if has_value else '<span class="value-tag no">pas de valeur</span>'
@@ -203,7 +203,7 @@ def combo_panel(combo: dict, title: str, stake: float, cap: float | None, css_ki
             f'<span class="combo-match"><span class="combo-time">{kickoff}</span>'
             f'{html.escape(m["home_team"])} – {html.escape(m["away_team"])}</span>'
             f'<span class="combo-pick">{value_chip}'
-            f'<b>{market_icon} {html.escape(label_for(p["market"], m["home_team"], m["away_team"]))}</b> '
+            f'<b>{market_icon} {html.escape(p.get("label") or label_for(p["market"], m["home_team"], m["away_team"]))}</b> '
             f'@ {p["unibet_odd"]:.2f}</span></li>'
         )
 

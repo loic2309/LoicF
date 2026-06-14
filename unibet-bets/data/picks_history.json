@@ -238,5 +238,125 @@
       "has_value": true,
       "is_buteur": false
     }
+  },
+  "d79edbd6aaeb578d33e313446b18d333": {
+    "event_id": "d79edbd6aaeb578d33e313446b18d333",
+    "home_team": "Germany",
+    "away_team": "Curaçao",
+    "commence_time": "2026-06-14T17:00:00Z",
+    "safe": {
+      "market": "ger_2mt_win",
+      "cote": 1.5,
+      "fair_prob": 0.62,
+      "edge": -0.07000000000000006,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "btts_no",
+      "cote": 1.37,
+      "fair_prob": 0.869,
+      "edge": 0.1905300000000001,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "over_3.5",
+      "cote": 1.46,
+      "fair_prob": 0.4213,
+      "edge": -0.38490199999999997,
+      "has_value": true,
+      "is_buteur": false
+    }
+  },
+  "32ec06abda2398ac41501c86eb9aa376": {
+    "event_id": "32ec06abda2398ac41501c86eb9aa376",
+    "home_team": "Netherlands",
+    "away_team": "Japan",
+    "commence_time": "2026-06-14T20:00:00Z",
+    "safe": {
+      "market": "under_3.5",
+      "cote": 1.33,
+      "fair_prob": 0.7784,
+      "edge": 0.03527199999999997,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "dc_X2",
+      "cote": 1.81,
+      "fair_prob": 0.6473,
+      "edge": 0.17161300000000002,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "h2h_away",
+      "cote": 3.9,
+      "fair_prob": 0.3368,
+      "edge": 0.31352,
+      "has_value": true,
+      "is_buteur": false
+    }
+  },
+  "05752bb341e197001387b64f3a06b9b2": {
+    "event_id": "05752bb341e197001387b64f3a06b9b2",
+    "home_team": "Ivory Coast",
+    "away_team": "Ecuador",
+    "commence_time": "2026-06-14T23:00:00Z",
+    "safe": {
+      "market": "dc_X2",
+      "cote": 1.36,
+      "fair_prob": 0.8823529411764705,
+      "edge": 0.2,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "dc_X2",
+      "cote": 1.36,
+      "fair_prob": 0.861,
+      "edge": 0.17096,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "h2h_away",
+      "cote": 2.65,
+      "fair_prob": 0.5692,
+      "edge": 0.50838,
+      "has_value": true,
+      "is_buteur": false
+    }
+  },
+  "b55f9569de3f4d731bc5537ff5ff43e4": {
+    "event_id": "b55f9569de3f4d731bc5537ff5ff43e4",
+    "home_team": "Sweden",
+    "away_team": "Tunisia",
+    "commence_time": "2026-06-15T02:00:00Z",
+    "safe": {
+      "market": "under_3.5",
+      "cote": 1.23,
+      "fair_prob": 0.7959,
+      "edge": -0.021042999999999923,
+      "has_value": false,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "h2h_away",
+      "cote": 4.4,
+      "fair_prob": 0.24066090283091046,
+      "edge": 0.05890797245600621,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "ultra_risky": {
+      "market": "under_1.5",
+      "cote": 2.92,
+      "fair_prob": 0.3131210958904109,
+      "edge": -0.08568640000000016,
+      "has_value": false,
+      "is_buteur": false
+    }
   }
 }

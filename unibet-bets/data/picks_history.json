@@ -358,5 +358,93 @@
       "has_value": true,
       "is_buteur": false
     }
+  },
+  "c54f00b11925751d2b62988775c6c239": {
+    "event_id": "c54f00b11925751d2b62988775c6c239",
+    "home_team": "Spain",
+    "away_team": "Cape Verde",
+    "commence_time": "2026-06-15T16:00:00Z",
+    "safe": {
+      "market": "h2h_home",
+      "cote": 1.09,
+      "fair_prob": 0.8993,
+      "edge": -0.019762999999999975,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "over_3.5",
+      "cote": 1.8,
+      "fair_prob": 0.42205671018276764,
+      "edge": -0.24029792167101827,
+      "has_value": false,
+      "is_buteur": false
+    }
+  },
+  "fbfb95c62003fd6d828b309f96ee1f9b": {
+    "event_id": "fbfb95c62003fd6d828b309f96ee1f9b",
+    "home_team": "Belgium",
+    "away_team": "Egypt",
+    "commence_time": "2026-06-15T19:00:00Z",
+    "safe": {
+      "market": "h2h_home",
+      "cote": 1.6,
+      "fair_prob": 0.59116,
+      "edge": -0.05414399999999997,
+      "has_value": false,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "dc_1X",
+      "cote": 1.14,
+      "fair_prob": 0.859,
+      "edge": -0.02074000000000009,
+      "has_value": true,
+      "is_buteur": false
+    }
+  },
+  "64b91c5f2db61c7358a4f05459e83c52": {
+    "event_id": "64b91c5f2db61c7358a4f05459e83c52",
+    "home_team": "Saudi Arabia",
+    "away_team": "Uruguay",
+    "commence_time": "2026-06-15T22:00:00Z",
+    "safe": {
+      "market": "dc_X2",
+      "cote": 1.09,
+      "fair_prob": 0.9408,
+      "edge": 0.02547199999999994,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "over_2.5",
+      "cote": 2.08,
+      "fair_prob": 0.43829574803149607,
+      "edge": -0.08834484409448817,
+      "has_value": false,
+      "is_buteur": false
+    }
+  },
+  "ec51b9c44ad5e34552f3ab53f7262813": {
+    "event_id": "ec51b9c44ad5e34552f3ab53f7262813",
+    "home_team": "Iran",
+    "away_team": "New Zealand",
+    "commence_time": "2026-06-16T01:00:00Z",
+    "safe": {
+      "market": "dc_1X",
+      "cote": 1.23,
+      "fair_prob": 0.8684,
+      "edge": 0.06813199999999986,
+      "has_value": true,
+      "is_buteur": false
+    },
+    "risky": {
+      "market": "dc_1X",
+      "cote": 1.23,
+      "fair_prob": 0.8688,
+      "edge": 0.06862400000000002,
+      "has_value": true,
+      "is_buteur": false
+    }
   }
 }

@@ -441,34 +441,26 @@
       "is_buteur": false
     }
   },
-  "ec51b9c44ad5e34552f3ab53f7262813": {
-    "event_id": "ec51b9c44ad5e34552f3ab53f7262813",
-    "home_team": "Iran",
-    "away_team": "New Zealand",
-    "commence_time": "2026-06-16T01:00:00Z",
+  "73a4fcd14cc9766b9b9bfd50b8ca153a": {
+    "event_id": "73a4fcd14cc9766b9b9bfd50b8ca153a",
+    "home_team": "France",
+    "away_team": "Senegal",
+    "commence_time": "2026-06-16T19:00:00Z",
     "safe": {
-      "market": "dc_1X",
-      "cote": 1.23,
-      "fair_prob": 0.8684,
-      "edge": 0.06813199999999986,
+      "market": "btts_yes",
+      "cote": 1.9,
+      "fair_prob": 0.58,
+      "edge": 0.10199999999999987,
       "has_value": true,
       "is_buteur": false
     },
     "risky": {
-      "market": "over_1.5",
-      "cote": 1.44,
-      "fair_prob": 0.75,
-      "edge": 0.08000000000000007,
+      "market": "scorer_Kylian Mbappe",
+      "cote": 1.95,
+      "fair_prob": 0.55,
+      "edge": 0.07250000000000001,
       "has_value": true,
-      "is_buteur": false
-    },
-    "ultra_risky": {
-      "market": "over_3.5",
-      "cote": 4.75,
-      "fair_prob": 0.2214,
-      "edge": 0.051649999999999974,
-      "has_value": true,
-      "is_buteur": false
+      "is_buteur": true
     }
   }
 }

@@ -42,7 +42,7 @@
     "completed": true,
     "home_score": 1,
     "away_score": 1,
-    "last_update": "2026-06-15T06:14:55.367159+00:00"
+    "last_update": "2026-06-16T06:17:50.595225+00:00"
   },
   "f6c8748a16516e0998f95de14235432a": {
     "home_team": "Brazil",
@@ -51,7 +51,7 @@
     "completed": true,
     "home_score": 1,
     "away_score": 1,
-    "last_update": "2026-06-15T06:14:55.367178+00:00"
+    "last_update": "2026-06-16T06:17:50.595247+00:00"
   },
   "5ae41a06735c926eeb7f74006933adce": {
     "home_team": "Haiti",
@@ -60,7 +60,7 @@
     "completed": true,
     "home_score": 0,
     "away_score": 1,
-    "last_update": "2026-06-15T06:14:55.367185+00:00"
+    "last_update": "2026-06-16T06:17:50.595256+00:00"
   },
   "564084f52cc9f1abcc18187c168a7cdc": {
     "home_team": "Australia",
@@ -78,7 +78,7 @@
     "completed": true,
     "home_score": 7,
     "away_score": 1,
-    "last_update": "2026-06-15T06:14:55.367192+00:00"
+    "last_update": "2026-06-16T21:05:29.794458+00:00"
   },
   "32ec06abda2398ac41501c86eb9aa376": {
     "home_team": "Netherlands",
@@ -87,7 +87,7 @@
     "completed": true,
     "home_score": 2,
     "away_score": 2,
-    "last_update": "2026-06-15T06:14:55.367197+00:00"
+    "last_update": "2026-06-16T21:05:29.794484+00:00"
   },
   "05752bb341e197001387b64f3a06b9b2": {
     "home_team": "Ivory Coast",
@@ -96,7 +96,7 @@
     "completed": true,
     "home_score": 1,
     "away_score": 0,
-    "last_update": "2026-06-15T06:14:55.367201+00:00"
+    "last_update": "2026-06-16T21:05:29.794493+00:00"
   },
   "b55f9569de3f4d731bc5537ff5ff43e4": {
     "home_team": "Sweden",
@@ -105,52 +105,52 @@
     "completed": true,
     "home_score": 5,
     "away_score": 1,
-    "last_update": "2026-06-15T06:14:55.367205+00:00"
+    "last_update": "2026-06-16T21:05:29.794503+00:00"
   },
   "c54f00b11925751d2b62988775c6c239": {
     "home_team": "Spain",
     "away_team": "Cape Verde",
-    "commence_time": "2026-06-15T16:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-15T16:00Z",
+    "completed": true,
+    "home_score": 0,
+    "away_score": 0,
+    "last_update": "2026-06-16T21:05:29.794513+00:00"
   },
   "fbfb95c62003fd6d828b309f96ee1f9b": {
     "home_team": "Belgium",
     "away_team": "Egypt",
-    "commence_time": "2026-06-15T19:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-15T19:00Z",
+    "completed": true,
+    "home_score": 1,
+    "away_score": 1,
+    "last_update": "2026-06-16T21:05:29.794523+00:00"
   },
   "64b91c5f2db61c7358a4f05459e83c52": {
     "home_team": "Saudi Arabia",
     "away_team": "Uruguay",
-    "commence_time": "2026-06-15T22:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-15T22:00Z",
+    "completed": true,
+    "home_score": 1,
+    "away_score": 1,
+    "last_update": "2026-06-16T21:05:29.794532+00:00"
   },
   "ec51b9c44ad5e34552f3ab53f7262813": {
     "home_team": "Iran",
     "away_team": "New Zealand",
-    "commence_time": "2026-06-16T01:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-16T01:00Z",
+    "completed": true,
+    "home_score": 2,
+    "away_score": 2,
+    "last_update": "2026-06-16T21:05:29.794538+00:00"
   },
   "73a4fcd14cc9766b9b9bfd50b8ca153a": {
     "home_team": "France",
     "away_team": "Senegal",
-    "commence_time": "2026-06-16T19:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-16T19:00Z",
+    "completed": true,
+    "home_score": 3,
+    "away_score": 1,
+    "last_update": "2026-06-16T21:05:29.794543+00:00"
   },
   "4d4f2b9b78182b557d4fbf8dcf4f4af2": {
     "home_team": "Iraq",

@@ -761,10 +761,11 @@ def analyse_today(force_buteur: bool = False) -> dict:
     risky_combo = build_combo(results, "risky", RISKY_COMBO_CAP)
     ultra_combo = build_combo(results, "ultra_risky", None)
 
-    # Snapshot the picks for performance tracking (overwrites prior snapshot
-    # for the same event_id — last refresh of the day wins).
-    if results:
-        record_picks(results)
+    # NOTE: we deliberately do NOT auto-record picks here anymore. Rendering
+    # the page is not the same as placing a bet — auto-logging model
+    # suggestions polluted the performance ledger with bets that were never
+    # actually staked. Real placed bets are recorded explicitly via
+    # record_picks() only when the user confirms what they bet.
 
     # The cached value can be stale (multiple workflow runs, manual ops in
     # between). Hit /sports (FREE — doesn't count against quota) to refresh

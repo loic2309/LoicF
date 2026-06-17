@@ -477,5 +477,35 @@
       "is_buteur": false,
       "stake": 9.0
     }
+  },
+  "6cc871c121a1869b4612d3fb22fa9d55": {
+    "event_id": "6cc871c121a1869b4612d3fb22fa9d55",
+    "home_team": "Portugal",
+    "away_team": "DR Congo",
+    "commence_time": "2026-06-17T17:00:00Z",
+    "safe": {
+      "market": "over_1.5",
+      "cote": 1.43,
+      "fair_prob": 0.8,
+      "edge": 0.1439999999999999,
+      "has_value": true,
+      "is_buteur": false,
+      "stake": 15.0
+    }
+  },
+  "689096c8cd7e2753b9fec95321943c5d": {
+    "event_id": "689096c8cd7e2753b9fec95321943c5d",
+    "home_team": "England",
+    "away_team": "Croatia",
+    "commence_time": "2026-06-17T20:00:00Z",
+    "risky": {
+      "market": "h2h_draw",
+      "cote": 3.6,
+      "fair_prob": 0.29,
+      "edge": 0.04400000000000004,
+      "has_value": true,
+      "is_buteur": false,
+      "stake": 5.0
+    }
   }
 }

@@ -124,6 +124,7 @@ def record_picks(matches: list) -> None:
                 "edge": pick["edge"],
                 "has_value": pick.get("has_value", False),
                 "is_buteur": pick.get("is_buteur", False),
+                "stake": pick.get("stake"),  # actual stake placed (None → category default)
             }
         history[event_id] = entry
     save_picks_history(history)
@@ -210,7 +211,7 @@ def evaluate_all() -> dict:
             pick = entry.get(category)
             if not pick:
                 continue
-            stake = STAKES[category]
+            stake = pick.get("stake") or STAKES[category]
             market = pick["market"]
             cote = pick["cote"]
             outcome = "pending"
@@ -367,7 +368,9 @@ def evaluate_combos(rows: list) -> list:
             picks = by_day_cat[bday].get(category, [])
             if not picks:
                 continue
-            stake = STAKES[category]
+            # Use the actual stake placed (rows carry per-bet stake); for a
+            # single bet this is its real stake, not the category default.
+            stake = picks[0].get("stake") or STAKES[category]
             # Natural product (informational — what the combo would pay if
             # every leg won)
             cote = 1.0

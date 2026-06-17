@@ -462,5 +462,20 @@
       "has_value": true,
       "is_buteur": true
     }
+  },
+  "4d4f2b9b78182b557d4fbf8dcf4f4af2": {
+    "event_id": "4d4f2b9b78182b557d4fbf8dcf4f4af2",
+    "home_team": "Iraq",
+    "away_team": "Norway",
+    "commence_time": "2026-06-16T22:00:00Z",
+    "ultra_risky": {
+      "market": "over_2.5",
+      "cote": 1.57,
+      "fair_prob": 0.65,
+      "edge": 0.020500000000000185,
+      "has_value": true,
+      "is_buteur": false,
+      "stake": 9.0
+    }
   }
 }

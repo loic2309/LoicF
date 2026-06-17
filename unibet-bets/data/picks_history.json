@@ -470,7 +470,7 @@
     "commence_time": "2026-06-16T22:00:00Z",
     "ultra_risky": {
       "market": "over_2.5",
-      "cote": 1.57,
+      "cote": 1.65,
       "fair_prob": 0.65,
       "edge": 0.020500000000000185,
       "has_value": true,

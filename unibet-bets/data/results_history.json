@@ -114,7 +114,7 @@
     "completed": true,
     "home_score": 0,
     "away_score": 0,
-    "last_update": "2026-06-16T21:05:29.794513+00:00"
+    "last_update": "2026-06-17T09:45:45.246290+00:00"
   },
   "fbfb95c62003fd6d828b309f96ee1f9b": {
     "home_team": "Belgium",
@@ -123,7 +123,7 @@
     "completed": true,
     "home_score": 1,
     "away_score": 1,
-    "last_update": "2026-06-16T21:05:29.794523+00:00"
+    "last_update": "2026-06-17T09:45:45.246318+00:00"
   },
   "64b91c5f2db61c7358a4f05459e83c52": {
     "home_team": "Saudi Arabia",
@@ -132,7 +132,7 @@
     "completed": true,
     "home_score": 1,
     "away_score": 1,
-    "last_update": "2026-06-16T21:05:29.794532+00:00"
+    "last_update": "2026-06-17T09:45:45.246328+00:00"
   },
   "ec51b9c44ad5e34552f3ab53f7262813": {
     "home_team": "Iran",
@@ -141,7 +141,7 @@
     "completed": true,
     "home_score": 2,
     "away_score": 2,
-    "last_update": "2026-06-16T21:05:29.794538+00:00"
+    "last_update": "2026-06-17T09:45:45.246336+00:00"
   },
   "73a4fcd14cc9766b9b9bfd50b8ca153a": {
     "home_team": "France",
@@ -150,34 +150,34 @@
     "completed": true,
     "home_score": 3,
     "away_score": 1,
-    "last_update": "2026-06-16T21:05:29.794543+00:00"
+    "last_update": "2026-06-17T09:45:45.246344+00:00"
   },
   "4d4f2b9b78182b557d4fbf8dcf4f4af2": {
     "home_team": "Iraq",
     "away_team": "Norway",
-    "commence_time": "2026-06-16T22:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-16T22:00Z",
+    "completed": true,
+    "home_score": 1,
+    "away_score": 4,
+    "last_update": "2026-06-17T09:45:45.246351+00:00"
   },
   "f31b2ee9e1cc6f7e641467f8237eaa21": {
     "home_team": "Argentina",
     "away_team": "Algeria",
-    "commence_time": "2026-06-17T01:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-17T01:00Z",
+    "completed": true,
+    "home_score": 3,
+    "away_score": 0,
+    "last_update": "2026-06-17T09:45:45.246359+00:00"
   },
   "25161cf6cf0cd9be17ae2e7e224a1f45": {
     "home_team": "Austria",
     "away_team": "Jordan",
-    "commence_time": "2026-06-17T04:00:00Z",
-    "completed": false,
-    "home_score": null,
-    "away_score": null,
-    "last_update": "2026-06-12T06:38:07.863179+00:00"
+    "commence_time": "2026-06-17T04:00Z",
+    "completed": true,
+    "home_score": 3,
+    "away_score": 1,
+    "last_update": "2026-06-17T09:45:45.246367+00:00"
   },
   "6cc871c121a1869b4612d3fb22fa9d55": {
     "home_team": "Portugal",

@@ -135,7 +135,6 @@ or France-focused on local openings.
 
 | Plan | Price | Credits | ≈ per lead |
 |------|-------|---------|-----------|
-| Monthly (6-month commitment) | €199 / mo | 663 / month | €0.30 |
 | 12-month beta (best value) | €2,100 | 7,950 | €0.26 |
 
 1 credit = 1 qualified lead (named decision-maker with contact details). Paid beta,

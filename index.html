@@ -140,7 +140,31 @@ body {
 .player-status { font-size: 10px; color: var(--ink-soft); }
 
 /* Table base */
-.table-wrap { overflow-x: auto; margin: -2px; padding: 2px; }
+.table-wrap {
+  overflow-x: auto;
+  margin: -2px;
+  padding: 2px;
+  position: relative;
+  /* Gradient fade on the right edge signals horizontal scrolling on narrow screens */
+  background:
+    linear-gradient(to right, var(--bg-elev) 30%, rgba(255,255,255,0)) left center / 30px 100% no-repeat,
+    linear-gradient(to right, rgba(255,255,255,0), var(--bg-elev) 70%) right center / 30px 100% no-repeat,
+    linear-gradient(to right, rgba(0,0,0,0.06), rgba(0,0,0,0)) left center / 14px 100% no-repeat,
+    linear-gradient(to left,  rgba(0,0,0,0.06), rgba(0,0,0,0)) right center / 14px 100% no-repeat;
+  background-attachment: local, local, scroll, scroll;
+}
+.table-wrap::after {
+  content: "← faites glisser horizontalement pour voir tous les joueurs →";
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-soft);
+  padding: 6px 0 0;
+  font-style: italic;
+}
+@media (min-width: 900px) {
+  .table-wrap::after { display: none; }
+}
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
 th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
 th {
@@ -381,7 +405,7 @@ tbody tr:hover { background: var(--bg-soft); }
     </section>
 
     <footer class="footer">
-      Mis à jour 27 Jun 2026 à 04:54 · Belgique (CEST)
+      Mis à jour 27 Jun 2026 à 04:57 · Belgique (CEST)
     </footer>
   </div>
 </body>

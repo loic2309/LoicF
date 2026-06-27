@@ -124,23 +124,87 @@ body {
   font-size: 11px;
 }
 
-/* Group rankings consolidated panel */
-.grp-rankings-block {
-  margin-bottom: 22px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--line);
+/* Group rankings consolidated panel — compact codes layout */
+.grp-rankings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
 }
-.grp-rankings-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.grp-rankings-block h3 {
-  margin: 0 0 10px;
-  font-size: 14px;
+.grp-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  background: var(--bg-elev);
+}
+.grp-card h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: -0.2px;
+  color: var(--ink);
 }
-.rank-locked {
+.grp-card .official-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px;
+  background: var(--gold-soft);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+.grp-card .official-row .label {
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex: 0 0 auto;
+}
+.grp-card .official-row .codes { display: flex; gap: 3px; flex-wrap: wrap; }
+.grp-card .picks-list { display: flex; flex-direction: column; gap: 3px; }
+.grp-card .pick-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.grp-card .pick-row:hover { background: var(--bg-soft); }
+.grp-card .pick-row-perfect { background: rgba(34, 197, 94, 0.06); }
+.grp-card .player-name {
+  flex: 0 0 90px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.grp-card .codes {
+  display: flex; gap: 3px; flex-wrap: nowrap;
+}
+.grp-card .code {
+  display: inline-flex; align-items: center;
+  gap: 2px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--bg-soft);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 9.5px;
+  color: var(--ink-mid);
+  white-space: nowrap;
+}
+.grp-card .code b {
+  font-size: 8px;
+  font-weight: 700;
   color: var(--ink-soft);
+  font-family: -apple-system, sans-serif;
+  margin-right: 1px;
+}
+.grp-card .code.match { background: var(--green-soft); color: var(--green); }
+.grp-card .code.match b { color: var(--green); }
+.grp-card .code.miss { background: var(--red-soft); color: var(--red); opacity: 0.75; }
+.grp-card .code.miss b { color: var(--red); }
+.locked-tag {
+  color: var(--gold);
   font-style: italic;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 /* Pre-kickoff */
@@ -417,7 +481,7 @@ tbody tr:hover { background: var(--bg-soft); }
       <h1 class="hero-title">Mondial Pronos</h1>
       <div class="hero-meta">
         <span class="dot"></span>
-        Suspense · reveal dans 1j 11h
+        Suspense · reveal dans 1j 10h
       </div>
     </header>
 
@@ -438,7 +502,7 @@ tbody tr:hover { background: var(--bg-soft); }
     </section>
 
     <footer class="footer">
-      Mis à jour 27 Jun 2026 à 07:38 · Belgique (CEST)
+      Mis à jour 27 Jun 2026 à 08:49 · Belgique (CEST)
     </footer>
   </div>
 </body>

@@ -109,6 +109,39 @@ body {
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.04em;
 }
+.section-title .badge-locked {
+  background: var(--gold-soft);
+  color: var(--gold);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+}
+.section-title .badge-unlocked {
+  background: var(--green-soft);
+  color: var(--green);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+}
+
+/* Group rankings consolidated panel */
+.grp-rankings-block {
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.grp-rankings-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.grp-rankings-block h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.rank-locked {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: 11px;
+}
 
 /* Pre-kickoff */
 .lock-card { text-align: center; padding: 36px 28px; }
@@ -405,7 +438,7 @@ tbody tr:hover { background: var(--bg-soft); }
     </section>
 
     <footer class="footer">
-      Mis à jour 27 Jun 2026 à 07:21 · Belgique (CEST)
+      Mis à jour 27 Jun 2026 à 07:38 · Belgique (CEST)
     </footer>
   </div>
 </body>

@@ -207,6 +207,63 @@ body {
   font-size: 10px;
 }
 
+/* Live knockout focus panel */
+.section-help { font-size: 12px; color: var(--ink-mid); margin: -8px 0 16px; }
+.kf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.kf-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  background: var(--bg-elev);
+}
+.kf-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--line);
+}
+.kf-round {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--ink-mid);
+}
+.kf-status { font-size: 11px; color: var(--ink-mid); }
+.kf-matchup {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px;
+  align-items: center; padding: 12px 0;
+  font-size: 14px; font-weight: 600;
+}
+.kf-team { text-align: center; }
+.kf-score { text-align: center; }
+.kf-score-num { font-size: 18px; font-variant-numeric: tabular-nums; }
+.kf-score-num .dash { color: var(--ink-soft); margin: 0 4px; }
+.kf-table-wrap { overflow-x: auto; margin-top: 8px; }
+.kf-table { width: 100%; font-size: 11px; }
+.kf-table th, .kf-table td { padding: 4px 6px; }
+.kf-table .kf-player { font-weight: 600; white-space: nowrap; }
+.kf-table .kf-pred { font-family: ui-monospace, monospace; text-align: right; color: var(--ink-mid); }
+.kf-row-exact { background: rgba(34, 197, 94, 0.06); }
+.kf-team-chip {
+  display: inline-block;
+  padding: 1px 6px; margin: 1px 0;
+  background: var(--bg-soft);
+  border-radius: 3px;
+  font-size: 10px;
+  color: var(--ink-mid);
+}
+.kf-team-chip-real {
+  background: var(--green-soft);
+  color: var(--green);
+  font-weight: 600;
+}
+.kf-exact-pairing {
+  display: inline-block;
+  padding: 1px 6px; margin-left: 4px;
+  background: var(--gold-soft); color: var(--gold);
+  border-radius: 3px;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+
 /* Pre-kickoff */
 .lock-card { text-align: center; padding: 36px 28px; }
 .lock-icon { font-size: 36px; margin-bottom: 12px; }
@@ -506,6 +563,67 @@ tbody tr:hover { background: var(--bg-soft); }
   <div class="legend-row">
     <b>A</b>&nbsp;1/X/2 (poules)&nbsp;<i>3pt</i> · <b>B</b>&nbsp;Score exact&nbsp;<i>2pt</i> · <b>C</b>&nbsp;Classements&nbsp;<i>4pt</i> · <b>D</b>&nbsp;1/8e&nbsp;<i>5pt</i> · <b>E</b>&nbsp;1/4&nbsp;<i>7pt</i> · <b>F</b>&nbsp;1/2&nbsp;<i>10pt</i> · <b>G</b>&nbsp;3e place&nbsp;<i>7pt</i> · <b>H</b>&nbsp;Finalistes&nbsp;<i>15pt</i> · <b>I</b>&nbsp;Champion&nbsp;<i>15pt</i> · <b>J</b>&nbsp;Buteur&nbsp;<i>10pt</i>
   </div>
+</section>
+
+    
+<section class="card">
+  <h2 class="section-title">🔴 Phase éliminatoire — focus matchs</h2>
+  <p class="section-help">Pour chaque match knockout en cours/à venir, les joueurs qui ont prédit au moins une des deux équipes à ce tour, avec le score qu'ils ont mis dans leur propre bracket.</p>
+  <div class="kf-grid">
+<div class="kf-card">
+  <div class="kf-header">
+    <div class="kf-round">1/16</div>
+    <div class="kf-status">🔴 1ère mi-temps</div>
+  </div>
+  <div class="kf-matchup">
+    <span class="kf-team">Afrique du Sud</span>
+    <span class="kf-score"><span class="kf-score-num"><b>0</b><span class="dash">–</span><b>0</b></span></span>
+    <span class="kf-team">Canada</span>
+  </div>
+  <div class="kf-table-wrap">
+    <table class="kf-table">
+      <thead><tr><th>Joueur</th><th>Pronos dans son bracket</th><th>Score prédit</th></tr></thead>
+      <tbody><tr class="kf-row"><td class="kf-player">ADK</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Canada</span> · <span class="kf-team-chip">Autriche</span> </td><td class="kf-pred">100–0</td></tr><tr class="kf-row"><td class="kf-player">Alex Le Clercq</td><td class="kf-involved"><span class="kf-team-chip">Tchéquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–2</td></tr><tr class="kf-row"><td class="kf-player">Awad</td><td class="kf-involved"><span class="kf-team-chip">Tchéquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">0–1</td></tr><tr class="kf-row"><td class="kf-player">Coco</td><td class="kf-involved"><span class="kf-team-chip">Tchéquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–2</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Francesco Taquiny</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Afrique du Sud</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">3–2</td></tr><tr class="kf-row"><td class="kf-player">Gauth Bod</td><td class="kf-involved"><span class="kf-team-chip">Mexique</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Ge10 ft Mistral</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Canada</span> · <span class="kf-team-chip">Nouvelle-Zélande</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Hova</td><td class="kf-involved"><span class="kf-team-chip">Corée du Sud</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–2</td></tr><tr class="kf-row"><td class="kf-player">Hubert</td><td class="kf-involved"><span class="kf-team-chip">Turquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Karlo</td><td class="kf-involved"><span class="kf-team-chip">Mexique</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Loïc F</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Canada</span> · <span class="kf-team-chip">Algérie</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Marti</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Afrique du Sud</span> · <span class="kf-team-chip">Suisse</span> </td><td class="kf-pred">1–2</td></tr><tr class="kf-row"><td class="kf-player">Martin Sion</td><td class="kf-involved"><span class="kf-team-chip">Belgique</span> · <span class="kf-team-chip kf-team-chip-real">Afrique du Sud</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Max Reginster</td><td class="kf-involved"><span class="kf-team-chip">États-Unis</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Nathan Peeters</td><td class="kf-involved"><span class="kf-team-chip">Tchéquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Nayeem</td><td class="kf-involved"><span class="kf-team-chip">Mexique</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">2–1</td></tr><tr class="kf-row"><td class="kf-player">Oltaq</td><td class="kf-involved"><span class="kf-team-chip">Corée du Sud</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–2</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Robin</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Afrique du Sud</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">0–1</td></tr><tr class="kf-row"><td class="kf-player">Seb Lejeune</td><td class="kf-involved"><span class="kf-team-chip">Tchéquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">1–2</td></tr><tr class="kf-row"><td class="kf-player">Sim Poel</td><td class="kf-involved"><span class="kf-team-chip">Tchéquie</span> · <span class="kf-team-chip kf-team-chip-real">Canada</span> </td><td class="kf-pred">2–1</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="kf-card">
+  <div class="kf-header">
+    <div class="kf-round">1/16</div>
+    <div class="kf-status">à venir</div>
+  </div>
+  <div class="kf-matchup">
+    <span class="kf-team">Brésil</span>
+    <span class="kf-score"><span class="pending">– vs –</span></span>
+    <span class="kf-team">Japon</span>
+  </div>
+  <div class="kf-table-wrap">
+    <table class="kf-table">
+      <thead><tr><th>Joueur</th><th>Pronos dans son bracket</th><th>Score prédit</th></tr></thead>
+      <tbody><tr class="kf-row"><td class="kf-player">ADK</td><td class="kf-involved"><span class="kf-team-chip">Pays-Bas</span> · <span class="kf-team-chip kf-team-chip-real">Brésil</span> </td><td class="kf-pred">0–100</td></tr><tr class="kf-row"><td class="kf-player">Alex Le Clercq</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip">Maroc</span> </td><td class="kf-pred">0–1</td></tr><tr class="kf-row"><td class="kf-player">Awad</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip">Maroc</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Coco</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip">Maroc</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Francesco Taquiny</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip">Maroc</span> </td><td class="kf-pred">2–1</td></tr><tr class="kf-row"><td class="kf-player">Gauth Bod</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip">Suède</span> </td><td class="kf-pred">2–3</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Ge10 ft Mistral</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">2–1</td></tr><tr class="kf-row"><td class="kf-player">Hova</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip">Pays-Bas</span> </td><td class="kf-pred">0–1</td></tr><tr class="kf-row"><td class="kf-player">Hubert</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip">Suède</span> </td><td class="kf-pred">3–2</td></tr><tr class="kf-row"><td class="kf-player">Karlo</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip">Suède</span> </td><td class="kf-pred">3–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Loïc F</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">1–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Marti</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">2–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Martin Sion</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">1–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Max Reginster</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip kf-team-chip-real">Brésil</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Nathan Peeters</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Nayeem</td><td class="kf-involved"><span class="kf-team-chip">France</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> </td><td class="kf-pred">3–0</td></tr><tr class="kf-row"><td class="kf-player">Oltaq</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Japon</span> · <span class="kf-team-chip">Maroc</span> </td><td class="kf-pred">2–1</td></tr><tr class="kf-row"><td class="kf-player">Robin</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip">Suède</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Seb Lejeune</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">3–0</td></tr><tr class="kf-row"><td class="kf-player">Sim Poel</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip">Suède</span> </td><td class="kf-pred">3–2</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Vic</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Brésil</span> · <span class="kf-team-chip kf-team-chip-real">Japon</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">2–0</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="kf-card">
+  <div class="kf-header">
+    <div class="kf-round">1/16</div>
+    <div class="kf-status">à venir</div>
+  </div>
+  <div class="kf-matchup">
+    <span class="kf-team">Allemagne</span>
+    <span class="kf-score"><span class="pending">– vs –</span></span>
+    <span class="kf-team">Paraguay</span>
+  </div>
+  <div class="kf-table-wrap">
+    <table class="kf-table">
+      <thead><tr><th>Joueur</th><th>Pronos dans son bracket</th><th>Score prédit</th></tr></thead>
+      <tbody><tr class="kf-row"><td class="kf-player">ADK</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">100–0</td></tr><tr class="kf-row"><td class="kf-player">Alex Le Clercq</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Suède</span> </td><td class="kf-pred">2–1</td></tr><tr class="kf-row"><td class="kf-player">Awad</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Coco</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">2–1</td></tr><tr class="kf-row"><td class="kf-player">Francesco Taquiny</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Sénégal</span> </td><td class="kf-pred">0–1</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Gauth Bod</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">3–1</td></tr><tr class="kf-row"><td class="kf-player">Ge10 ft Mistral</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Hova</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">2–0</td></tr><tr class="kf-row"><td class="kf-player">Hubert</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Australie</span> </td><td class="kf-pred">4–0</td></tr><tr class="kf-row"><td class="kf-player">Karlo</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">4–1</td></tr><tr class="kf-row"><td class="kf-player">Loïc F</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Marti</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Écosse</span> </td><td class="kf-pred">3–1</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Martin Sion</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Max Reginster</td><td class="kf-involved"><span class="kf-team-chip">Mexique</span> · <span class="kf-team-chip kf-team-chip-real">Allemagne</span> </td><td class="kf-pred">2–1</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Nathan Peeters</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">3–1</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Nayeem</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">3–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Oltaq</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">2–0</td></tr><tr class="kf-row kf-row-exact"><td class="kf-player">Robin</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip kf-team-chip-real">Paraguay</span> <span class="kf-exact-pairing">match exact</span></td><td class="kf-pred">1–0</td></tr><tr class="kf-row"><td class="kf-player">Seb Lejeune</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Turquie</span> </td><td class="kf-pred">3–0</td></tr><tr class="kf-row"><td class="kf-player">Sim Poel</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">Maroc</span> </td><td class="kf-pred">3–1</td></tr><tr class="kf-row"><td class="kf-player">Vic</td><td class="kf-involved"><span class="kf-team-chip kf-team-chip-real">Allemagne</span> · <span class="kf-team-chip">#NAME?</span> </td><td class="kf-pred">3–1</td></tr></tbody>
+    </table>
+  </div>
+</div>
+</div>
 </section>
 
     
@@ -908,7 +1026,7 @@ tbody tr:hover { background: var(--bg-soft); }
     
 
     <footer class="footer">
-      Résultats mis à jour 28 Jun 2026 à 22:10 · page générée 28 Jun 2026 à 22:10
+      Résultats mis à jour 28 Jun 2026 à 22:11 · page générée 28 Jun 2026 à 22:11
     </footer>
   </div>
 </body>
